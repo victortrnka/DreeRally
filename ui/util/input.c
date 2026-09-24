@@ -160,7 +160,7 @@ signed int   readKeyboard(char *a1, int a2, int a3, int a4, unsigned int a5, sig
   byte_45EEE0[44] = 90; //byte_45EF0C = 90;
   byte_45EEE0[45] = 88; //byte_45EF0D = 88;
   byte_45EEE0[46] = 67; //byte_45EF0E = 67;
-  byte_45EEE0[47];// byte_45EF0F = 86;
+  byte_45EEE0[47] = 86;// byte_45EF0F = 86;
 
   byte_45EEE0[48] = 66; //byte_45EF10 = 66;
 
