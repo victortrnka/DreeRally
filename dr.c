@@ -7069,7 +7069,10 @@ LABEL_115:
           v17 = v83 - v76;
           do
           {
-            if ( *((BYTE *)participantCarBpk_5034FC + v15 + raceParticipantIngame[v5/4].participantBpkOffser_4A7D10 + v16) > 3u
+            //v5 ya es el indice del participante (antes era 864*indice y quedo un /4 suelto,
+            //asi que siempre se comparaba contra el sprite del participante 0 y los coches
+            //se atravesaban en vez de chocar).
+            if ( *((BYTE *)participantCarBpk_5034FC + v15 + raceParticipantIngame[v5].participantBpkOffser_4A7D10 + v16) > 3u
               && *((BYTE *)participantCarBpk_5034FC + v17 + v78 + raceParticipantIngame[v6].participantBpkOffser_4A7D10 + v16) > 3u )
             {
               v89 = v16 - 20;
