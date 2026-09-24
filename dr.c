@@ -16734,61 +16734,20 @@ int sub_43FD12()
 }
 
 //----- (0043FD70) --------------------------------------------------------
-int  initSystem(double fmodMinVersion, int a1, char **a2, char *args)
+int  initSystem(double fmodMinVersion, int argc, char **argv, char *args)
 {
-  const char *v3; // esi@1
-  char *v4; // eax@1
-  char *v5; // eax@4
-  int v6; // eax@5
-  int v7; // edi@7
-//  int v8; // eax@7
-//  void *v9; // esp@7
-  int result; // eax@8
-  char* sdlError; // eax@10
+  int result;
+  if (SDL_Init(SDL_INIT_NOPARACHUTE) < 0)
+  {
+    logError((int)aWinmainError, (int)SDL_GetError());
+    return 1;
+  }
+  atexit(generateExitError);
+  atexit(SDL_Quit);
 #ifndef PORTABILITY
-  HMODULE v12; // eax@11
+  SDL_SetModuleHandle(GetModuleHandleA(NULL));
 #endif
-  int v13; // eax@12
-  int v14; // [sp+0h] [bp-Ch]@7
-
-  v3 = *a2;
-  if(*a2==NULL)
-	  *a2=malloc(sizeof(char*));
-  v4 = strrchr(*a2, 92);
-  if ( v4 || (v4 = strrchr(*a2, 47)) != 0 )
-    v3 = v4 + 1;
-  if(v3==NULL)
-	  v3=malloc(sizeof(char*));
-  v5 = strrchr(v3, 46);
-  if ( v5 )
-    v6 = v5 - v3;
-  else
-    v6 = strlen(v3);
-  v7 = v6 + 1;
- 
-  if ( &v14 )
-  {
-    SDL_strlcpy(&v14, v3, v7);
-    if ( SDL_Init(SDL_INIT_NOPARACHUTE) >= 0 )
-    {
-      atexit(generateExitError);
-      atexit(SDL_Quit);
-	  #ifndef PORTABILITY
-      v12 = GetModuleHandleA(0);
-      SDL_SetModuleHandle(v12);
-		#endif
-    
-	  v13 = sub_43ACE0(fmodMinVersion, a1, (int)a2, args);
-      exit(v13);
-    }
-    sdlError = SDL_GetError();
-    logError((int)aWinmainError, sdlError);
-    result = 0;
-  }
-  else
-  {
-    result = outOfMemoryError();
-  }
+  result = sub_43ACE0(fmodMinVersion, argc, (int)argv, args);
   return result;
 }
 
