@@ -1835,7 +1835,7 @@ int drawPressAnyKeyToContinue()
 // 456BE4: using guessed type int waitCounter2_456BE4;
 
 //----- (00424240) --------------------------------------------------------
-int   sub_424240(int a1, double a2, double a3, double a4)
+int   sub_424240(int a1, float a2, float a3, float a4)
 {
   signed int v4; // edi@1
   int v5; // esi@1
