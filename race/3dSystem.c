@@ -2,6 +2,7 @@
 #include "../defs.h"
 #include "../dr.h"
 #include <math.h>
+#include <string.h>
 
 Sce3DObject sce2Texture[100];
 Sce4Texture sce4Texture[100];

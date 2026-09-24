@@ -4,6 +4,7 @@
 #include "defs.h"
 #include "ui/util/menus.h"
 #include "dr.h"
+#include <string.h>
 
 const int DEFAULT_BIGLETTER_SPACING_OFFSET = -23;
 

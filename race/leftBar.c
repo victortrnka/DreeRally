@@ -4,6 +4,7 @@
 #include "../raceParticipant.h"
 #include "../sfx/soundEffects.h"
 #include <math.h>
+#include <string.h>
 
 char smallbarBpk_50E720[2048]; // weak
 int boardsBPK_4AA940[4][2048]; // weak

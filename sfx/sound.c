@@ -1,6 +1,7 @@
 #include "sound.h"
 #include "../asset/bpaUtil.h"
 #include "stdlib.h"
+#include <string.h>
 
 #include "../config.h"
 
