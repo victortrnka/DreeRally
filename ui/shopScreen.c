@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 _UNKNOWN unk_444160; // weak
 int dword_4451AC = 163840; // weak

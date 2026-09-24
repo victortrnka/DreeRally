@@ -3,6 +3,7 @@
 #include "../raceParticipant.h"
 #include "../defs.h"
 #include <SDL_stdinc.h>
+#include <math.h>
 
 Powerup powerups[16];
 int dword_456AC4 = 0; // weak

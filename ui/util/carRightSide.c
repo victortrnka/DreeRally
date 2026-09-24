@@ -5,6 +5,7 @@
 #include "../../drivers.h"
 #include "../../dr.h"
 #include <SDL_stdinc.h>
+#include <math.h>
 
 //----- (0041FC20) --------------------------------------------------------
 int drawCarRightSide()

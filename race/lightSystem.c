@@ -2,6 +2,7 @@
 #include "lightSystem.h"
 #include "../defs.h"
 #include "../dr.h"
+#include <math.h>
 
 
 int trxSHA8Bpk_46E8E0[1024]; // weak
