@@ -489,3 +489,7 @@ ModelManifest.xml
 /tools/MENU.BPA_dir/15X150.BPK
 /DrWin/fmod.dll
 /DrWin/SDL.dll
+
+# macOS build outputs and the local runtime folder (game data)
+build/
+run/
