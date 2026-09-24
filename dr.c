@@ -7041,7 +7041,9 @@ LABEL_115:
       if ( (v8 & 0x80000000) != 0 )
       {
         v10 = 0;
-        HIDWORD(v8) = v8 + 40;
+        //HIDWORD(v8) es edx, que es v11: el limite del barrido en Y.
+        //Tal como estaba, v11 se quedaba con basura de la iteracion anterior.
+        v11 = (signed int)v8 + 40;
 		v12 = -(signed int)v8;
       }
       else
