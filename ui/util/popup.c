@@ -1,4 +1,5 @@
 #include <SDL_stdinc.h>
+#include <SDL_timer.h>
 
 #include <math.h>
 #include <stdio.h>

@@ -3,6 +3,7 @@
 
 #include "util/menus.h"
 #include <SDL_stdinc.h>
+#include <SDL_timer.h>
 #include "util/anim.h"
 #include "../imageUtil.h"
 #include "../config.h"
