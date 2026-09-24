@@ -1008,8 +1008,8 @@ int   setTriangleValue_43CD50(int pos1x, int pos1y, int pos2x, int pos2y, int po
                         v25 = v29;
                         v37 = v30;
                     }
-                    v26 = (unsigned __int64)floor(v25 + 0.40000001);
-                    v27 = (unsigned __int64)floor(v37 + 0.60000002);
+                    v26 = (signed int)floor(v25 + 0.40000001);
+                    v27 = (signed int)floor(v37 + 0.60000002);
                     if (v26 < 0)
                         v26 = 0;
                     if ((signed int)v27 > 512)
@@ -1042,8 +1042,8 @@ int   setTriangleValue_43CD50(int pos1x, int pos1y, int pos2x, int pos2y, int po
                     v21 = v29;
                     v34 = v30;
                 }
-                v22 = (unsigned __int64)floor(v21 + 0.40000001);
-                v23 = (unsigned __int64)floor(v34 + 0.60000002);
+                v22 = (signed int)floor(v21 + 0.40000001);
+                v23 = (signed int)floor(v34 + 0.60000002);
                 if (v22 < 0)
                     v22 = 0;
                 if ((signed int)v23 > 512)

@@ -156,8 +156,8 @@ int   iluminateTriangle_43D530(int pos1x, int pos1y, int pos2x, int pos2y, int p
                         v28 = v35;
                         v43 = v36;
                     }
-                    v29 = (unsigned __int64)floor(v28 + 0.40000001);
-                    v30 = (unsigned __int64)floor(v43 + 0.60000002);
+                    v29 = (signed int)floor(v28 + 0.40000001);
+                    v30 = (signed int)floor(v43 + 0.60000002);
                     v31 = v30;
                     if (v29 < 0)
                         v29 = 0;
@@ -206,8 +206,8 @@ int   iluminateTriangle_43D530(int pos1x, int pos1y, int pos2x, int pos2y, int p
                     v21 = v35;
                     v40 = v36;
                 }
-                v22 = (unsigned __int64)floor(v21 + 0.40000001);
-                v23 = (unsigned __int64)floor(v40 + 0.60000002);
+                v22 = (signed int)floor(v21 + 0.40000001);
+                v23 = (signed int)floor(v40 + 0.60000002);
                 v24 = v22;
                 v25 = v23;
                 if (v22 < 0)
