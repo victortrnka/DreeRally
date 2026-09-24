@@ -70,7 +70,8 @@ clean:
 # deliberately not copied: DreeRally creates its own inside run/.
 RUNTIME_FILES = ENGINE.BPA IBFILES.BPA MENU.BPA MUSICS.BPA \
                 TR0.BPA TR1.BPA TR2.BPA TR3.BPA TR4.BPA TR5.BPA TR6.BPA TR7.BPA TR8.BPA TR9.BPA \
-                SANIM.haf ENDANI.haf ENDANI0.HAF SDL.dll fmod.dll
+                SANIM.haf ENDANI.haf ENDANI0.HAF SDL.dll fmod.dll \
+                end.bmp rmd.bmp
 
 setup-run:
 	@test -d "$(DR_DATA)" || { echo "Death Rally data not found: DR_DATA=$(DR_DATA)"; exit 1; }
