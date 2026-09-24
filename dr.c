@@ -15627,31 +15627,8 @@ int   setWindowCaption3(int a1)
   {
     if ( a1 == 19 )
     {
-      if ( !mainArgs.configGL )
-      {
-        v2 = screenSurface;
-        v3 = 0;
-        if ( screenSurface->h > 0 )
-        {
-          v4 = screenSurface->w;
-          v5 = 0;
-          v6 = 4 * (screenSurface->pitch >> 2);
-          do
-          {
-            v7 = v5 + *(_DWORD *)(v2 + 20); ///screenSurface->pixels
-            for ( i = 0; i < v4; ++i )
-            {
-              *(_DWORD *)v7 = 0;
-              v2 = screenSurface;
-              v4 = screenSurface->w;
-              v7 += 4;
-            }
-            ++v3;
-            v5 += v6;
-          }
-          while ( v3 < screenSurface->h);
-        }
-      }
+      if (!mainArgs.configGL)
+        SDL_FillRect(screenSurface, NULL, 0);
       screenPtr = screenPtr_456BF4;
       glResolution_456C14 = 19;
       //TODO fix
