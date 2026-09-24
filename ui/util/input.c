@@ -63,7 +63,7 @@ char byte_45EF15; // weak
 char byte_45EF19; // weak
 
 //----- (0042E7F0) --------------------------------------------------------
-signed int   readKeyboard(const char *a1, int a2, int a3, int a4, unsigned int a5, signed int a6, int ingame, int a8, int a9)
+signed int   readKeyboard(char *a1, int a2, int a3, int a4, unsigned int a5, signed int a6, int ingame, int a8, int a9)
 {
   char *v9; // eax@1
   signed int v10; // ebp@1
@@ -490,7 +490,7 @@ LABEL_65:
         if ( !v70 )
           continue;
         if ( v16 != 1 )
-          strcpy((char *)a1, v72);
+          strcpy(a1, v72);
         
         return 1;
     }
