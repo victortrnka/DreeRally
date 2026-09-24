@@ -11154,31 +11154,36 @@ LABEL_195:
       if ( v50 > 0 )
       {
 
-		  v58 =&raceParticipantIngame[v50].dword_4A7E94;//sustitui por raceParticipantIngame
+		  //el original recorria los participantes con un puntero que empezaba en el
+		  //participante 0 y avanzaba 864 bytes; el indice tiene que empezar en 0 y subir.
+		  //Antes empezaba en v50 (==numberOfParticipants) y bajaba hasta 1: leia y escribia
+		  //raceParticipantIngame[4] (fuera del array) y nunca tocaba al participante 0,
+		  //que por eso se quedaba clavado contra las paredes.
+		  v58 = 0;
         v59 = v50;
         do
         {
-          if ( raceParticipantIngame[v59].dword_4A7E94 > 0 )
-            --raceParticipantIngame[v59].dword_4A7E94;
+          if ( raceParticipantIngame[v58].dword_4A7E94 > 0 )
+            --raceParticipantIngame[v58].dword_4A7E94;
           //v60 = *(_DWORD *)(v58 + 4);
-          if ( raceParticipantIngame[v59].dword_4A7E98 > 0 )
-            raceParticipantIngame[v59].dword_4A7E98 = raceParticipantIngame[v59].dword_4A7E98 - 1;
-		  v61 = raceParticipantIngame[v59].backLeftAbsoluteYPosition_4A7E34;// *(_DWORD *)(v58 - 24);
-          if (  raceParticipantIngame[v59].backLeftAbsoluteYPosition_4A7E34> 0 )
-            raceParticipantIngame[v59].backLeftAbsoluteYPosition_4A7E34 = raceParticipantIngame[v59].backLeftAbsoluteYPosition_4A7E34; - 1;
-		  if ( raceParticipantIngame[v59].dword_4A7D14==1)//; *(_DWORD *)(v58 - 384) == 1 )   //dword_4A7D14
-            raceParticipantIngame[v59].dword_4A7E94 += 2;
-          if ( raceParticipantIngame[v59].dword_4A7D18==1)// *(_DWORD *)(v58 - 380) == 1 )  //dword_4A7D18
+          if ( raceParticipantIngame[v58].dword_4A7E98 > 0 )
+            raceParticipantIngame[v58].dword_4A7E98 = raceParticipantIngame[v58].dword_4A7E98 - 1;
+		  //aqui el original decrementaba *(v58 - 24) == 4A7E7C, un campo que todavia no
+		  //esta en RaceParticipantIngame. La linea que habia aqui se autoasignaba
+		  //backLeftAbsoluteYPosition_4A7E34 (no hacia nada) asi que se elimina.
+		  if ( raceParticipantIngame[v58].dword_4A7D14==1)//; *(_DWORD *)(v58 - 384) == 1 )   //dword_4A7D14
+            raceParticipantIngame[v58].dword_4A7E94 += 2;
+          if ( raceParticipantIngame[v58].dword_4A7D18==1)// *(_DWORD *)(v58 - 380) == 1 )  //dword_4A7D18
           {
-             raceParticipantIngame[v59].absolutePositionX_4A7DB4 = raceParticipantIngame[v59].dword_4A7E50 ;//*(_DWORD *)(v58 - 224) = *(_DWORD *)(v58 - 68); // -224 es absolutePositionX_4A7DB4  -68 es dword_4A7E50
-            raceParticipantIngame[v59].dword_4A7E98 += 2;
+             raceParticipantIngame[v58].absolutePositionX_4A7DB4 = raceParticipantIngame[v58].dword_4A7E50 ;//*(_DWORD *)(v58 - 224) = *(_DWORD *)(v58 - 68); // -224 es absolutePositionX_4A7DB4  -68 es dword_4A7E50
+            raceParticipantIngame[v58].dword_4A7E98 += 2;
           }
-          if (raceParticipantIngame[v59].dword_4A7D1C ==1)// *(_DWORD *)(v58 - 376) == 1 ) ////dword_4A7D1c
+          if (raceParticipantIngame[v58].dword_4A7D1C ==1)// *(_DWORD *)(v58 - 376) == 1 ) ////dword_4A7D1c
           {
-           raceParticipantIngame[v59].absolutePositionY_4A7DB8 = raceParticipantIngame[v59].dword_4A7E54;// *(_DWORD *)(v58 - 220) = *(_DWORD *)(v58 - 64); // --220   absolutePositiony_4A7DB8 -64 es dword_4A7E54
-            raceParticipantIngame[v59].dword_4A7E98 += 2;
+           raceParticipantIngame[v58].absolutePositionY_4A7DB8 = raceParticipantIngame[v58].dword_4A7E54;// *(_DWORD *)(v58 - 220) = *(_DWORD *)(v58 - 64); // --220   absolutePositiony_4A7DB8 -64 es dword_4A7E54
+            raceParticipantIngame[v58].dword_4A7E98 += 2;
           }
-          v58 += 864;
+          ++v58;
           --v59;
         }
         while ( v59 );
