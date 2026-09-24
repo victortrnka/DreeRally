@@ -101,22 +101,7 @@ signed int   readKeyboard(char *a1, int a2, int a3, int a4, unsigned int a5, sig
   char v43; // cl@43
   int v44; // ecx@47
   int v45; // eax@47
-  char *v46 =malloc(100); // eax@48
-  char v47; // cl@49
-  int v48; // edx@51
   char v49; // dl@54
-  unsigned int v50; // eax@60
-  char *v51; // edi@60
-  char v52; // cl@61
-  void *v53; // edi@62
-  char *v54; // esi@62
-  char v55; // cl@62
-  int v56; // eax@62
-  signed int v57; // ecx@62
-  char *v58; // esi@63
-  signed int v59; // esi@64
-  int v60; // edi@64
-  unsigned __int8 v61; // [sp+1Ch] [bp-5Ch]@57
   char v62; // [sp+1Dh] [bp-5Bh]@1
   int initialFace; // [sp+20h] [bp-58h]@5
   int v64; // [sp+24h] [bp-54h]@5
@@ -128,6 +113,10 @@ signed int   readKeyboard(char *a1, int a2, int a3, int a4, unsigned int a5, sig
   int v70; // [sp+3Ch] [bp-3Ch]@5
   int v71; // [sp+40h] [bp-38h]@3
   char v72[100]; // [sp+44h] [bp-34h]@1
+  size_t length;
+  int glyphWidth;
+  int row;
+  char glyph[2] = { 0, 0 };
    int  a = 0;
   //aqui se definen las teclas validas
   memset(byte_45EEE0, 0, 0x100u);
@@ -402,80 +391,29 @@ signed int   readKeyboard(char *a1, int a2, int a3, int a4, unsigned int a5, sig
 		  v70 = strlen(v72);
         }
         goto LABEL_66;
-      case 0xE:                 //borrar
-        v46 = v72;
-        v72[strlen(v72)  - 1] = '\0';
-        do
-          v47 = *v46++;
-        while ( v47 );
-        v68 = v46 - &v72[1];
-        if ( v46 == &v72[1] )
+      case 0xE: // Backspace
+        length = strlen(v72);
+        if (length == 0)
           goto LABEL_66;
-        v48 = v67;
-		
-        v10 -= (unsigned __int8)bigLetterSpacing_445848[DEFAULT_BIGLETTER_SPACING_OFFSET+ (unsigned __int8)v72[strlen(v72) - 1]];
-		// v10 -= (unsigned __int8)menuActive_4457F0[58 + (unsigned __int8)v72[strlen(v72) - 1]];
-        v68 = 32;
-        do
-        {
-          memset(
-            (char *)screenBuffer + v48 + v10 + a2,
-            0xC4u,
-            (unsigned __int8)bigLetterSpacing_445848[DEFAULT_BIGLETTER_SPACING_OFFSET+ *((BYTE *)&v71 + strlen(v72) + 3)] + 20);
-          v48 += 640;
-          --v68;
-        }
-        while ( v68 );
-        drawKeyCursor(
-          v10 + v69,
-          (char *)screenBuffer + v67 + v10 + a2,
-          (unsigned __int8)bigLetterSpacing_445848[DEFAULT_BIGLETTER_SPACING_OFFSET+ *((BYTE *)&v71 + strlen(v72) + 3)] + 20,
-          32);
-        v16 = v71;
-        *((BYTE *)&v71 + strlen(v72) + 3) = 0;
+        glyphWidth = (unsigned char)bigLetterSpacing_445848[DEFAULT_BIGLETTER_SPACING_OFFSET + (unsigned char)v72[length - 1]];
+        v72[length - 1] = '\0';
+        v10 -= glyphWidth;
+        for (row = 0; row < 32; ++row)
+          memset((char *)screenBuffer + v69 + row * 640 + v10, 0xC4, glyphWidth + 20);
+        drawKeyCursor(v69 + v10, (char *)screenBuffer + v69 + v10, glyphWidth + 20, 32);
         goto LABEL_65;
       default:
-		
-       
-		  v49 = byte_45EEE0[(unsigned __int8)v15];
-		  if (*(_BYTE *)((unsigned __int8)byte_45EEE0[(unsigned __int8)v15] + a4) == 1 && strlen(v72) < a5 && v10 < a6)
-		  {
-			  v61 = byte_45EEE0[v16];
-			  if ((unsigned __int8)v49 > 0x40u && (unsigned __int8)v49 < 0x5Bu)
-				  v61 = v49 + 32;
-			  v50 = strlen((const char *)&v61) + 1;
-			  v51 = (char *)&v71 + 3;
-			  do
-				  v52 = (v51++)[1];
-			  while (v52);
-			  //memcpy(v51, &v61, 4 * (v50 >> 2));
-			  v54 = (char *)(&v61 + 4 * (v50 >> 2));
-			  v53 = &v51[4 * (v50 >> 2)];
-			  v55 = v50;
-			  v56 = 0;
-			//  memcpy(v53, v54, v55 & 3);
-			  v57 = 32;
-			  do
-			  {
-				//  v58 = (char *)screenBuffer + v56 + v10 + a2;
-				 /* *(_DWORD *)v58 = -993737532;
-				  *((_DWORD *)v58 + 1) = -993737532;
-				  *((_DWORD *)v58 + 2) = -993737532;
-				  *((_DWORD *)v58 + 3) = -993737532;
-				  *((_DWORD *)v58 + 4) = -993737532;
-				  *((_DWORD *)v58 + 5) = -993737532;
-				  *((_DWORD *)v58 + 6) = -993737532;*/
-				  v56 += 640;
-				  --v57;
-				  //*((_DWORD *)v58 + 7) = -993737532;
-			  } while (v57);
-			  v59 = v69 + v10 ;
-			  drawTextWithFont((int)graphics2.fbig3bBpk, (int)&bigLetterSpacing_445848, (const char *)&v61,  v67 + v10 + a2);
-			  //drawTextWithFont((int)fbig3bBpk, (int)&bigLetterSpacing_445848, (const char *)&v61, v58 + v10);
-			  v60 = v61;
-			  drawKeyCursor(v59, (char *)screenBuffer + v67 + v10 + a2, (unsigned __int8)bigLetterSpacing_445848[DEFAULT_BIGLETTER_SPACING_OFFSET+ v61], 40);
-			  v10 += (unsigned __int8)bigLetterSpacing_445848[DEFAULT_BIGLETTER_SPACING_OFFSET+ v60];
-			  memcpy(&v72[strlen(v72)], &v61, 1);
+        v49 = byte_45EEE0[(unsigned char)v15];
+        length = strlen(v72);
+        if (*((unsigned char *)a4 + (unsigned char)v49) == 1 && length < a5 && v10 < a6)
+        {
+          glyph[0] = (v49 >= 'A' && v49 <= 'Z') ? v49 + ('a' - 'A') : v49;
+          glyphWidth = (unsigned char)bigLetterSpacing_445848[DEFAULT_BIGLETTER_SPACING_OFFSET + (unsigned char)glyph[0]];
+          drawTextWithFont((int)graphics2.fbig3bBpk, (int)&bigLetterSpacing_445848, glyph, v69 + v10);
+          drawKeyCursor(v69 + v10, (char *)screenBuffer + v69 + v10, glyphWidth, 40);
+          v72[length] = glyph[0];
+          v72[length + 1] = '\0';
+          v10 += glyphWidth;
 LABEL_65:
           v13 = a9;
         }
