@@ -58,13 +58,13 @@ void *  getMusicStream(char* musicName)
 		if (filePos ==69) {
 			int z = 0;
 		}
-		v6 = (BYTE)fileContent[filePos];
+		v6 = (unsigned __int8)fileContent[filePos];
 		 a1 = v6;
 		 a2 = filePos % 7;
-		 result = (BYTE)a1 << a2;
-		v6 = result | (BYTE)a1 >> (8 - a2);
-		v6 = -109 - (17 * filePos) + (BYTE)v6;
-		v6 = (BYTE)v6;
+		 result = (unsigned __int8)a1 << a2;
+		v6 = result | (unsigned __int8)a1 >> (8 - a2);
+		v6 = -109 - (17 * filePos) + (unsigned __int8)v6;
+		v6 = (unsigned __int8)v6;
 		
 		fileContent[filePos] = v6;
 		++filePos;
@@ -312,7 +312,7 @@ void   loadMusic(int a1, char * music1, int a3, char* soundEffect)
 			do
 			{
 				//96 es 60h huele a que son los instrumentos del xm
-				if (*((BYTE *)musicStream + v8 + 96) >= 0xFEu)
+				if (*((unsigned __int8 *)musicStream + v8 + 96) >= 0xFEu)
 					++v10;
 				musicOrder_45DC60[v8] = v10;
 				dword_45E1E0[v8] = v8 + v10;
