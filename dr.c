@@ -8364,13 +8364,10 @@ int  showSmoke_40F070(int result)
   {
     v3 = v1 + 216 * currentDriverSelectedIndex_503518;
     v4 = dword_4A7EE4[v3];
-	if(debug) v4=10;
     if ( v4 <= 0 )
       goto LABEL_35;
     v5 = leftMenuInRaceWidth_456AA0 + dword_4A7F5C[v3] - circuitImageOffsetX_456ABC;
     v6 = dword_4A7FD4[v3] - circuitImageOffsetY_456AC0;
-	if(debug) v6=100; 
-	if(debug) v5=100;
     if ( v5 >= 4 && v5 + 4 < 320 && v6 >= 4 && v6 + 4 < 200 )
     {
       if ( v4 > 4 || (v2 = 0, v4 > 4) )
