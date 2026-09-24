@@ -16751,10 +16751,9 @@ int  initSystem(double fmodMinVersion, int argc, char **argv, char *args)
   return result;
 }
 
-int   logError(int a1, int a2)
+int logError(int title, int message)
 {
-  return fprintf((FILE *)&iob[0] + 2, aSS, a1, a2);
-  //return fprintf((FILE *)iob[0]._ptr + 2, aSS, a1, a2);
+  return fprintf(stderr, "%s: %s\n", (const char *)title, (const char *)message);
 }
 
 int outOfMemoryError()
