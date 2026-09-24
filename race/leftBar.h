@@ -16,6 +16,7 @@ extern void* sidebom1Bpk_481E04; // idb
 
 // int __usercall drawSmallLeftBar_413C90@<eax>(int a1@<ebx>);
 // int __usercall drawSmallLeftBar_414110@<eax>(int a1@<ebx>);
+int  drawSmallLeftBar_414110(int a1);
 int drawLeftRaceBar_414220();
 int  drawWeaponsBar_43BEF0(int a1, void* a2, unsigned int a3, int a4, char a5);
 int   drawTurboBar_43B3A0(int a1, int a2, int a3, char a4);

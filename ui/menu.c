@@ -19,6 +19,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../asset/haf.h"
+#include "../cars.h"
+#include "creditsScreen.h"
+#include "endGameScreen.h"
+#include "licenseScreen.h"
+#include "loadSaveGameScreen.h"
+#include "raceResultsScreen.h"
+#include "shopScreen.h"
+#include "startGameScreen.h"
+#include "util/bottomText.h"
 
 __int16 word_4636DF; // weak
 __int16 word_446E00 = 8224; // weak

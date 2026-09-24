@@ -17,6 +17,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../sfx/sound.h"
+#include "prevRaceScreen.h"
+#include "raceResultsScreen.h"
+#include "util/bottomText.h"
+#include "util/carRightSide.h"
 
 char byte_461F00[256]; // weak
 int lastCircuitsSelected_456780[3];

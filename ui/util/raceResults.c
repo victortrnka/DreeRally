@@ -12,6 +12,7 @@
 #include "../../drivers.h"
 #include "../../mod/mod.h"
 #include "../../i18n/i18n.h"
+#include "../raceResultsScreen.h"
 
 const  int EASY_RACE=0;
  const int MEDIUM_RACE=1;

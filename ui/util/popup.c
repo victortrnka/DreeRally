@@ -15,6 +15,8 @@
 #include "../../config.h"
 #include "../../variables.h"
 #include "popup.h"
+#include "../../sfx/sound.h"
+#include "../menu.h"
 
 char aASlickSteroidR[30] = "[A slick steroid run, anyone?"; // weak
 _UNKNOWN unk_452DE8; // weak

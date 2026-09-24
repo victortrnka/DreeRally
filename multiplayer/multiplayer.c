@@ -1,3 +1,5 @@
+#include "../dr.h"
+
 /*int multiplayer_415280();
 int   multiplayer_406D30(int a1);
 void   multiplayer_406BE0(char a1);

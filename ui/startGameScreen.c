@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <SDL.h>
+#include "../mod/mod.h"
 
 int textureTemp[0xFFFFFu]; // weak
 

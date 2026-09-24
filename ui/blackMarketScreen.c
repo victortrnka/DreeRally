@@ -16,6 +16,13 @@
 #include "../imageUtil.h"
 #include "util/menus.h"
 #include "util/popup.h"
+#include "../mod/mod.h"
+#include "../sfx/sound.h"
+#include "menu.h"
+#include "prevRaceScreen.h"
+#include "selectRaceScreen.h"
+#include "util/bottomText.h"
+#include "util/carRightSide.h"
 
 _UNKNOWN unk_444160;
  _UNKNOWN unk_45FDC4; // weak;

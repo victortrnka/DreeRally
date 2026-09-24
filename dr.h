@@ -4,10 +4,72 @@
 #include "defs.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <SDL_joystick.h>
 
 
 int __SETS__(int x);
 int __OFSUB__(int x, int y);
+void    errorExitScreen(int a1);
+int   colorToPaletteEntry(int a1, signed int a2);
+signed int autoLoadSave();
+int callRefreshOrExecuteBackgroundFunction_43C8F0();
+int configJoystick();
+int   convertColorToPaletteColor(int a1, int a2);
+void   copyBuffer2Screen(void *a1, const void *a2, int a3);
+void   copyImageToBuffer(int a1, int a2);
+int copyPalette1toPalette();
+void   decryptTexture(int src,  int dest, int startPos, int lenght);
+int   drawBorder_421980(int a1, int a2, int a3, int a4);
+signed int drawCircuitPreviewImage();
+int   drawImageInRace_43B240(int filename, int width, int height, int offset);
+int   drawInRaceImageToBuffer_43B160(int image, int sizex, int sizey, int buffer);
+char drawPopupCursor_42C780 ();
+int   drawSprite_402590(int baseImage, int width, int height, signed int a4, int spriteNumber, int a6, int a7, int a8);
+int drawTransparentBlock(int a1, int a2, int a3, int a4);
+char eventDetected();
+void freeMemoryGraphics();
+void freeMemoryGraphics3();
+void * getArmourBpkById(int armourId);
+void * getCarBpkById(int carId);
+void * getEngineBpkById(int engineId);
+void * getSceneCarBpkById(int carId);
+void * getTireBpkById(int tireId);
+signed int   hasInsuficientMoneyToBuy(int a1);
+void inicializeGraphicVars();
+int  inicializeScreen(double a1);
+signed int isVesaCompatible();
+void loadGraphics3();
+int   loadPaletteMenu();
+void   nullsub_1();
+signed __int64 recalculateSDLTicks_43C740();
+void refreshAllScreen();
+void refreshAndCheckConnection_42A570();
+int refreshScreenWithDelay();
+void removeBackgroundRefreshFunction_43C730();
+SDL_Joystick * SDLConfigureJoystick();
+int   setPaletteAndGetValue(unsigned __int8 pos, unsigned __int8 r, char g, unsigned __int8 b);
+int   setPaletteValue(int pos, int r, int g, int b);
+int   setPaletteValueWithFloats(double a1, double a2, double a3);
+int setWindowCaption();
+int setWindowCaption2();
+int   setWindowCaption3(int a1);
+void showEndAnim_4312D0();
+void   startRace(int a1, int numberOfParticipants);
+char sub_418090();
+int sub_4224E0();
+int   sub_424510(int a1, int a2, int raceId);
+int sub_42A480();
+char sub_42C4A0();
+char   sub_42C560(int a1);
+int   sub_42C7F0(int a1, int a2, int a3, int a4, int a5, int a6);
+int   sub_43B080(int a1, int a2, int a3, int a4, int a5);
+int sub_43C4B0();
+int   sub_43C7E0(int a1, int a2, int a3, signed int a4, char a5);
+int transitionToBlack();
+int transitionToCurrentImage();
+int   updateScreenPtr(int a1);
+int waitWithRefresh();
+unsigned int   writeTextInRace_402510(int a1, const char *a2);
 
 extern char byte_463E00[256]; // weak
 extern _UNKNOWN unk_462096; // weak

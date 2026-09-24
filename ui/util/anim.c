@@ -11,6 +11,7 @@
 #include "../../defs.h"
 #include "anim.h"
 #include "popup.h"
+#include "../blackMarketScreen.h"
 
 //esto es la duracion de los frames para los coches!!!!!
 

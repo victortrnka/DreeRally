@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <SDL.h>
+#include "menu.h"
 
 //----- (004274E0) --------------------------------------------------------
 int showCredits()

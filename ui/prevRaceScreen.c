@@ -16,6 +16,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <SDL.h>
+#include "../sfx/sound.h"
+#include "menu.h"
+#include "raceResultsScreen.h"
+#include "selectRaceScreen.h"
+#include "util/bottomText.h"
+#include "util/carRightSide.h"
 
 char aThisIsIt_Here_[68] = "This is it. Here. Now. In Death Rally, where life is short and hot,"; // weak
 char aFastAndDeadly_[58] = "fast and deadly. The race is on. Watch the road. Hear the"; // weak

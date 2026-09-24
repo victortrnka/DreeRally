@@ -14,6 +14,10 @@
 #include <stdlib.h>
 #include <SDL_stdinc.h>
 #include <string.h>
+#include "../asset/haf.h"
+#include "../sfx/sound.h"
+#include "menu.h"
+#include "util/raceResults.h"
 
 char showEndAnim_463DF8; // weak
 char byte_45FC0F[256]; // weak

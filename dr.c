@@ -55,6 +55,8 @@
 #include "dr.h"
 
 #include <string.h>
+#include "asset/haf.h"
+#include "ui/menu.h"
 
 //-------------------------------------------------------------------------
 // Function declarations

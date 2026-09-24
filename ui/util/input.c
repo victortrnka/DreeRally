@@ -14,6 +14,8 @@
 #include "../../graphics.h"
 #include "menus.h"
 #include "../../dr.h"
+#include "../../sfx/sound.h"
+#include "../menu.h"
 
 
 char byte_45EEE0[256]; // weak

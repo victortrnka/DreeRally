@@ -7,6 +7,7 @@
 #include "dr.h"
 #include "cars.h"
 #include "ui/util/anim.h"
+#include "ui/blackMarketScreen.h"
 
  Driver drivers[20];
  int driverId; // weak

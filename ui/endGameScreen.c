@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <SDL.h>
+#include "../sfx/sound.h"
 
 //----- (00427700) --------------------------------------------------------
 int showEndScreen()

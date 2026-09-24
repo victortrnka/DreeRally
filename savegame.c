@@ -5,6 +5,7 @@
 #include "savegame.h"
 #include "defs.h"
 #include <SDL_stdinc.h>
+#include "util.h"
 
 void *Str; // idb
 int savegames_unk_446DC2 =10;

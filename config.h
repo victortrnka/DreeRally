@@ -79,6 +79,8 @@ int saveConfiguration();
 
 char loadConfig();
 
+int defaultConfig();
+
 //dword_461F20 es la estructura halloffame
 
 #endif

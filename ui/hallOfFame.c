@@ -15,6 +15,8 @@
 #include "../dr.h"
 #include "../circuit.h"
 #include <SDL_stdinc.h>
+#include "../sfx/sound.h"
+#include "util/bottomText.h"
 
 
 

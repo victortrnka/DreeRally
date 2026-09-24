@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../mod/mod.h"
+#include "../sfx/sound.h"
 
 void *anim_currentFrameData; // idb
 BYTE animPalette[768];

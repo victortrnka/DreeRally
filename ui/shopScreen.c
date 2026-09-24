@@ -18,6 +18,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include "../mod/mod.h"
+#include "../sfx/sound.h"
+#include "blackMarketScreen.h"
+#include "menu.h"
+#include "prevRaceScreen.h"
+#include "selectRaceScreen.h"
+#include "util/bottomText.h"
+#include "util/carRightSide.h"
 
 _UNKNOWN unk_444160; // weak
 int dword_4451AC = 163840; // weak

@@ -4,6 +4,7 @@
 #include "../defs.h"
 #include <SDL_stdinc.h>
 #include <math.h>
+#include "../sfx/sound.h"
 
 Powerup powerups[16];
 int dword_456AC4 = 0; // weak

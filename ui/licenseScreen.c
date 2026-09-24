@@ -16,6 +16,9 @@
 #include "../sfx/sound.h"
 #include <stdlib.h>
 #include <string.h>
+#include "menu.h"
+#include "util/anim.h"
+#include "util/bottomText.h"
 
 char aSpeedMakesMeDi[21] = "speed makes me dizzy"; // weak
 char aILiveToRide[15] = "i live to ride"; // weak
