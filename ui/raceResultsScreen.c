@@ -1381,8 +1381,12 @@ int   sub_424240(int a1, float a2, float a3, float a4)
   v19 = 0.1 * a2;
   v17 = 0;
   
-  v5 = ((12 * a1) / 4)-1;
-  //v5 = 12 * a1 + 4586564; //45FC44
+  //v5 = 12 * a1 + 4586564; //0x45FC44; la primera escritura era *(v5 - 4), o sea
+  //0x45FC40 + 12*a1. palette1 empieza en 0x45FD00, asi que el indice es 3*a1 - 48
+  //(a1=64 -> 144, igual que el 144 de sub_418B00). Con el -1 que habia, las rampas de
+  //color de los coches se escribian en entradas equivocadas: los coches salian todos del
+  //mismo color y ademas se pisaban otras entradas de la paleta.
+  v5 = 3 * a1 - 48;
  
   v20 = 0.1 * a3;
   v21 = 0.1 * a4;
@@ -1416,8 +1420,8 @@ int   sub_424240(int a1, float a2, float a3, float a4)
   } while (v4 < 8);*/
   v10 = 0;
   v18 = 0;
-  v11 = (12 * (a1+8) / 4)-1;
-  //v11 = 12 * (a1 + 8) + 4586564;//45FC44
+  //v11 = 12 * (a1 + 8) + 4586564;//0x45FC44; mismo calculo que arriba: 3*(a1+8) - 48
+  v11 = 3 * (a1 + 8) - 48;
   do
   {
     v15 = (double)v18;
