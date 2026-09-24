@@ -424,7 +424,7 @@ int initDrivers()
 	  drivers[index].rank = index + 1; ///esta es la posicion
 	  drivers[index].colour = index+1;
 	  
-  } while (++index < 20);
+  } while (++index < 19); // drivers[19] is the player, set up below
  /* v5 = (signed int)dword_460890;
   do
   {
@@ -478,6 +478,9 @@ int initDrivers()
   drivers[19].tire = 0;
   drivers[19].armour= 0;
   drivers[19].carType = 0;
+  drivers[19].carMoneyCost = cars[0].cost;
+  drivers[19].rank = 20;
+  drivers[19].racesWon = 0;
   drivers[19].totalRaces = 0;
   drivers[19].lastRaceIncome = 0;
   drivers[19].points = 0;
