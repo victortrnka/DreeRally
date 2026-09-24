@@ -6258,13 +6258,16 @@ int balanceIAEngineInRace_40B920()
         }
       }
       result = numberOfParticipants_508D24;
-      ++v1;
-      //v4 += 864;
-	  v4++;
 
+	  //el original escribia sobre el participante actual (*(v3 - 1)) y despues avanzaba el
+	  //puntero. Al incrementar antes, el factor iba al participante siguiente, el 0 nunca se
+	  //actualizaba y la ultima vuelta escribia en raceParticipant2[4], fuera del array.
 	  raceParticipant2[v4].efectiveEngine_4A6884 = v5 * raceParticipant2[v4].efectiveEngineBackup_4A6888;
      // *((float *)v3 - 1) = v5 * *(float *)v3;
       //v3 += 37;
+      ++v1;
+      //v4 += 864;
+	  v4++;
       if ( v1 >= result )
         break;
       result = userRaceOrder_4A9EA8;
