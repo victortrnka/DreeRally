@@ -721,7 +721,6 @@ unsigned int drawStadistics()
   int v86; // edx@69
   int v87; // eax@69
   char *v88; // edx@69
-  int v89; // ecx@69
   int v90; // edi@69
   int v91; // esi@69
   char *v92; // ecx@71
@@ -729,9 +728,8 @@ unsigned int drawStadistics()
   char *v94; // esi@71
   char *v95; // edx@71
   char v96; // al@72
+  int recordIndex; // indice en configuration.circuitRecords (circuito + 18 * tipoDeCoche)
   int v97; // ebx@73
-  int v98; // ecx@73
-  int v99; // ecx@74
   char *v100; // ecx@76
   int v101; // eax@76
   char *v102; // esi@76
@@ -740,7 +738,6 @@ unsigned int drawStadistics()
   char v105; // al@77
   int v106; // edx@78
   int v107; // ecx@78
-  int v108; // eax@78
   char *v109; // edi@80
 //  char v110; // al@81
   char *v111; // edi@84
@@ -1227,13 +1224,16 @@ unsigned int drawStadistics()
     drawTextWithFont(v86, (int)&letterSpacing_4458B0, (const char *)&v173, 246926);
     v87 = 27 * driverId;
     v88 = &circuitsToSelect_46126C[selectedRace_462CE8];
-    v89 = 24 * ((unsigned __int8)circuitsToSelect_46126C[selectedRace_462CE8] + 18 * drivers[driverId].carType);
+    //El original indexaba la tabla de records con &dword_45F04C + 24*indice, pero aqui
+    //dword_45F04C/50/54 son enteros sueltos: eso escribia miles de bytes fuera. La tabla
+    //real es configuration.circuitRecords[circuito + 18*tipoDeCoche] (18*6 entradas de 24 bytes).
+    recordIndex = (unsigned __int8)circuitsToSelect_46126C[selectedRace_462CE8] + 18 * drivers[driverId].carType;
     v90 = currentRaceBestLapSeconds_45EB48;
     v91 = currentRaceBestLapMinutes_463CAC;
-    if ( currentRaceBestLapMilliseconds_461FEC + 100 * (currentRaceBestLapSeconds_45EB48 + 60 * currentRaceBestLapMinutes_463CAC) < *(int *)((char *)&dword_45F054 + v89)
+    if ( currentRaceBestLapMilliseconds_461FEC + 100 * (currentRaceBestLapSeconds_45EB48 + 60 * currentRaceBestLapMinutes_463CAC) < configuration.circuitRecords[recordIndex].cen
                                                                  + 100
-                                                                 * (*(int *)((char *)&dword_45F050 + v89)
-                                                                  + 60 * *(int *)((char *)&dword_45F04C + v89))
+                                                                 * (configuration.circuitRecords[recordIndex].sec
+                                                                  + 60 * configuration.circuitRecords[recordIndex].min)
       && currentRaceBestLapMinutes_463CAC + currentRaceBestLapSeconds_45EB48 + currentRaceBestLapMilliseconds_461FEC )
     {
       v92 = &byte_460840[v87 * 4];
@@ -1255,15 +1255,15 @@ unsigned int drawStadistics()
       v91 = currentRaceBestLapMinutes_463CAC;
 
 	  //esto es de circuit record
-      v98 = 24 * ((unsigned __int8)circuitsToSelect_46126C[selectedRace_462CE8] + 18 * drivers[driverId].carType);
-      *(int *)((char *)&dword_45F04C + v98) = currentRaceBestLapMinutes_463CAC;
-      *(int *)((char *)&dword_45F050 + v98) = v90;
-      *(int *)((char *)&dword_45F054 + v98) = v97;
+      recordIndex = (unsigned __int8)circuitsToSelect_46126C[selectedRace_462CE8] + 18 * drivers[driverId].carType;
+      configuration.circuitRecords[recordIndex].min = currentRaceBestLapMinutes_463CAC;
+      configuration.circuitRecords[recordIndex].sec = v90;
+      configuration.circuitRecords[recordIndex].cen = v97;
     }
-    v99 = 24 * ((unsigned __int8)*v88 + 18 * drivers[driverId].carType);
-    if ( *(int *)((char *)&dword_45F04C + v99)
-       + *(int *)((char *)&dword_45F050 + v99)
-       + *(int *)((char *)&dword_45F054 + v99)
+    recordIndex = (unsigned __int8)*v88 + 18 * drivers[driverId].carType;
+    if ( configuration.circuitRecords[recordIndex].min
+       + configuration.circuitRecords[recordIndex].sec
+       + configuration.circuitRecords[recordIndex].cen
       || currentRaceBestLapMilliseconds_461FEC + 100 * (v90 + 60 * v91) <= 0 )
     {
       v104 = 0;
@@ -1286,10 +1286,10 @@ unsigned int drawStadistics()
       v91 = currentRaceBestLapMinutes_463CAC;
       v106 = currentRaceBestLapMilliseconds_461FEC;
       v107 = currentRaceBestLapSeconds_45EB48;
-      v108 = 24 * ((unsigned __int8)circuitsToSelect_46126C[selectedRace_462CE8] + 18 * drivers[driverId].carType);
-      *(int *)((char *)&dword_45F04C + v108) = currentRaceBestLapMinutes_463CAC;
-      *(int *)((char *)&dword_45F050 + v108) = v107;
-      *(int *)((char *)&dword_45F054 + v108) = v106;
+      recordIndex = (unsigned __int8)circuitsToSelect_46126C[selectedRace_462CE8] + 18 * drivers[driverId].carType;
+      configuration.circuitRecords[recordIndex].min = currentRaceBestLapMinutes_463CAC;
+      configuration.circuitRecords[recordIndex].sec = v107;
+      configuration.circuitRecords[recordIndex].cen = v106;
     }
     SDL_itoa(v91, &v184, 10);
     SDL_itoa(currentRaceBestLapSeconds_45EB48, &v178, 10);
@@ -1386,18 +1386,10 @@ unsigned int drawStadistics()
     v142 = (int)graphicsGeneral.fsma3aBpk;
     memcpy(&v140[4 * (v139 >> 2)], &DstBuf[4 * (v139 >> 2)], v139 & 3);
     drawTextWithFont(v142, (int)&letterSpacing_4458B0, (const char *)&v173, 261646);
-    SDL_itoa(
-      *(&dword_45F04C + 6 * ((unsigned __int8)circuitsToSelect_46126C[selectedRace_462CE8] + 18 * drivers[driverId].carType)),
-      &v184,
-      10);
-    SDL_itoa(
-      *(&dword_45F050 + 6 * ((unsigned __int8)circuitsToSelect_46126C[selectedRace_462CE8] + 18 * drivers[driverId].carType)),
-      &v178,
-      10);
-    SDL_itoa(
-      *(&dword_45F054 + 6 * ((unsigned __int8)circuitsToSelect_46126C[selectedRace_462CE8] + 18 * drivers[driverId].carType)),
-      &v181,
-      10);
+    recordIndex = (unsigned __int8)circuitsToSelect_46126C[selectedRace_462CE8] + 18 * drivers[driverId].carType;
+    SDL_itoa(configuration.circuitRecords[recordIndex].min, &v184, 10);
+    SDL_itoa(configuration.circuitRecords[recordIndex].sec, &v178, 10);
+    SDL_itoa(configuration.circuitRecords[recordIndex].cen, &v181, 10);
     v143 = &v184;
     do
       v144 = *v143++;

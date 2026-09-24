@@ -1282,10 +1282,12 @@ LABEL_160:
 	raceParticipant[3].g = *((BYTE *)v112 + 31);
 	raceParticipant[3].b = *((BYTE *)v112 + 32);
   }
-  v123 = 24 * ((unsigned __int8)circuitsToSelect_46126C[selectedRace_462CE8] + 18 * drivers[v121].carType);
-  circuitRecordMinutes_50A160 = *(int *)((char *)&dword_45F04C + v123);
-  v124 = *(int *)((char *)&dword_45F050 + v123);
-  circuitRecordMilliseconds_4A9B8C = *(int *)((char *)&dword_45F054 + v123);
+  //dword_45F04C/50/54 son enteros sueltos en este puerto; indexarlos con 24*indice leia
+  //fuera de rango. La tabla real es configuration.circuitRecords[circuito + 18*tipoDeCoche].
+  v123 = (unsigned __int8)circuitsToSelect_46126C[selectedRace_462CE8] + 18 * drivers[v121].carType;
+  circuitRecordMinutes_50A160 = configuration.circuitRecords[v123].min;
+  v124 = configuration.circuitRecords[v123].sec;
+  circuitRecordMilliseconds_4A9B8C = configuration.circuitRecords[v123].cen;
   circuitRecordSeconds_501260 = v124;
   Val = 0;
   if ( isMultiplayerGame )
