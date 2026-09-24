@@ -9186,8 +9186,6 @@ int recalculateCarBoundary_411D10()
         --raceParticipantIngame[ v1].dword_4A8054;
         v7 = raceParticipantIngame[ v1].carVelocity_4A7DB0;
         v8 = (double)v7;
-        v9 = raceParticipantIngame[v1].lastFrontLeftAbsoluteXPosition_4A7E18;
-        v10 = raceParticipantIngame[v1].lastFrontLeftAbsoluteYPosition_4A7E1C;
         v11 = raceParticipantIngame[v1].frontLeftAbsoluteXPosition_4A7E10 - raceParticipantIngame[v1].lastFrontLeftAbsoluteXPosition_4A7E18;
         dword_481BE8 = 0;
         v159 = v11 / v8;
@@ -9199,21 +9197,17 @@ int recalculateCarBoundary_411D10()
         v171 = (raceParticipantIngame[v1].backRightAbsoluteXPosition_4A7E40 - raceParticipantIngame[v1].lastBackRightAbsoluteXPosition_4A7E48) / v8;
         for ( i = (raceParticipantIngame[v1].backRightAbsoluteYPosition_4A7E44 - raceParticipantIngame[v1].lastBackRightAbsoluteYPosition_4A7E4C) / v8; dword_481BE8 < v7; ++dword_481BE8 )
         {
-          v12 = raceParticipantIngame[v1].lastFrontLeftAbsoluteXPosition_4A7E18;//(unsigned __int64)*(float *)v9;
-          v13 = raceParticipantIngame[v1].lastFrontLeftAbsoluteXPosition_4A7E18;//*(float *)v9;
-          v15 = raceParticipantIngame[v1].lastFrontLeftAbsoluteXPosition_4A7E18;//*(float *)v9;
-		  if(raceParticipantIngame[v1].lastFrontLeftAbsoluteYPosition_4A7E1C!=0.0)
-			  v15 = v15 + 1.0;
-         /*TODO FIX esto esta sin inicializar if ( !v16 )
-            v15 = v15 + 1.0;*/
+          //Las cuatro esquinas se leen igual: antes la primera se tomaba como int y las
+          //otras tres se reinterpretaban con *(float*)&, y los "if (!x) x = x + 1.0"
+          //comparaban campos que no correspondian. Ahora los campos son float y el
+          //ajuste sigue el mismo patron que el bloque de derrapes de mas abajo.
+          v15 = raceParticipantIngame[v1].lastFrontLeftAbsoluteXPosition_4A7E18;
+          if ( !v15 )
+            v15 = v15 + 1.0;
           v17 = (unsigned __int64)v15;
-          v18 = raceParticipantIngame[v1].lastFrontLeftAbsoluteYPosition_4A7E1C;//(unsigned __int64)*(float *)v10;
-          v19 = raceParticipantIngame[v1].lastFrontLeftAbsoluteYPosition_4A7E1C;//*(float *)v10;
-          v21 = raceParticipantIngame[v1].lastFrontLeftAbsoluteYPosition_4A7E1C;//*(float *)v10;
-          if(raceParticipantIngame[v1].frontRightAbsoluteXPosition_4A7E20!=0.0)
-			  v21 = v21 + 1.0;
-		  /*TODO FIX esto esta sin inicializarif ( !v22 )
-            v21 = v21 + 1.0;*/
+          v21 = raceParticipantIngame[v1].lastFrontLeftAbsoluteYPosition_4A7E1C;
+          if ( !v21 )
+            v21 = v21 + 1.0;
           v23 = v17 + circuitWidth_464F40 * (unsigned __int64)v21;
           if ( (*((BYTE *)trxImaBpk_50A16C + v23) & 0xF) == 15 )
           {
@@ -9225,18 +9219,14 @@ int recalculateCarBoundary_411D10()
                                                                             + v23
                                                                             + 1)];
           }
-		  v24 = (unsigned __int64)*(float *)&raceParticipantIngame[currentDriverSelectedIndex_503518].lastFrontRightAbsoluteXPosition_4A7E28;
-          v25 = raceParticipantIngame[currentDriverSelectedIndex_503518].lastFrontRightAbsoluteXPosition_4A7E28;
-          v27 = *(float *)&raceParticipantIngame[currentDriverSelectedIndex_503518].lastFrontRightAbsoluteXPosition_4A7E28;
-          
-		  /*TODO FIX esto esta sin inicializarif ( !v28 )
-            v27 = v27 + 1.0;*/
+
+          v27 = raceParticipantIngame[v1].lastFrontRightAbsoluteXPosition_4A7E28;
+          if ( !v27 )
+            v27 = v27 + 1.0;
           v29 = (unsigned __int64)v27;
-		  v30 = (unsigned __int64)*(float *)&raceParticipantIngame[currentDriverSelectedIndex_503518].lastFrontRightAbsoluteYPosition_4A7E2C;
-		  v31 = raceParticipantIngame[currentDriverSelectedIndex_503518].lastFrontRightAbsoluteYPosition_4A7E2C;
-		  v33 = *(float *)&raceParticipantIngame[currentDriverSelectedIndex_503518].lastFrontRightAbsoluteYPosition_4A7E2C;
-          /*TODO FIX esto esta sin inicializarif ( !v34 )
-            v33 = v33 + 1.0;*/
+          v33 = raceParticipantIngame[v1].lastFrontRightAbsoluteYPosition_4A7E2C;
+          if ( !v33 )
+            v33 = v33 + 1.0;
           v35 = v29 + circuitWidth_464F40 * (unsigned __int64)v33;
           if ( (*((BYTE *)trxImaBpk_50A16C + v35) & 0xF) == 15 )
           {
@@ -9248,17 +9238,14 @@ int recalculateCarBoundary_411D10()
                                                                             + v35
                                                                             + 1)];
           }
-		  v36 = (unsigned __int64)*(float *)&raceParticipantIngame[currentDriverSelectedIndex_503518].lastBackLeftAbsoluteXPosition_4A7E38;
-          v37 = raceParticipantIngame[currentDriverSelectedIndex_503518].lastBackLeftAbsoluteXPosition_4A7E38;
-          v39 = *(float *)&raceParticipantIngame[currentDriverSelectedIndex_503518].lastBackLeftAbsoluteXPosition_4A7E38;
-          /*TODO FIX esto esta sin inicializarif ( !v40 )
-            v39 = v39 + 1.0;*/
+
+          v39 = raceParticipantIngame[v1].lastBackLeftAbsoluteXPosition_4A7E38;
+          if ( !v39 )
+            v39 = v39 + 1.0;
           v41 = (unsigned __int64)v39;
-		  v42 = (unsigned __int64)*(float *)&raceParticipantIngame[currentDriverSelectedIndex_503518].lastBackLeftAbsoluteYPosition_4A7E3C;
-		  v43 =raceParticipantIngame[currentDriverSelectedIndex_503518].lastBackLeftAbsoluteYPosition_4A7E3C;
-		  v45 = *(float *)&raceParticipantIngame[currentDriverSelectedIndex_503518].lastBackLeftAbsoluteYPosition_4A7E3C;
-          /*TODO FIX esto esta sin inicializarif ( !v46 )
-            v45 = v45 + 1.0;*/
+          v45 = raceParticipantIngame[v1].lastBackLeftAbsoluteYPosition_4A7E3C;
+          if ( !v45 )
+            v45 = v45 + 1.0;
           v47 = v41 + circuitWidth_464F40 * (unsigned __int64)v45;
           if ( (*((BYTE *)trxImaBpk_50A16C + v47) & 0xF) == 15 )
           {
@@ -9270,17 +9257,14 @@ int recalculateCarBoundary_411D10()
                                                                             + v47
                                                                             + 1)];
           }
-		  v48 = (unsigned __int64)*(float *)&raceParticipantIngame[currentDriverSelectedIndex_503518].lastBackRightAbsoluteXPosition_4A7E48;
-		  v49 = raceParticipantIngame[currentDriverSelectedIndex_503518].lastBackRightAbsoluteXPosition_4A7E48;
-		  v51 = *(float *)&raceParticipantIngame[currentDriverSelectedIndex_503518].lastBackRightAbsoluteXPosition_4A7E48;
-          /*TODO FIX esto esta sin inicializarif ( !v52 )
-            v51 = v51 + 1.0;*/
+
+          v51 = raceParticipantIngame[v1].lastBackRightAbsoluteXPosition_4A7E48;
+          if ( !v51 )
+            v51 = v51 + 1.0;
           v53 = (unsigned __int64)v51;
-		  v54 = (unsigned __int64)*(float *)&raceParticipantIngame[currentDriverSelectedIndex_503518].lastBackRightAbsoluteYPosition_4A7E4C;
-		  v55 = raceParticipantIngame[currentDriverSelectedIndex_503518].lastBackRightAbsoluteYPosition_4A7E4C;
-		  v57 = *(float *)&raceParticipantIngame[currentDriverSelectedIndex_503518].lastBackRightAbsoluteYPosition_4A7E4C;
-          /*TODO FIX esto esta sin inicializarif ( !v58 )
-            v57 = v57 + 1.0;*/
+          v57 = raceParticipantIngame[v1].lastBackRightAbsoluteYPosition_4A7E4C;
+          if ( !v57 )
+            v57 = v57 + 1.0;
           v59 = v53 + circuitWidth_464F40 * (unsigned __int64)v57;
           if ( (*((BYTE *)trxImaBpk_50A16C + v59) & 0xF) == 15 )
           {
@@ -9292,11 +9276,9 @@ int recalculateCarBoundary_411D10()
                                                                             + v59
                                                                             + 1)];
           }
-          v60 = 864 * currentDriverSelectedIndex_503518;
+
 		  (raceParticipantIngame[currentDriverSelectedIndex_503518].lastFrontLeftAbsoluteXPosition_4A7E18) = v159 + raceParticipantIngame[currentDriverSelectedIndex_503518].lastFrontLeftAbsoluteXPosition_4A7E18;
-		  v9 = raceParticipantIngame[currentDriverSelectedIndex_503518].lastFrontLeftAbsoluteXPosition_4A7E18;
 		  (raceParticipantIngame[currentDriverSelectedIndex_503518].lastFrontLeftAbsoluteYPosition_4A7E1C) = v161 + (raceParticipantIngame[currentDriverSelectedIndex_503518].lastFrontLeftAbsoluteYPosition_4A7E1C);
-		  v10 = &raceParticipantIngame[currentDriverSelectedIndex_503518].lastFrontLeftAbsoluteYPosition_4A7E1C;
           (raceParticipantIngame[currentDriverSelectedIndex_503518].lastFrontRightAbsoluteXPosition_4A7E28) = v163 + (raceParticipantIngame[currentDriverSelectedIndex_503518].lastFrontRightAbsoluteXPosition_4A7E28);
 		  (raceParticipantIngame[currentDriverSelectedIndex_503518].lastFrontRightAbsoluteYPosition_4A7E2C) = v165 + (raceParticipantIngame[currentDriverSelectedIndex_503518].lastFrontRightAbsoluteYPosition_4A7E2C);
           (raceParticipantIngame[currentDriverSelectedIndex_503518].lastBackLeftAbsoluteXPosition_4A7E38) = v167 + (raceParticipantIngame[currentDriverSelectedIndex_503518].lastBackLeftAbsoluteXPosition_4A7E38);
