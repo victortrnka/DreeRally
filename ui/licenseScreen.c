@@ -146,30 +146,13 @@ int   licenseScreen(int useWeapons_mal)
   sub_418090();
   //v17 = &byte_460840[108 * driverId];
   //v18 = &byte_460840[108 * driverId];
-  v17 = (char *)&drivers[driverId];
-  v18 = (char *)&drivers[driverId];
-
- 
-  do
-  {
-    v19 = *v18;
-    v18[v61 - v17] = *v18;
-    ++v18;
-  }
-  while ( v19 );
+  v17 = drivers[driverId].name;
+  memcpy(v61, v17, sizeof(drivers[driverId].name));
   *v17 = 0;
   if ( !readKeyboard(v17, 173, 208, (int)&unk_4455B0_2, 0xAu, 300, 0, 1, 1) )
   {
     loadMenuSoundEffect(1u, 25, 0, configuration.effectsVolume, dword_445194);
-    v47 = v61;
-    v48 = (char *)&drivers[driverId - (signed int)v61];
-    do
-    {
-      v49 = *v47;
-      v48[(_DWORD)v47] = *v47;
-      ++v47;
-    }
-    while ( v49 );
+    memcpy(drivers[driverId].name, v61, sizeof(drivers[driverId].name));
     v46 = 0;
     goto LABEL_86;
   }
