@@ -14661,11 +14661,6 @@ int sub_42D780()
 //----- (004312D0) --------------------------------------------------------
 void showEndAnim_4312D0()
 {
-  unsigned int v0; // eax@2
-  char *v1; // edi@2
-  char v2; // cl@3
-  char *v3; // edi@5
-  char v4; // al@6
   FILE *v5; // eax@7
   FILE *v6; // esi@7
   __int32 v7; // edi@8
@@ -14685,27 +14680,13 @@ void showEndAnim_4312D0()
   int v21; // ST18_4@12
   int v22; // eax@12
   int v23; // [sp+1Ch] [bp-68h]@2
-  char Filename; // [sp+20h] [bp-64h]@1
+  char Filename[100]; // [sp+20h] [bp-64h]@1
 
-  Filename = 0;
+  Filename[0] = 0;
   if ( byte_462D50 == 2 )
-  {
-    v0 = strlen(byte_45FAA0) + 1;
-    v1 = (char *)&v23 + 3;
-    do
-      v2 = (v1++)[1];
-    while ( v2 );
-    memcpy(v1, byte_45FAA0, v0);
-  }
-  v3 = (char *)&v23 + 3;
-  do
-    v4 = (v3++)[1];
-  while ( v4 );
-  *(_DWORD *)v3 = 1633971813;
-  *((_DWORD *)v3 + 1) = 1747872110;
-  *((_WORD *)v3 + 4) = 26209;
-  v3[10] = 0;
-  v5 = fopen(&Filename, "rb");
+    strcat(Filename, byte_45FAA0);
+  strcat(Filename, "endani.haf");
+  v5 = fopen(Filename, "rb");
   v6 = v5;
   if ( v5 )
   {
