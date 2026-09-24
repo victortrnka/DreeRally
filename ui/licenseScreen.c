@@ -90,8 +90,7 @@ int   licenseScreen(int useWeapons_mal)
   __int16 v59; // [sp+24h] [bp-24h]@9
   
   char v61[120]; // [sp+3Ch] [bp-Ch]@16
-  char* DstBuf; // [sp+30h] [bp-18h]@9
-  DstBuf = (char*)malloc(0x1000);
+  char price[32];
   extractFromBpa("MENU.BPA", tsahpeBpk_45EB5C, (int)"licence3.bpk");
   copyImageToBuffer((int)tsahpeBpk_45EB5C, (int)textureTemp);
   carAnimCurrentFrame_45FBA0 = 0;
@@ -130,18 +129,10 @@ int   licenseScreen(int useWeapons_mal)
   }
   drawImageWithPosition2((int)carbas2Bpk, 96, 96, (int)((char *)screenBuffer + 113119));
   drawImageWithPosition2((int)carnameBpk, 96, 16, (int)((char *)screenBuffer + 113119));
-  SDL_itoa(cars[0].cost, &DstBuf, 10);
-
-   //v8 = strlen(&DstBuf) + 1;
-
-	v9 = malloc(v3); //coste + el $
-	strcpy(v9,"$"); /* copy name into the new var */
-	strcat(v9, &DstBuf);
-
-  v11 = getBoxTextOffset(v9);
-  drawInGamePrices(v9, v11 + 165599);
+  snprintf(price, sizeof(price), "$%d", cars[0].cost);
+  v11 = getBoxTextOffset(price);
+  drawInGamePrices(price, v11 + 165599);
   v12 = 0;
-  free(v9);
   for ( j = 0; j < carAnimCurrentFrame_45FBA0; ++j )
     v12 += carAnimFrameSize_45FBA0[j];
   copyImageToBuffer((int)((char *)kuplaBpk + v12), (int)dword_461EA4);
@@ -200,16 +191,9 @@ int   licenseScreen(int useWeapons_mal)
   drawImageWithPosition2((int)*(&graphicsGeneral.face01Bpk + drivers[driverId].face), 64, 64, (int)((char *)screenBuffer + 122330));
   drawImageWithPosition2((int)carbas2Bpk, 96, 96, (int)((char *)screenBuffer + 113119));
   drawImageWithPosition2((int)carnameBpk, 96, 16, (int)((char *)screenBuffer + 113119));
-  SDL_itoa(cars[0].cost, &DstBuf, 10);
-  v59 = 36;
-  v21 = strlen(&DstBuf) + 1;
-  v22 = (char *)&v58 + 3;
-  do
-    v23 = (v22++)[1];
-  while ( v23 );
-  memcpy(v22, &DstBuf, v21);
-  v24 = getBoxTextOffset((const char *)&v59);
-  drawInGamePrices((const char *)&v59, v24 + 165599);
+  snprintf(price, sizeof(price), "$%d", cars[0].cost);
+  v24 = getBoxTextOffset(price);
+  drawInGamePrices(price, v24 + 165599);
   drawMenuAnimation(479, 192, carAnimCurrentFrame_45FBA0, (int)kuplaBpk, (int)carAnimFrameSize_45FBA0);
   drawKeyCursor(123359, (char *)screenBuffer + 123359, 0x60u, 64);
   carAnimCurrentFrame_45FBA0 = (carAnimCurrentFrame_45FBA0 + 1) % 64;
