@@ -2755,7 +2755,7 @@ int drawToBlackScreen()
         (unsigned __int64)((double)circuitPalette_4B4020[v1+2]* (v4 * 0.025)));
       v1 += 3;
       ++v0;
-	} while (v1 < maxPaletteEntries + 1 );
+	} while (v1 < maxPaletteEntries );
 	//}while (v1 < (signed int)((char *)trxSCE2Bpk_4B4320 + 1));
     waitWithRefresh();
     setMusicVolume((unsigned __int64)(v4 * 1638.4));
@@ -2797,7 +2797,7 @@ int setCircuitPalette_4B4020()
     ++v0;
    // v1 = (char *)v1 + 12;
   }
-  while (v2 < maxPaletteEntries + 1);
+  while (v2 < maxPaletteEntries);
   //while ( v2 < (signed int)((char *)trxSCE2Bpk_4B4320 + 1) );
   return result;
 }
@@ -2829,7 +2829,7 @@ int setCircuitPaletteBis_4B4020()
     v1 += 3;
    // v0 = (char *)v0 + 12;
   }
-  while (v1 < maxPaletteEntries + 1);
+  while (v1 < maxPaletteEntries);
   //while ( v1 < (signed int)((char *)trxSCE2Bpk_4B4320 + 1) );
   return result;
 }
@@ -2862,7 +2862,7 @@ int setCircuitPaletteTransitionToBlack_4B4020()
     //v1 = (char *)v1 + 3;
 	v1 += 3;
     ++v7;
-	if (v1 > 768)
+	if (v1 >= maxPaletteEntries)
 		break;
 
     //if ( v2 >= (signed int)&dword_50FB44 )
@@ -2897,7 +2897,7 @@ int setCircuitPaletteTransitionToOriginal_4B4020()
     result = setPaletteAndGetValue(v1, v3, v4, (v5 + 0x8000) >> 16);
     v2 += 3;
     ++v1;
-	if (v2 > 768)
+	if (v2 >= maxPaletteEntries)
 		break;
     //if ( v2 >= (signed int)&dword_50FB44 )
       //break;
