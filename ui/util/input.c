@@ -187,7 +187,7 @@ signed int   readKeyboard(char *a1, int a2, int a3, int a4, unsigned int a5, sig
   {
     do
 	
-      v10 += (unsigned __int8)bigLetterSpacing_445848[DEFAULT_BIGLETTER_SPACING_OFFSET+ (unsigned __int8)v72[v11++]];
+      v10 += (unsigned __int8)bigLetterSpacing_445848[(unsigned __int8)v72[v11++] - 30];
 	  //v10 += (unsigned __int8)menuActive_4457F0[58 + (unsigned __int8)v72[v11++]];
     while ( v11 < strlen(v72) );
   }
@@ -395,7 +395,7 @@ signed int   readKeyboard(char *a1, int a2, int a3, int a4, unsigned int a5, sig
         length = strlen(v72);
         if (length == 0)
           goto LABEL_66;
-        glyphWidth = (unsigned char)bigLetterSpacing_445848[DEFAULT_BIGLETTER_SPACING_OFFSET + (unsigned char)v72[length - 1]];
+        glyphWidth = (unsigned char)bigLetterSpacing_445848[(unsigned char)v72[length - 1] - 30];
         v72[length - 1] = '\0';
         v10 -= glyphWidth;
         for (row = 0; row < 32; ++row)
@@ -408,7 +408,8 @@ signed int   readKeyboard(char *a1, int a2, int a3, int a4, unsigned int a5, sig
         if (*((unsigned char *)a4 + (unsigned char)v49) == 1 && length < a5 && v10 < a6)
         {
           glyph[0] = (v49 >= 'A' && v49 <= 'Z') ? v49 + ('a' - 'A') : v49;
-          glyphWidth = (unsigned char)bigLetterSpacing_445848[DEFAULT_BIGLETTER_SPACING_OFFSET + (unsigned char)glyph[0]];
+          // The font header occupies two bytes; glyph widths start at ASCII 32.
+          glyphWidth = (unsigned char)bigLetterSpacing_445848[(unsigned char)glyph[0] - 30];
           for (row = 0; row < 32; ++row)
             memset((char *)screenBuffer + v69 + row * 640 + v10, 0xC4, 32);
           drawTextWithFont((int)graphics2.fbig3bBpk, (int)&bigLetterSpacing_445848, glyph, v69 + v10);
