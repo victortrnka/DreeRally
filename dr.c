@@ -12872,8 +12872,10 @@ signed int   hasInsuficientMoneyToBuy(int a1)
   char *v6; // edi@6
   char v7; // al@7
   signed int result; // eax@8
-  char *DstBuf = malloc(100); // [sp+4h] [bp-34h]@4
-  char *money = malloc(100); // [sp+4h] [bp-34h]@4
+  //Eran dos malloc que se perdian en las dos salidas de la funcion; como buffers locales
+  //no hay fuga y ademas DstBuf pasa a ser escribible (ver abajo).
+  char DstBuf[100];
+  char money[32];
   char v10; // [sp+17h] [bp-21h]@4
   int v11; // [sp+18h] [bp-20h]@4
   int v12; // [sp+1Ch] [bp-1Ch]@4
