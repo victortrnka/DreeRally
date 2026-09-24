@@ -409,6 +409,8 @@ signed int   readKeyboard(char *a1, int a2, int a3, int a4, unsigned int a5, sig
         {
           glyph[0] = (v49 >= 'A' && v49 <= 'Z') ? v49 + ('a' - 'A') : v49;
           glyphWidth = (unsigned char)bigLetterSpacing_445848[DEFAULT_BIGLETTER_SPACING_OFFSET + (unsigned char)glyph[0]];
+          for (row = 0; row < 32; ++row)
+            memset((char *)screenBuffer + v69 + row * 640 + v10, 0xC4, 32);
           drawTextWithFont((int)graphics2.fbig3bBpk, (int)&bigLetterSpacing_445848, glyph, v69 + v10);
           drawKeyCursor(v69 + v10, (char *)screenBuffer + v69 + v10, glyphWidth, 40);
           v72[length] = glyph[0];
