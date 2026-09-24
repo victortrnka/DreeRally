@@ -5629,7 +5629,10 @@ int calculateCircuitReversed_40A9A0()
     raceParticipantIngame[v35].absolutePositionY_4A7DB8 = (double)(v39 - 1);
     if ( v27 )
       raceParticipantIngame[v35].directionRotation_4A7D0C = v40 + 95;
-    v41 = 1600 * raceParticipantIngame[v35].directionRotation_4A7D0C;
+    //cada participante tiene su propio banco de 96 rotaciones dentro de participantCarBpk.
+    //Sin el 96*v35 los cuatro coches apuntaban al banco del participante 0 y en la parrilla
+    //de los circuitos invertidos salian los cuatro identicos hasta el primer tick de fisica.
+    v41 = 1600 * (raceParticipantIngame[v35].directionRotation_4A7D0C + 96 * v35);
     v42 = raceParticipantIngame[v35].directionRotation_4A7D0C * 3.75;
     raceParticipantIngame[v35].carAngle_4A7DAC = v42;
     raceParticipantIngame[v35].flt_4A7E58 = v42;
