@@ -588,8 +588,12 @@ int drawLeftRaceBar_414220()
     }
     else if (ticksToPauseLapTimeInHud_4A9EB0 <= 0)
     {
-        v57 = (signed int)(currentLapTime_481E0C / 70 + ((unsigned int)(-2004318071 * (currentLapTime_481E0C / 70)) >> 32)) >> 5;
-        drawSprite_402590((int)&smalfo4aBpk_4A9160, 6, 6, v57 + ((unsigned int)v57 >> 31), 16, leftMenuInRaceWidth_456AA0 + 22587, -6, 0);
+        // El original dividia por 60 con la multiplicacion magica 0x88888889. Al quedar en
+        // 32 bits, el ">> 32" desplaza mas que el ancho del tipo (C4293): en x86 el contador
+        // se enmascara a 5 bits, o sea ">> 0", y los minutos salian mal. La rama de abajo,
+        // con lastCompletedLapTime, ya hace la division directa.
+        v57 = currentLapTime_481E0C / 70 / 60;
+        drawSprite_402590((int)&smalfo4aBpk_4A9160, 6, 6, v57, 16, leftMenuInRaceWidth_456AA0 + 22587, -6, 0);
         drawSprite_402590((int)&smalfo4aBpk_4A9160, 6, 6, currentLapTime_481E0C / 70 % 60, 16, leftMenuInRaceWidth_456AA0 + 22601, 6, 0);
         drawSprite_402590((int)&smalfo4aBpk_4A9160, 6, 6, (unsigned __int64)((double)(currentLapTime_481E0C % 70) * 1.42), 16, leftMenuInRaceWidth_456AA0 + 22615, 6, 0);
     }
