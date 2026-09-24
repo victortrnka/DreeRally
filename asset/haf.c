@@ -293,12 +293,6 @@ void decryptAnimFrame()
 void   openAnimation(const char *animFile, int a2, char * music, int a4, char * effect, char onKeyPressExit, char screenResolution)
 {
 	
-  unsigned int v7; // eax@2
-  char *v8; // edi@2
-  char v9; // cl@3
-  unsigned int v10; // eax@5
-  char *v11; // edi@5
-  char v12; // cl@6
 //  void *v13 =malloc(0xFA00u); // eax@7
   void *v14 = malloc(0xFA00u); // eax@7
   int (  *v15)(FILE *); // ebx@11
@@ -330,7 +324,7 @@ void   openAnimation(const char *animFile, int a2, char * music, int a4, char * 
   signed int v41; // esi@37
   signed int v42; // esi@39
   int v43; // [sp+Ch] [bp-404h]@1
-  char Filename; // [sp+10h] [bp-400h]@1
+  char Filename[256]; // [sp+10h] [bp-400h]@1
   char *v45 = malloc(768); // [sp+110h] [bp-300h]@17
   //char v46; // [sp+111h] [bp-2FFh]@17
   int frames;
@@ -343,22 +337,10 @@ void   openAnimation(const char *animFile, int a2, char * music, int a4, char * 
       return;
   }
   v43 = 1;
-  Filename = 0;
+  Filename[0] = 0;
   if ( byte_462D50 == 2 )
-  {
-    v7 = strlen(byte_45FAA0) + 1;
-    v8 = (char *)&v43 + 3;
-    do
-      v9 = (v8++)[1];
-    while ( v9 );
-    memcpy(v8, byte_45FAA0, v7);
-  }
-  v10 = strlen(animFile) + 1;
-  v11 = (char *)&v43 + 3;
-  do
-    v12 = (v11++)[1];
-  while ( v12 );
-  memcpy(v11, animFile, v10);
+    strcat(Filename, byte_45FAA0);
+  strcat(Filename, animFile);
   //allocateMemory(0xFA00u);
   //allocateMemoryPtr((void*)&v13,0xFA00u); //esto huele a un frame
   anim_currentFrameData = malloc(0xFA00u);
