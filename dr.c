@@ -10819,8 +10819,17 @@ if ( isCircuitReversed_456AA8 )
 	  if(raceParticipantIngame[v47 ].lastKeysRead_4A7D60[raceParticipantIngame[ userRaceOrder_4A9EA8].lastKeysReadPreviousIndex_4A7DA4]==0x40u){
 		  debug=1;
 		  }
-		raceParticipantIngame[dword_503510 + v47 - v46++].dword_4A7D1C = raceParticipantIngame[v47 ].lastKeysRead_4A7D60[raceParticipantIngame[ userRaceOrder_4A9EA8].lastKeysReadPreviousIndex_4A7DA4];
-		if(debug) raceParticipantIngame[v47 ].dword_4A7D20[dword_503510- v46++] = raceParticipantIngame[v47].lastKeysRead_4A7D60[raceParticipantIngame[ userRaceOrder_4A9EA8].lastKeysReadPreviousIndex_4A7DA4];
+		//Aqui habia dos escrituras. La primera indexaba raceParticipantIngame con
+		//"dword_503510 + v47 - v46", que se sale del array de 4 participantes, y encima
+		//escribia en dword_4A7D1C (bandera de choque en Y) en lugar del buffer de teclas.
+		//Ademas cada una incrementaba v46, asi que se consumian dos posiciones por vuelta
+		//y con mas de un frame por tick se perdian entradas. Queda solo la correcta.
+		{
+			int frameSlot = dword_503510 - 1 - v46;
+			int keySlot = raceParticipantIngame[userRaceOrder_4A9EA8].lastKeysReadPreviousIndex_4A7DA4;
+			raceParticipantIngame[v47].dword_4A7D20[frameSlot] = raceParticipantIngame[v47].lastKeysRead_4A7D60[keySlot];
+			++v46;
+		}
 
       }
       while ( v46 < dword_503510 );
