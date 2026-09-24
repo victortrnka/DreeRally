@@ -226,7 +226,9 @@ LABEL_11:
     }
   }
   //while (v17 < (signed int)&unk_4A7BF0);
-  postRaceMain(1, v26, v27);
+  //v26/v27 estaban sin inicializar. postRaceMain solo usa argc; el resto de las llamadas
+  //ya pasan cadenas vacias, asi que se hace lo mismo aqui.
+  postRaceMain(1, (const char **)"", (const char **)"");
   //result = 0;
   result = getMaxDriverPoints(driverId);
   if ( isMultiplayerGame

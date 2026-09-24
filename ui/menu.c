@@ -2022,7 +2022,8 @@ char seeStadistics_42C940()
   //esto es mio 
   v26 = malloc(10);
   v25 = malloc(10);
-  postRaceMain(2, v25, v26);
+  //mismo caso: postRaceMain solo mira argc, y v25/v26 no estaban inicializados.
+  postRaceMain(2, (const char **)"", (const char **)"");
   memcpy(screenBuffer, graphicsGeneral.menubg5Bpk, 0x4B000u);
   drawMenu(INITIAL_MENU, 0);
   drawMenu(START_NEW_GAME_MENU, 1);
