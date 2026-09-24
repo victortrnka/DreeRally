@@ -12917,7 +12917,11 @@ signed int   hasInsuficientMoneyToBuy(int a1)
     do
       v7 = (v6++)[1];
     while ( v7 );*/
-    DstBuf = "Honey. [You are ";
+    //Aqui estaba el fallo al intentar comprar algo sin dinero suficiente: DstBuf se
+    //reasignaba a un literal de cadena (memoria de solo lectura) y despues se le hacian
+    //dos strcat encima. Eso escribe fuera del literal y sobre una pagina no escribible;
+    //el resultado era corrupcion de pila y el juego se cerraba.
+    strcpy(DstBuf, "Honey. [You are ");
     _itoa(a1 - drivers[driverId].money, money, 10);
     strcat(DstBuf, money);
     strcat(DstBuf, "$ short.");
