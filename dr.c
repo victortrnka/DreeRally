@@ -12188,7 +12188,7 @@ int   setPaletteValueWithFloats(double a1, double a2, double a3)
 }
 
 //----- (00418B00) --------------------------------------------------------
-int   sub_418B00(double a1, double a2, double a3)
+int   sub_418B00(float a1, float a2, float a3)
 {
   signed int v3; // edi@1
 //  _UNKNOWN *v4; // esi@1

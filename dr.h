@@ -56,6 +56,7 @@ int   setWindowCaption3(int a1);
 void showEndAnim_4312D0();
 void   startRace(int a1, int numberOfParticipants);
 char sub_418090();
+int   sub_418B00(float a1, float a2, float a3);
 int sub_4224E0();
 int   sub_424510(int a1, int a2, int raceId);
 int sub_42A480();
