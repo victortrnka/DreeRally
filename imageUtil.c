@@ -1,3 +1,4 @@
+#include "imageUtil.h"
 
 
 #include "graphics.h"
