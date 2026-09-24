@@ -153,11 +153,6 @@ int   postRaceMain(int argc, const char **argv, const char **envp)
   int v29; // ST34_4@18
   int v30; // ST30_4@18
   int v31; // eax@18
-  unsigned int v32; // eax@22
-  void *v33; // edi@22
-  char v34; // cl@23
-  char *v35; // edi@25
-  char v36; // al@26
   FILE *v37; // eax@27
   FILE *v38; // esi@27
   __int32 v39; // edi@28
@@ -199,11 +194,6 @@ int   postRaceMain(int argc, const char **argv, const char **envp)
   int v75; // ST34_4@84
   int v76; // ST30_4@84
   int v77; // eax@84
-  unsigned int v78; // eax@88
-  void *v79; // edi@88
-  char v80; // cl@89
-  char *v81; // edi@91
-  char v82; // al@92
   FILE *v83; // eax@93
   FILE *v84; // esi@93
   __int32 v85; // edi@94
@@ -212,8 +202,7 @@ int   postRaceMain(int argc, const char **argv, const char **envp)
   int v88; // ST34_4@97
   int v89; // ST30_4@97
   int v90; // eax@97
-  char v91; // [sp+Fh] [bp-65h]@22
-  char Filename; // [sp+10h] [bp-64h]@21
+  char Filename[100]; // [sp+10h] [bp-64h]@21
 
   v3 = 0;
   showEndAnim_463DF8 = 0;
@@ -455,27 +444,11 @@ LABEL_15:
     {
       stopSong();
       stopAndOpenMusic();
-      Filename = 0;
+      Filename[0] = 0;
       if ( byte_462D50 == 2 )
-      {
-        v32 = strlen(byte_45FAA0) + 1;
-        v33 = &v91;
-        do
-        {
-          v34 = *((BYTE *)v33 + 1);
-          v33 = (char *)v33 + 1;
-        }
-        while ( v34 );
-        memcpy(v33, byte_45FAA0, v32);
-      }
-      v35 = &v91;
-      do
-        v36 = (v35++)[1];
-      while ( v36 );
-      *(_DWORD *)v35 = 1633971813; //endanim
-      *((_DWORD *)v35 + 1) = 774924654;
-      *((_DWORD *)v35 + 2) = 6709608;
-      v37 = fopen(&Filename, "rb");
+        strcat(Filename, byte_45FAA0);
+      strcat(Filename, "endani0.haf");
+      v37 = fopen(Filename, "rb");
       v38 = v37;
       if ( v37 )
       {
@@ -602,27 +575,11 @@ LABEL_15:
   {
     stopSong();
     stopAndOpenMusic();
-    Filename = 0;
+    Filename[0] = 0;
     if ( byte_462D50 == 2 )
-    {
-      v78 = strlen(byte_45FAA0) + 1;
-      v79 = &v91;
-      do
-      {
-        v80 = *((BYTE *)v79 + 1);
-        v79 = (char *)v79 + 1;
-      }
-      while ( v80 );
-      memcpy(v79, byte_45FAA0, v78);
-    }
-    v81 = &v91;
-    do
-      v82 = (v81++)[1];
-    while ( v82 );
-    *(_DWORD *)v81 = 1633971813;
-    *((_DWORD *)v81 + 1) = 774924654;
-    *((_DWORD *)v81 + 2) = 6709608;
-    v83 = fopen(&Filename, "rb");
+      strcat(Filename, byte_45FAA0);
+    strcat(Filename, "endani0.haf");
+    v83 = fopen(Filename, "rb");
     v84 = v83;
     if ( v83 )
     {
