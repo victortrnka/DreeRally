@@ -208,24 +208,23 @@ LABEL_11:
   while (participantsRace[0] < 4u || participantsRace[2] < 4u );
   //while (HIBYTE(word_461EB4) < 4u || (unsigned __int8)byte_461EB6 < 4u);
   //v29 = 0;
-  indexRaceParticipant = 0;
- // v17 = (signed int)dword_4A7AA0;
-  do
+  //Sorteo de posiciones de parrilla. El original marcaba las ocupadas en *(&v28 + n),
+  //un array de 5 bytes en la pila que aqui no se inicializa nunca: con el relleno 0xCC
+  //del build Debug todas las posiciones figuran ocupadas y el bucle interno no termina.
   {
-    do
+    char positionTaken[5] = { 0, 0, 0, 0, 0 };
+    for ( indexRaceParticipant = 0; indexRaceParticipant < 4; ++indexRaceParticipant )
     {
-      v18 = rand() % 4;
-      v19 = *(&v28 + v18 + 1);
-      v20 = v18 + 1;
+      do
+      {
+        v18 = rand() % 4;
+        v20 = v18 + 1;
+      }
+      while ( positionTaken[v20] );
       raceParticipant[indexRaceParticipant].racePosition = v20;
+      positionTaken[v20] = 1;
     }
-    while ( v19 );
-    //v17 += 84;
-    *(&v28 + v20) = 1;
-
-	indexRaceParticipant++;
   }
-  while (indexRaceParticipant < 4 );
   //while (v17 < (signed int)&unk_4A7BF0);
   postRaceMain(1, v26, v27);
   //result = 0;
