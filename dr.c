@@ -6213,32 +6213,16 @@ int balanceIAEngineInRace_40B920()
   int v6; // eax@10
   int v7; // ecx@10
   int v8; // [sp+0h] [bp-34h]@2
-  int v9; // [sp+4h] [bp-30h]@1
-  int v10; // [sp+8h] [bp-2Ch]@1
-  int v11; // [sp+Ch] [bp-28h]@1
-  int v12; // [sp+10h] [bp-24h]@1
-  int v13; // [sp+14h] [bp-20h]@1
-  int v14; // [sp+18h] [bp-1Ch]@1
-  int v15; // [sp+1Ch] [bp-18h]@1
-  int v16; // [sp+20h] [bp-14h]@1
-  int v17; // [sp+24h] [bp-10h]@1
-  int v18; // [sp+28h] [bp-Ch]@1
-  int v19; // [sp+2Ch] [bp-8h]@1
-  int v20; // [sp+30h] [bp-4h]@1
+
+  //El original guardaba estas constantes como floats en la pila (v9..v20) y las leia con
+  //*((float *)&v9 + 2 * dificultad). Estaban declaradas como int, asi que 0.07 etc. se
+  //truncaban a 0 y la IA no compensaba nunca su motor. Aqui quedan como tablas por dificultad.
+  static const float engineBoostOneZoneBehind[3]  = { 0.07f, 0.11f, 0.18f }; // v9,  v11, v13
+  static const float engineBoostTwoZonesBehind[3] = { 0.12f, 0.20f, 0.32f }; // v10, v12, v14
+  static const float engineCutOneZoneAhead[3]     = { 0.12f, 0.06f, 0.03f }; // v15, v17, v19
+  static const float engineCutTwoZonesAhead[3]    = { 0.19f, 0.12f, 0.06f }; // v16, v18, v20
 
   result = userRaceOrder_4A9EA8;
-  v9 = 0.07;
-  v10 = 0.12;
-  v11 = 0.11;
-  v12 = 0.2;
-  v13 = 0.18;
-  v14 = 0.32;
-  v15 = 0.12;
-  v16 = 0.19;
-  v17 = 0.06;
-  v18 = 0.12;
-  v19 = 0.03;
-  v20 = 0.06;
   if ( userRaceOrder_4A9EA8 )
     v8 = raceParticipant[0].difficulty;
   else
@@ -6262,15 +6246,15 @@ int balanceIAEngineInRace_40B920()
 	   
         v7 = circuitVaiZones_4A685C * raceParticipantIngame[v4].currentLap_4A7E08 + raceParticipantIngame[v4].actualVaiZone_4A7D00;
         if ( v7 == v6 - 1 )
-          v5 = *((float *)&v9 + 2 * v8) + 1.0;
+          v5 = engineBoostOneZoneBehind[v8] + 1.0;
         if ( v7 <= v6 - 2 )
-          v5 = *((float *)&v10 + 2 * v8) + 1.0;
+          v5 = engineBoostTwoZonesBehind[v8] + 1.0;
         if ( selectedRaceId != 2 )
         {
           if ( v7 == v6 + 1 )
-            v5 = 1.0 - *((float *)&v15 + 2 * v8);
+            v5 = 1.0 - engineCutOneZoneAhead[v8];
           if ( v7 >= v6 + 2 )
-            v5 = 1.0 - *((float *)&v16 + 2 * v8);
+            v5 = 1.0 - engineCutTwoZonesAhead[v8];
         }
       }
       result = numberOfParticipants_508D24;
