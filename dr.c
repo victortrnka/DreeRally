@@ -10908,7 +10908,12 @@ if ( isCircuitReversed_456AA8 )
           while ( v56 );
         }
        
-		// recalculateRaceCarWithOrientation();
+		//Estaba comentada desde la version 0.2 y por eso los coches se atravesaban: es la
+		//unica funcion que detecta el contacto entre coches y marca dword_4A7D18/4A7D1C,
+		//que es lo que despues revierte la posicion para separarlos. Se comento porque
+		//indexaba participantCarBpk fuera de rango (el "v5/4" y el limite de barrido en Y
+		//sin inicializar); con esos dos arreglados los indices quedan dentro del buffer.
+		recalculateRaceCarWithOrientation();
         currentDriverSelectedIndex_503518 = 0;
         if ( v50 > 0 )
         {
