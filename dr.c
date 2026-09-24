@@ -16861,47 +16861,12 @@ int main( int argc, char* argv[] ){
 #ifndef PORTABILITY
 int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
-  double fmodMinVersion=3.75; // st7@0
-  HMODULE ddrawModule; // eax@1
-  const char *arg; // ebx@3
-  unsigned int argLenght; // kr04_4@3
-  int v8; // eax@3
-  
-  int result; // eax@4
-  int v11; // eax@5
-  int v12; // ebx@5
-//  int v13; // eax@5
-//  void *v14; // esp@5
-  int v15; // [sp+0h] [bp-Ch]@3
-
+  HMODULE ddrawModule;
   ddrawModule = LoadLibraryA(LibFileName);
   if (ddrawModule)
     FreeLibrary(ddrawModule);
-  arg = GetCommandLineA();
-  argLenght = strlen(arg) + 1;
-  v8 = argLenght - 1 + 4;
-  
-  if ( &v15 )
-  {
-    SDL_strlcpy(&v15, &arg, argLenght);
-    v11 = sub_43FF90(&v15, 0);
-	v12 = v11;
-   
-    if ( &v15 )
-    {
-      sub_43FF90(&v15, (int)&v15);
-      initSystem(fmodMinVersion, v12, (const char **)&v15, arg);
-      result = 0;
-    }
-    else
-    {
-      result = outOfMemoryError();
-    }
-  }  else
-  {
-    result = outOfMemoryError();
-  }
-  return result;
+  // Use CRT-owned argument storage instead of copying strings over stack ints.
+  return initSystem(3.75, __argc, __argv, GetCommandLineA());
 }
 
 #endif
