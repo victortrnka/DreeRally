@@ -723,19 +723,9 @@ unsigned int drawStadistics()
   char *v88; // edx@69
   int v90; // edi@69
   int v91; // esi@69
-  char *v92; // ecx@71
-  int v93; // eax@71
-  char *v94; // esi@71
-  char *v95; // edx@71
-  char v96; // al@72
   int recordIndex; // indice en configuration.circuitRecords (circuito + 18 * tipoDeCoche)
   int v97; // ebx@73
-  char *v100; // ecx@76
-  int v101; // eax@76
-  char *v102; // esi@76
-  char *v103; // edx@76
   char v104; // bl@76
-  char v105; // al@77
   int v106; // edx@78
   int v107; // ecx@78
   char *v109; // edi@80
@@ -1236,18 +1226,10 @@ unsigned int drawStadistics()
                                                                   + 60 * configuration.circuitRecords[recordIndex].min)
       && currentRaceBestLapMinutes_463CAC + currentRaceBestLapSeconds_45EB48 + currentRaceBestLapMilliseconds_461FEC )
     {
-      v92 = &byte_460840[v87 * 4];
-      v93 = (unsigned __int8)*v88 + 18 * drivers[driverId].carType;
-      v94 = (char *)(24 * v93 + 4583488);
-      //TODO FIX configuration.circuitRecords v95 = &configuration.byte_45F040[24 * v93 - (_DWORD)v92];
-      do
-      {
-        v96 = *v92;
-        v95[(_DWORD)v92] = *v92;
-        ++v92;
-      }
-      while ( v96 );
-      _strupr(v94);
+      //v95 estaba sin inicializar (el TODO habia comentado su asignacion) y se usaba como
+      //puntero de destino: ahi se cerraba el juego al terminar la carrera.
+      strcpy(configuration.circuitRecords[recordIndex].name, drivers[driverId].name);
+      _strupr(configuration.circuitRecords[recordIndex].name);
       v87 = 27 * driverId;
       v90 = currentRaceBestLapSeconds_45EB48;
       v97 = currentRaceBestLapMilliseconds_461FEC;
@@ -1270,19 +1252,10 @@ unsigned int drawStadistics()
     }
     else
     {
-      v100 = &byte_460840[v87 * 4];
-      v101 = (unsigned __int8)*v88 + 18 * drivers[driverId].carType;
-      v102 = (char *)(24 * v101 + 4583488);
-      //TODO FIX configuration.circuitRecords v103 = &configuration.byte_45F040[24 * v101 - (_DWORD)v100];
+      //mismo caso que arriba con v103 sin inicializar
       v104 = 0;
-      do
-      {
-        v105 = *v100;
-        v103[(_DWORD)v100] = *v100;
-        ++v100;
-      }
-      while ( v105 );
-      _strupr(v102);
+      strcpy(configuration.circuitRecords[recordIndex].name, drivers[driverId].name);
+      _strupr(configuration.circuitRecords[recordIndex].name);
       v91 = currentRaceBestLapMinutes_463CAC;
       v106 = currentRaceBestLapMilliseconds_461FEC;
       v107 = currentRaceBestLapSeconds_45EB48;
