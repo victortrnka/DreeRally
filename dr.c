@@ -13021,11 +13021,7 @@ signed int autoLoadSave()
   signed int result; // eax@16
   char v19; // [sp+4h] [bp-18h]@3
   char v20; // [sp+4h] [bp-18h]@13
-  int v21; // [sp+Ch] [bp-10h]@3
-  int v22; // [sp+10h] [bp-Ch]@3
-  int v23; // [sp+14h] [bp-8h]@3
-  __int16 v24; // [sp+18h] [bp-4h]@3
-  char v25; // [sp+1Ah] [bp-2h]@3
+  char v21[16]; // [sp+Ch] [bp-10h]@3
 
   v0 = 0;
   if ( isMultiplayerGame )
@@ -13049,12 +13045,8 @@ signed int autoLoadSave()
       *((BYTE *)Str + 1) = driverId;
       *((BYTE *)Str + 2) = useWeapons;
       *((BYTE *)Str + 3) = configuration.difficulty;
-      v21 = 1667855697;
-      v22 = 1986098027;
-      v23 = 1817387109;
-      v24 = 29807;
-      v5 = &v21;
-      v25 = 0;
+      strcpy(v21, "Quicksave Slot");
+      v5 = (int *)v21;
       v19 = v4;
       v6 = 0;
       do
@@ -13063,14 +13055,14 @@ signed int autoLoadSave()
         v5 = (int *)((char *)v5 + 1);
       }
       while ( v7 );
-      if ( v5 != (int *)((char *)&v21 + 1) )
+      if ( v5 != (int *)(v21 + 1) )
       {
         do
         {
-          *((BYTE *)Str + v6 + 4) = *((BYTE *)&v21 + v6);
+          *((BYTE *)Str + v6 + 4) = v21[v6];
           ++v6;
         }
-        while ( v6 < strlen((const char *)&v21) );
+        while ( v6 < strlen(v21) );
       }
       memcpy((char *)Str + 19, byte_460840, 0x870u);
       v8 = 1;
