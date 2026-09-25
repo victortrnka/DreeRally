@@ -10739,7 +10739,8 @@ if ( isCircuitReversed_456AA8 )
 		{
 			int frameSlot = dword_503510 - 1 - v46;
 			int keySlot = raceParticipantIngame[userRaceOrder_4A9EA8].lastKeysReadPreviousIndex_4A7DA4;
-			raceParticipantIngame[v47].dword_4A7D20[frameSlot] = raceParticipantIngame[v47].lastKeysRead_4A7D60[keySlot];
+			if ( frameSlot >= 0 && frameSlot < 16 && keySlot >= 0 && keySlot < 16 )
+				raceParticipantIngame[v47].dword_4A7D20[frameSlot] = raceParticipantIngame[v47].lastKeysRead_4A7D60[keySlot];
 			++v46;
 		}
 
