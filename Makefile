@@ -47,7 +47,9 @@ else
 $(error PROFILE must be debug or equiv)
 endif
 
-.PHONY: all clean setup-run run
+.PHONY: all clean setup-run run check-equiv
+
+BASE ?= HEAD
 
 all: $(OUT)/dreerally.exe
 
@@ -85,3 +87,6 @@ run: $(OUT)/dreerally.exe
 	@test -f run/ENGINE.BPA || { echo "Run 'make setup-run' first"; exit 1; }
 	cp $(OUT)/dreerally.exe $(OUT)/dreerally.pdb run/
 	"$(CX)/wine" --bottle "$(BOTTLE)" --workdir "$(CURDIR)/run" "$(CURDIR)/run/dreerally.exe" $(ARGS)
+
+check-equiv:
+	tools/equiv/check-equiv.sh $(BASE)
