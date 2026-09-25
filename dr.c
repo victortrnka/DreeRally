@@ -13008,7 +13008,11 @@ signed int autoLoadSave()
         }
         while ( v6 < strlen(v21) );
       }
-      memcpy((char *)Str + 19, byte_460840, 0x870u);
+      //el bloque que el original guarda/carga en 0x460840 es exactamente drivers[20]
+      //(Driver, 108 bytes cada uno, sin relleno: mismo offset por campo que el original,
+      //ver drivers.h); byte_460840 es un array separado en el port que nadie mantiene
+      //sincronizado con drivers[], asi que el quicksave no persistia el estado real
+      memcpy((char *)Str + 19, drivers, 0x870u);
       v8 = 1;
       while ( 1 )
       {
@@ -13054,7 +13058,7 @@ signed int autoLoadSave()
       driverId = *((BYTE *)Str + 1);
       useWeapons = *((BYTE *)Str + 2);
 	  configuration.difficulty = *((BYTE *)Str + 3);
-      memcpy(byte_460840, (char *)Str + 19, 0x870u);
+      memcpy(drivers, (char *)Str + 19, 0x870u);
       free(Str);
       v15 = drivers[driverId].spikes;
       v16 = drivers[driverId].rocket;
