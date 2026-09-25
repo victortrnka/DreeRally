@@ -1382,11 +1382,12 @@ int   sub_424240(int a1, float a2, float a3, float a4)
   v17 = 0;
   
   //v5 = 12 * a1 + 4586564; //0x45FC44; la primera escritura era *(v5 - 4), o sea
-  //0x45FC40 + 12*a1. palette1 empieza en 0x45FD00, asi que el indice es 3*a1 - 48
-  //(a1=64 -> 144, igual que el 144 de sub_418B00). Con el -1 que habia, las rampas de
-  //color de los coches se escribian en entradas equivocadas: los coches salian todos del
-  //mismo color y ademas se pisaban otras entradas de la paleta.
-  v5 = 3 * a1 - 48;
+  //0x45FC40 + 12*a1. palette1[0] tambien es 0x45FC40 (copyPalette1toPalette,
+  //0x422740, arranca en dword_45FC44 pero lee/escribe primero *(puntero-4)),
+  //asi que el indice es simplemente 3*a1 (a1=64 -> 192, igual que el primer
+  //bloque de sub_418B00, que tambien apunta a 0x45FF40). El -1 que habia
+  //antes escribia una entrada mas atras de la cuenta.
+  v5 = 3 * a1;
  
   v20 = 0.1 * a3;
   v21 = 0.1 * a4;
@@ -1420,8 +1421,8 @@ int   sub_424240(int a1, float a2, float a3, float a4)
   } while (v4 < 8);*/
   v10 = 0;
   v18 = 0;
-  //v11 = 12 * (a1 + 8) + 4586564;//0x45FC44; mismo calculo que arriba: 3*(a1+8) - 48
-  v11 = 3 * (a1 + 8) - 48;
+  //v11 = 12 * (a1 + 8) + 4586564;//0x45FC44; mismo calculo que arriba: 3*(a1+8)
+  v11 = 3 * (a1 + 8);
   do
   {
     v15 = (double)v18;
