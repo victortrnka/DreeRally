@@ -24,8 +24,8 @@ char byte_452E38[] = { '[' }; // weak
 _UNKNOWN unk_452D70; // weak
 
 char aMoneyTalksAndT[32] = "Money talks, and [the damage is"; // weak
-char byte_452CD0[] = { '[' }; // weak
-char byte_452CF8[] = { '[' }; // weak
+char byte_452CD0[] = "[done, "; // weak
+char byte_452CF8[] = "["; // weak
 char aDown_ThatSDoug[34] = "down. That's dough baked luck for"; // weak
 char aYou_AndLuckShe[34] = "you. And luck, she ain't no lady."; // weak
 
@@ -282,7 +282,6 @@ int sabotageScreen()
   
 //  signed int v9; // esi@8
 //  int v10; // ecx@8
-  int v11; // edx@26
   int v12; // edi@29
   unsigned __int8 v13; // bl@29
   int v14; // edx@29
@@ -295,44 +294,24 @@ int sabotageScreen()
   int v21; // eax@45
   unsigned int v22; // edi@45
   int v23; // ST20_4@45
-  char *v24; // ecx@45
-  char v25; // dl@46
-  int v26; // eax@47
-  char v27; // cl@48
-  unsigned int v28; // eax@49
-  char *v29; // edi@49
-  char v30; // cl@50
-  char *v31; // edi@51
-  char v32; // al@52
-  int v33; // eax@53
-  char v34; // cl@54
-  unsigned int v35; // eax@55
-  char *v36; // edi@55
-  char v37; // cl@56
-  char *v38; // edi@57
-  char v39; // al@58
-  char v40; // [sp+8h] [bp-58h]@1
-  unsigned __int8 v41; // [sp+9h] [bp-57h]@1
-  unsigned __int8 v42; // [sp+Ah] [bp-56h]@1
-  unsigned __int8 v43; // [sp+Bh] [bp-55h]@1
+  unsigned __int8 v40[4]; // [sp+8h] [bp-58h]@1
   int v44; // [sp+Ch] [bp-54h]@8
-  char DstBuf; // [sp+10h] [bp-50h]@45
+  char DstBuf[12]; // [sp+10h] [bp-50h]@45
   char v46[16]; // [sp+1Ch] [bp-44h]@46
-  char v47[2]; // [sp+2Ch] [bp-34h]@48
+  char v47[52]; // [sp+2Ch] [bp-34h]@48
   unsigned __int8 v48; // [sp+2Eh] [bp-32h]@29
   unsigned __int8 v49; // [sp+2Fh] [bp-31h]@29
   int maxDriverPoints;
 
-  //cambiar a racePositions[0][0];
-  v0 = BYTE2(dword_45EB50[selectedRace_462CE8]);
-  v1 = LOBYTE(dword_45EB50[selectedRace_462CE8]);
-  v2 = BYTE3(dword_45EB50[selectedRace_462CE8]);
+  v0 = racePositions[selectedRace_462CE8][2];
+  v1 = racePositions[selectedRace_462CE8][0];
+  v2 = racePositions[selectedRace_462CE8][3];
   v3 = isMultiplayerGame;
-  v41 = BYTE1(dword_45EB50[selectedRace_462CE8]);
-  v42 = v0;
+  v40[1] = racePositions[selectedRace_462CE8][1];
+  v40[2] = v0;
   v4 = driverId;
-  v43 = v2;
-  v40 = v1;
+  v40[3] = v2;
+  v40[0] = v1;
   v5 = 0;
  // v6 = (signed int)dword_46084C;
   do
@@ -351,21 +330,20 @@ int sabotageScreen()
   {
     v44 = 1;
 	maxDriverPoints = getMaxDriverPoints(driverId);
-    if ( isMultiplayerGame || (v11 = 27 * v4, drivers[v11].points > maxDriverPoints) || !useWeapons || drivers[v11].sabotage != 1 )
+    if ( isMultiplayerGame || drivers[v4].points > maxDriverPoints || !useWeapons || drivers[v4].sabotage != 1 )
     {
       result = 0;
     }
     else
     {
       v12 = (unsigned __int8)v1;
-      v13 = LOBYTE(drivers[v41].rank);
-      v12 *= 108;
+      v13 = LOBYTE(drivers[v40[1]].rank);
 	  //LOBYTE(v17) = *((BYTE *)dword_460888 + v12);
-	  LOBYTE(v17) = *((int8*)drivers[v12].rank);
-      v14 = drivers[v12].rank;
-      v48 = LOBYTE(drivers[v42].rank);
-      v15 = (char *)drivers[v12].rank;
-      v49 = LOBYTE(drivers[v43].rank);
+	  LOBYTE(v17) = LOBYTE(drivers[v12].rank);
+      v14 = drivers[v4].rank;
+      v48 = LOBYTE(drivers[v40[2]].rank);
+      v15 = (char *)&drivers[v12].rank;
+      v49 = LOBYTE(drivers[v40[3]].rank);
       v16 = (unsigned __int8)v17;
       v17 = (unsigned __int8)v17;
       if ( (unsigned __int8)v17 == v14 )
@@ -382,66 +360,27 @@ int sabotageScreen()
       if ( *(_DWORD *)v15 != v17 )
       {
         do
-          v19 = *(&v41 + v18++);
+          v19 = v40[1 + v18++];
         while (drivers[v19].rank != v17 );
       }
       v20 = SDL_GetTicks();
       srand(v20);
       v21 = rand();
-      v22 = 108 * (unsigned __int8)*(&v40 + v18);
+      v22 = v40[v18];
       v23 = v21 % 25 + 25;//calculo del sabotage aleatorio
       //dword_46084C[v22 / 4] = v23;
-	  drivers[v22 / 4].damage = v23;
-      SDL_itoa(v23, &DstBuf, 10);
-      v24 =(char*) drivers[v22].damage;
-      do
-      {
-        v25 = *v24;
-		//v24[&v46[-v22] - byte_460840] = *v24;
-		//esto ni idea de lo que hace TODO
-      //  v24[&v46[-v22] - byte_460840] = *v24;
-        ++v24;
-      }
-      while ( v25 );
+	  drivers[v22].damage = v23;
+      SDL_itoa(v23, DstBuf, 10);
+      strcpy(v46, drivers[v22].name);
       createPopup(45, 165, 458, 195, 1);
       writeTextInScreen(aMoneyTalksAndT, 131301);
-      v26 = 0;
-      do
-      {
-        v27 = byte_452CD0[v26];
-        v47[v26++] = v27;
-      }
-      while ( v27 );
-      v28 = strlen(&DstBuf) + 1;
-      v29 = &v46[15];
-      do
-        v30 = (v29++)[1];
-      while ( v30 );
-      memcpy(v29, &DstBuf, v28);
-      v31 = &v46[15];
-      do
-        v32 = (v31++)[1];
-      while ( v32 );
-      memcpy(v31, "% worth! Sabotage says that", 0x1Cu);
+      strcpy(v47, byte_452CD0);
+      strcat(v47, DstBuf);
+      strcat(v47, "% worth! Sabotage says that");
       writeTextInScreen(v47, 141541);
-      v33 = 0;
-      do
-      {
-        v34 = byte_452CF8[v33];
-        v47[v33++] = v34;
-      }
-      while ( v34 );
-      v35 = strlen(v46) + 1;
-      v36 = &v46[15];
-      do
-        v37 = (v36++)[1];
-      while ( v37 );
-      memcpy(v36, v46, v35);
-      v38 = &v46[15];
-      do
-        v39 = (v38++)[1];
-      while ( v39 );
-      memcpy(v38, " is going down{ and staying", 0x1Cu);
+      strcpy(v47, byte_452CF8);
+      strcat(v47, v46);
+      strcat(v47, " is going down{ and staying");
       writeTextInScreen(v47, 151781);
       writeTextInScreen(aDown_ThatSDoug, 162021);
       writeTextInScreen(aYou_AndLuckShe, 172261);
