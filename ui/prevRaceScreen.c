@@ -281,17 +281,11 @@ void   previewRaceScreen(signed int participants)
 //  char v34; // cl@30
 //  char *v35; // edi@31
 //  char v36; // al@32
-  int *v37; // ecx@33
-  signed int v38; // eax@33
-  char v39; // dl@34
 //  char *v40; // eax@36
 //  signed int v41; // edx@36
 //  char v42; // cl@37
 //  char *v43; // edi@38
 //  char v44; // al@39
-  int *v45; // ecx@40
-  signed int v46; // eax@40
-  char v47; // dl@41
 //  unsigned __int8 v48; // cl@45
 //  unsigned __int8 v49; // dl@45
 //  unsigned __int8 v50; // cl@45
@@ -766,20 +760,9 @@ void   previewRaceScreen(signed int participants)
 		extractFromBpa("MENU.BPA", textureTemp, Str);
         copyImageToBuffer((int)textureTemp, (int)tsahpeBpk_45EB5C);
         drawImageWithPosition((int)tsahpeBpk_45EB5C, 360, 274, (int)((char *)screenBuffer + 64264));
-        v37 = &v251 + (unsigned __int8)circuitsToSelect_46126C[1];
-		//v37 = &v251 + (unsigned __int8)byte_46126D;
 		strcpy(raceFilePrefix_45EA50, "TR");
 		SDL_itoa((circuitsToSelect_46126C[1] % 9) + 1, DstBuf, 10);
 		strcat(raceFilePrefix_45EA50, DstBuf);
-        v38 = (char *)&raceFilePrefix_45EA50[-(unsigned __int8)circuitsToSelect_46126C[1]] - (char *)&v251;
-		//v38 = (char *)&raceFilePrefix_45EA50[-(unsigned __int8)byte_46126D] - (char *)&v251;
-        do
-        {
-          v39 = *(BYTE *)v37;
-          *((BYTE *)v37 + v38) = *(BYTE *)v37;
-          v37 = (int *)((char *)v37 + 1);
-        }
-        while ( v39 );
         numberOfLaps = getModIntEntry("RACE_MEDIUM_LAPS", 5);
         goto LABEL_44;
       case 2:
@@ -806,20 +789,9 @@ void   previewRaceScreen(signed int participants)
         extractFromBpa("MENU.BPA", textureTemp,Str);
         copyImageToBuffer((int)textureTemp, (int)tsahpeBpk_45EB5C);
         drawImageWithPosition((int)tsahpeBpk_45EB5C, 360, 274, (int)((char *)screenBuffer + 64264));
-        v45 = &v251 + (unsigned __int8)circuitsToSelect_46126C[2];
 		strcpy(raceFilePrefix_45EA50, "TR");
 		SDL_itoa((circuitsToSelect_46126C[2] % 9) + 1, DstBuf, 10);
 		strcat(raceFilePrefix_45EA50, DstBuf);
-        v46 = (char *)&raceFilePrefix_45EA50[-(unsigned __int8)circuitsToSelect_46126C[2]] - (char *)&v251;
-		//v45 = &v251 + (unsigned __int8)byte_46126E;
-		//v46 = (char *)&raceFilePrefix_45EA50[-(unsigned __int8)byte_46126E] - (char *)&v251;
-        do
-        {
-          v47 = *(BYTE *)v45;
-          *((BYTE *)v45 + v46) = *(BYTE *)v45;
-          v45 = (int *)((char *)v45 + 1);
-        }
-        while ( v47 );
         numberOfLaps = getModIntEntry("RACE_HARD_LAPS", 6);
         goto LABEL_44;
       case 3:
