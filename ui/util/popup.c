@@ -502,7 +502,7 @@ int showHitmanScreen()
         v14 = rand() % 4;
         v15 = selectedRace_462CE8;
       }
-      while ( *((int8*)&dword_45EB50[selectedRace_462CE8] + v14) == driverId );
+      while ( racePositions[selectedRace_462CE8][v14] == driverId );
       v16 = 0;
       do
       {
@@ -511,8 +511,8 @@ int showHitmanScreen()
       }
       while ( v17 );
 	  //todo structura drivers
-      v18 = &drivers[*((int8*)&dword_45EB50[v15] + v14)];
-      v19 = &drivers[*((int8*)&dword_45EB50[v15] + v14)];
+      v18 = &drivers[racePositions[v15][v14]];
+      v19 = &drivers[racePositions[v15][v14]];
       do
         v20 = *v18++;
       while ( v20 );
@@ -580,7 +580,7 @@ int showHitmanScreen()
       drawYesNoMenu(161, 321, 0, &v39);
       if ( v39 == 1 )
       {
-        v35 = *((int8*)&dword_45EB50[selectedRace_462CE8] + v14);
+        v35 = racePositions[selectedRace_462CE8][v14];
         killQuestDriverId_456BBC = v35;
 		v36 = drivers[v35].name;
 		// v36 = &byte_460840[108 * v35];
