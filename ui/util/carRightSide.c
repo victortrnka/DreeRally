@@ -15,9 +15,6 @@ int drawCarRightSide()
     //  char v2; // cl@2
     int namePosition; // eax@3
     int* v4; // eax@3
-    unsigned int v5; // eax@5
-    char* v6; // edi@5
-    char v7; // cl@6
     int money; // eax@7
   //  unsigned int v9; // eax@9
   //  char *v10; // edi@9
@@ -108,12 +105,6 @@ int drawCarRightSide()
     memcpy(&moneyCount[1], DstBuf, strlen(DstBuf));
     memset(&moneyCount[strlen(DstBuf) + 1], '\0', 1);
 
-    v5 = strlen(DstBuf) + 1;
-    v6 = (char*)&v45 + 3;
-    do
-        v7 = (v6++)[1];
-    while (v7);
-    memcpy(v6, DstBuf, v5);
     money = sub_41FA50(moneyCount);//size small text
     drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, moneyCount, money + 131744);
 
