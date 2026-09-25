@@ -1,12 +1,31 @@
 # menu: skip the intro and reach the main menu.
 #
-# The intro-skip count is not deterministic (it depends on which intro frame
-# is showing when each key lands), so this sends two Enters with generous
-# gaps, then Esc. Esc is "Previous menu": if the 2nd Enter only cleared the
-# intro, Esc on the main menu itself is a harmless no-op; if the 2nd Enter
-# also opened the "Start Racing" submenu (intro cleared unusually fast),
-# Esc backs out of it to the main menu. Either way this lands cleanly on the
-# main menu. Verified with screenshots.
-enter w2000
-enter w1800
-esc w1200
+# The intro-skip count is not fully deterministic (it depends on which
+# intro frame is showing when a key lands), but DR_SHOTS's own default
+# ("3:intro 9:menu") always fires before DR_KEYS starts and eats 9s of
+# wall time first, so by the time this scenario's own Enter lands, the
+# intro has almost always already run its course. One Enter with a
+# generous wait reliably reached the main menu in repeated runs;
+# a 2nd Enter measured as one Enter too many,
+# overshooting into the "Start Racing" submenu instead. If a future
+# scenario changes SHOTS away from the default, re-measure this.
+#
+# Earlier versions of this prefix used two Enters followed by an Esc, on
+# the theory that Esc ("Previous menu") is a harmless no-op once already on
+# the main menu: if the 2nd Enter only cleared the intro, Esc would do
+# nothing; if it also opened "Start Racing", Esc would back out of it.
+# Measurement showed otherwise: Esc
+# on the main menu moves the highlighted item to the last one ("Exit to
+# OS") instead of leaving it alone or backing out. Re-measured with
+# two independent runs and confirmed identically both times, so Esc is no longer
+# used to normalize onto the main menu anywhere in this scenario set. This
+# does not affect Esc used *inside* a submenu (e.g. configure-effects.keys's
+# trailing Esc, which is normal "Previous menu" behaviour and was not part
+# of what those measurements covered).
+#
+# shot:menu is the known-state check used in place of Esc: look
+# at the screenshot before trusting that a scenario built on this prefix
+# landed on the main menu rather than still mid-intro or already one level
+# into "Start Racing".
+enter w3500
+shot:menu

@@ -2,7 +2,10 @@
 # Configure > Effect volume > Enter > Esc (deterministic). Exercises the Effect-volume popup
 # (showAdjustOptions) that used to smash the stack (fixed in 715098c).
 #
-# enter/enter/esc: reach the main menu (see menu.keys for why).
+# enter, then shot:menu: reach the main menu and confirm it with a
+#   screenshot instead of a trailing Esc (see menu.keys for why Esc is no
+#   longer used to normalize onto the main menu itself, and why one Enter
+#   -- not two -- is the measured-reliable count here).
 # down/enter: Multiplayer Race is disabled, so one Down from the default
 #   "Start Racing" selection lands on "Configure" (skip-disabled behaviour,
 #   verified in the original trial); Enter opens it.
@@ -11,14 +14,15 @@
 #   Previous menu - one Down from the default "Music Volume" lands on
 #   "Effect Volume"; Enter opens the popup.
 # wait, enter, esc: the exact repro - sit on the popup, confirm, leave
-#   Configure back to the main menu.
+#   Configure back to the main menu. This Esc is inside the Configure
+#   submenu ("Previous menu"), not on the main menu itself, so the
+#   main-menu Esc finding (see menu.keys) does not apply to it.
 #
-# Verified with screenshots: reaches "ADJUST EFFECT VOLUME: NN%", then
-# returns to the main menu with Configure highlighted, no crash (the bug
-# is fixed on this tree).
-enter w2000
-enter w1800
-esc w1200
+# Verified with screenshots with the Esc-free prefix: reaches "ADJUST
+# EFFECT VOLUME: NN%", then returns to the main menu with Configure
+# highlighted, no crash (the bug is fixed).
+enter w3500
+shot:menu
 down w800
 enter w1500
 down w800

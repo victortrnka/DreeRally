@@ -1,13 +1,15 @@
 # race: new game -> licence -> difficulty -> sign up -> race start.
-# Key path adapted from an earlier working sequence, reflowed onto the enter/enter/esc
-# intro-skip-and-normalize used by the other scenarios (see menu.keys).
+# Key path adapted from an earlier working sequence, reflowed onto the single-enter
+# intro-skip prefix used by the other scenarios (see menu.keys).
 #
 # The race only runs without crashing from commit 1dfd778 onwards
 # ("replay player input into the key buffer"). On anything
 # earlier it crashes right after sign-up (Unhandled illegal instruction,
 # _startRace). Run this scenario only on trees that include 1dfd778.
 #
-# enter/enter/esc: reach the main menu.
+# enter, then shot:menu: reach the main menu (see menu.keys for why there
+#   is no trailing Esc here anymore, and why one Enter -- not two -- is the
+#   measured-reliable count).
 # enter/enter: open "Start Racing" (default-highlighted), confirm
 #   "Start A New Game" (also default-highlighted) -> Driver's Licence.
 # t/e/s/t + enter: type nickname "TEST", confirm.
@@ -20,10 +22,10 @@
 #
 # Verified with screenshots on a build including 1dfd778: reaches the
 # Driver's Licence, the difficulty popup, the sign-up screen, and a running
-# race with AI cars moving, 0 Unhandled.
-enter w2000
-enter w1800
-esc w1200
+# race with AI cars moving, 0 Unhandled (also re-verified
+# with the Esc-free prefix and the RUN_SECS-derived keys bound).
+enter w3500
+shot:menu
 enter w1500
 enter w1500
 t w200
