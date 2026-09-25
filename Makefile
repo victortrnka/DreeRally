@@ -47,7 +47,7 @@ else
 $(error PROFILE must be debug or equiv)
 endif
 
-.PHONY: all clean setup-run run check-equiv stats
+.PHONY: all clean setup-run run check-equiv stats docker-test
 
 BASE ?= HEAD
 
@@ -93,3 +93,53 @@ check-equiv:
 
 stats:
 	@python3 tools/stats.py
+
+# --- Headless Docker test runner ---------------------------------------
+# keys.exe: a small standalone console tool, not part of the game itself, so
+# it gets its own simple build rule rather than folding into $(OBJS)/CFLAGS.
+$(OUT)/keys.obj: tools/docker/keys.c Makefile
+	@mkdir -p $(@D)
+	$(CC) --target=i686-pc-windows-msvc /nologo /c /Od /MT \
+	  /imsvc $(XWIN)/crt/include /imsvc $(XWIN)/sdk/include/ucrt \
+	  /imsvc $(XWIN)/sdk/include/um /imsvc $(XWIN)/sdk/include/shared \
+	  /Fo$@ $<
+
+$(OUT)/keys.exe: $(OUT)/keys.obj
+	$(LD) /nologo /machine:x86 /subsystem:console \
+	  /libpath:$(XWIN)/crt/lib/x86 /libpath:$(XWIN)/sdk/lib/um/x86 /libpath:$(XWIN)/sdk/lib/ucrt/x86 \
+	  /out:$@ $< user32.lib kernel32.lib
+
+# docker-test: builds and runs the game headless in Docker (see
+# tools/docker/). Uses its own run-docker/ runtime dir, never run/, so it
+# never collides with a CrossOver run in progress.
+#   DOCKER_ARGS -> DR_ARGS  (dreerally.exe args, default "-window -nosound")
+#   KEYS      -> DR_KEYS  (keys.exe tokens; ignored if SCENARIO is set)
+#   SHOTS     -> DR_SHOTS (screenshot offsets, default "3:intro 9:menu")
+#   SECS      -> RUN_SECS (seconds before stopping the game, default 12)
+#   OUT_SHOTS -> where screenshots/log/status land (default build/docker-out)
+#   SCENARIO  -> reads KEYS from tools/docker/scenarios/<name>.keys instead
+DOCKER_ARGS ?= -window -nosound
+KEYS      ?=
+SHOTS     ?= 3:intro 9:menu
+SECS      ?= 12
+OUT_SHOTS ?= build/docker-out
+SCENARIO  ?=
+
+ifneq ($(SCENARIO),)
+SCENARIO_FILE := tools/docker/scenarios/$(SCENARIO).keys
+KEYS := $(shell sed -e 's/\#.*//' $(SCENARIO_FILE) 2>/dev/null | tr '\n' ' ' | tr -s ' ')
+endif
+
+docker-test: $(OUT)/dreerally.exe $(OUT)/keys.exe
+	@test -d "$(DR_DATA)" || { echo "Death Rally data not found: DR_DATA=$(DR_DATA)"; exit 1; }
+	@if [ -n "$(SCENARIO)" ]; then test -f "$(SCENARIO_FILE)" || { echo "no such scenario: $(SCENARIO_FILE)"; exit 1; }; fi
+	@rm -rf run-docker
+	@mkdir -p run-docker
+	@for f in $(RUNTIME_FILES); do cp -p "$(DR_DATA)/$$f" run-docker/ || exit 1; done
+	@cp $(OUT)/dreerally.exe run-docker/
+	@cp $(OUT)/keys.exe run-docker/
+	@mkdir -p $(OUT_SHOTS)
+	RUNTIME_DIR="$(CURDIR)/run-docker" OUT_DIR="$(CURDIR)/$(OUT_SHOTS)" \
+	  DR_ARGS="$(DOCKER_ARGS)" DR_KEYS="$(KEYS)" DR_SHOTS="$(SHOTS)" RUN_SECS="$(SECS)" \
+	  NAME="dreerally-docker-test-$$$$" \
+	  tools/docker/run.sh
