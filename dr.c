@@ -6242,6 +6242,10 @@ int balanceIAEngineInRace_40B920()
     v8 = raceParticipant[0].difficulty;
   else
     v8 = raceParticipant[1].difficulty;
+  if ( v8 < 0 )
+    v8 = 0;
+  if ( v8 > 2 )
+    v8 = 2;
   v1 = 0;
   currentDriverSelectedIndex_503518 = 0;
   if ( numberOfParticipants_508D24 > 0 )
