@@ -5382,6 +5382,22 @@ int *initRaceValues_409F90()
 	raceParticipantIngame[indexRaceParticipant].dword_4A7EE4[13] =0;
 	raceParticipantIngame[indexRaceParticipant].dword_4A7EE4[14] =0;
 
+	raceParticipantIngame[indexRaceParticipant].dword_4A7F20[0] =0;
+	raceParticipantIngame[indexRaceParticipant].dword_4A7F20[1] =0;
+	raceParticipantIngame[indexRaceParticipant].dword_4A7F20[2] =0;
+	raceParticipantIngame[indexRaceParticipant].dword_4A7F20[3] =0;
+	raceParticipantIngame[indexRaceParticipant].dword_4A7F20[4] =0;
+	raceParticipantIngame[indexRaceParticipant].dword_4A7F20[5] =0;
+	raceParticipantIngame[indexRaceParticipant].dword_4A7F20[6] =0;
+	raceParticipantIngame[indexRaceParticipant].dword_4A7F20[7] =0;
+	raceParticipantIngame[indexRaceParticipant].dword_4A7F20[8] =0;
+	raceParticipantIngame[indexRaceParticipant].dword_4A7F20[9] =0;
+	raceParticipantIngame[indexRaceParticipant].dword_4A7F20[10] =0;
+	raceParticipantIngame[indexRaceParticipant].dword_4A7F20[11] =0;
+	raceParticipantIngame[indexRaceParticipant].dword_4A7F20[12] =0;
+	raceParticipantIngame[indexRaceParticipant].dword_4A7F20[13] =0;
+	raceParticipantIngame[indexRaceParticipant].dword_4A7F20[14] =0;
+
 	raceParticipantIngame[indexRaceParticipant].dword_4A7EB8 =0;
 	
 	raceParticipantIngame[indexRaceParticipant].spriteBurnOffset_4A7EDC =0;
@@ -8318,13 +8334,15 @@ int showSmoke_40F070(int result)
 {
   RaceParticipantIngame *participant = &raceParticipantIngame[currentDriverSelectedIndex_503518];
   int side, slot, row, column;
-  for (side = 0; side < 2; ++side)
+  //el original alterna los dos lados por slot (side0 slot0, side1 slot0, side0 slot1, ...),
+  //no todos los side0 seguidos de todos los side1: el bucle externo es slot, el interno side.
+  for (slot = 0; slot < 15; ++slot)
   {
-    int *ages = side ? participant->dword_4A7F20 : participant->dword_4A7EE4;
-    int *positionsX = side ? participant->dword_4A7F98 : participant->dword_4A7F5C;
-    int *positionsY = side ? participant->dword_4A8010 : participant->dword_4A7FD4;
-    for (slot = 0; slot < 15; ++slot)
+    for (side = 0; side < 2; ++side)
     {
+      int *ages = side ? participant->dword_4A7F20 : participant->dword_4A7EE4;
+      int *positionsX = side ? participant->dword_4A7F98 : participant->dword_4A7F5C;
+      int *positionsY = side ? participant->dword_4A8010 : participant->dword_4A7FD4;
       int age = ages[slot];
       int x = leftMenuInRaceWidth_456AA0 + positionsX[slot] - circuitImageOffsetX_456ABC;
       int y = positionsY[slot] - circuitImageOffsetY_456AC0;
