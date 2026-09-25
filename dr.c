@@ -12865,10 +12865,12 @@ signed int   hasInsuficientMoneyToBuy(int a1)
     //reasignaba a un literal de cadena (memoria de solo lectura) y despues se le hacian
     //dos strcat encima. Eso escribe fuera del literal y sobre una pagina no escribible;
     //el resultado era corrupcion de pila y el juego se cerraba.
-    strcpy(DstBuf, "Honey. [You are ");
+    //el original: "honey. [You are $" (0x443428) + digitos + " [short." (0x44341c);
+    //el "[" no se dibuja, es un escape de fuente (writeTextInScreen, v13=2)
+    strcpy(DstBuf, "honey. [You are $");
     _itoa(a1 - drivers[driverId].money, money, 10);
     strcat(DstBuf, money);
-    strcat(DstBuf, "$ short.");
+    strcat(DstBuf, " [short.");
 
    // *(_DWORD *)v6 = 1752390432; //hs[
    // *((_DWORD *)v6 + 1) = 779383407; //.tro
