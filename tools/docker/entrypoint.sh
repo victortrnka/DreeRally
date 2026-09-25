@@ -7,9 +7,14 @@
 #   DR_ARGS   extra dreerally.exe args, e.g. "-window -nosound -gl"
 #   DR_SHOTS  space-separated "seconds:label" pairs, e.g. "3:intro 8:menu"
 #   DR_KEYS   tokens passed to keys.exe, e.g. "down down enter", run after
-#             the last screenshot in DR_SHOTS; a final screenshot is taken
-#             after keys finish. Bounded by a 90s timeout (keys.exe itself
-#             waits up to ~60s for the game window before giving up).
+#             the last screenshot in DR_SHOTS. A "shot:<label>" token splits
+#             the sequence there: the keys before it run first, a screenshot
+#             <label>.png is taken, then the next segment runs. A final
+#             "after_keys" screenshot is always taken once every segment has
+#             run. Each keys.exe invocation is bounded by the time left until
+#             RUN_SECS+30s after game launch (keys.exe itself waits up to
+#             ~60s for the game window before giving up), so a hang in any
+#             one segment cannot outlive the overall bound.
 #   RUN_SECS  total seconds to let the game run before stopping it (default 12)
 #
 # Exit code / STATUS: 0 only for STATUS=alive or STATUS=exited(rc=0). Every
@@ -111,11 +116,46 @@ done
 
 KEYS_TIMEOUT=0
 if [ -n "${DR_KEYS:-}" ] && [ "$GAME_EXITED_EARLY" -eq 0 ] && kill -0 "$GAME_PID" 2>/dev/null; then
-	log "running keys.exe $DR_KEYS (90s bound)"
-	if ! timeout 90 wine "$RUNTIME_DIR/keys.exe" $DR_KEYS >>"$OUT_DIR/keys.log" 2>&1; then
-		log "keys.exe timed out or failed"
-		KEYS_TIMEOUT=1
-	fi
+	# Bound derived from RUN_SECS rather than a fixed constant, so a longer
+	# scenario (e.g. a full race) gets a proportionally longer bound while a
+	# short one still fails fast. KEYS_DEADLINE is a fixed point in time, and
+	# every segment's timeout is however much of it is left, so N segments
+	# can never together run longer than a single bound would have.
+	KEYS_BOUND_SECS=$((RUN_SECS + 30))
+	KEYS_DEADLINE=$((T0 + KEYS_BOUND_SECS))
+	log "running keys.exe from DR_KEYS (bound: RUN_SECS+30=${KEYS_BOUND_SECS}s from launch)"
+
+	run_keys_segment() {
+		local seg="$1"
+		if [ -z "$seg" ]; then
+			return 0
+		fi
+		local remaining=$((KEYS_DEADLINE - $(date +%s)))
+		if [ "$remaining" -le 0 ]; then
+			log "keys.exe segment skipped: ${KEYS_BOUND_SECS}s bound already used up"
+			KEYS_TIMEOUT=1
+			return 0
+		fi
+		if ! timeout "$remaining" wine "$RUNTIME_DIR/keys.exe" $seg >>"$OUT_DIR/keys.log" 2>&1; then
+			log "keys.exe segment timed out or failed (had ${remaining}s left): $seg"
+			KEYS_TIMEOUT=1
+		fi
+	}
+
+	SEG=""
+	for tok in $DR_KEYS; do
+		case "$tok" in
+			shot:*)
+				run_keys_segment "$SEG"
+				SEG=""
+				shoot "${tok#shot:}"
+				;;
+			*)
+				SEG="${SEG:+$SEG }$tok"
+				;;
+		esac
+	done
+	run_keys_segment "$SEG"
 	shoot "after_keys"
 fi
 
