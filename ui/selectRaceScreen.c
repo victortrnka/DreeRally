@@ -319,6 +319,7 @@ void selectRaceScreen()
   int v51; // [sp+24h] [bp-48h]@62
   int v52; // [sp+28h] [bp-44h]@62
   int v53; // [sp+2Ch] [bp-40h]@46
+  char rankDigits[20]; // el original: acStack_38[0x14]
   char *name =malloc(100); // [sp+30h] [bp-3Ch]@45
   int index = 176;
   selectedRace_462CE8 = -1;
@@ -477,7 +478,7 @@ void selectRaceScreen()
           136,
           2,
           (int)((char *)screenBuffer + 160 * (selectedRaceId + 72 * participantsRace[selectedRaceId]) + 179227));
-        SDL_itoa(drivers[driverId].rank, name, 10);
+        SDL_itoa(drivers[driverId].rank, rankDigits, 10);
 		/*drawImageWithPosition(
 			(int)graphics4.signlineBpk,
 			136,
@@ -521,7 +522,13 @@ void selectRaceScreen()
           v28 = (v27++)[1];
         while ( v28 );
         memcpy(v27, &Str, v26);*/
-		strcat(name, " ");
+		//el original pone rank + "." + name, con un espacio delante si el rank tiene 1 digito
+		//(DAT_004434ec y DAT_004429a0, los mismos literales " " y "." de addParticipantToRace)
+		name[0] = 0;
+		if ( strlen(rankDigits) < 2 )
+			strcat(name, " ");
+		strcat(name, rankDigits);
+		strcat(name, ".");
 		strcat(name, drivers[driverId].name);
 		_strupr(name);
         drawTextWithFont(
