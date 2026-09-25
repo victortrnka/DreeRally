@@ -692,15 +692,9 @@ void   addParticipantToRace(signed int a1)
   int v13; // eax@29
   unsigned __int8 v14; // al@34
   int v15; // ebp@34
-  char *v16; // edi@35
-  char v17; // al@36
-  unsigned int v18; // eax@38
-  void *v19; // edi@38
-  char v20; // cl@39
 //  char *v21; // edi@40
 //  char v22; // al@41
 //  char *v23; // eax@42
-  char *v24; // edx@42
 //  char v25; // cl@43
 //  unsigned int v26; // eax@44
 //  void *v27; // edi@44
@@ -710,11 +704,8 @@ void   addParticipantToRace(signed int a1)
 //  int v31; // ecx@46
   int v32; // eax@46
  
-  char v34; // [sp+17h] [bp-51h]@35
-  char v35; // [sp+18h] [bp-50h]@34
-  char* DstBuf; // [sp+4h] [bp-64h]@34
-  char * buffer=malloc(2);
-  DstBuf = malloc(0x1000);
+  char DstBuf[20]; // [sp+4h] [bp-64h]@34
+  char v35[80]; // [sp+18h] [bp-50h]@34
   if ( !(rand() % a1) )
   {
     v1 = 0;
@@ -802,26 +793,12 @@ void   addParticipantToRace(signed int a1)
 	 
 	 //* ((BYTE *)&word_461EB4 + race) = v14 + 1;
 	  participantsRace[race ] = v14 + 1;
-      _itoa(drivers[v3].rank, &DstBuf, 10);
+      _itoa(drivers[v3].rank, DstBuf, 10);
 	  //itoa(dword_460888[27 * v3], &DstBuf, 10);
-      v35 = 0;
-      if ( strlen(&DstBuf) < 2 )
-      {
-        v16 = &v34;
-        do
-          v17 = (v16++)[1];
-        while ( v17 );
-        *(_WORD *)v16 = 32;
-      }
-      v18 = strlen(&DstBuf) + 1;
-      v19 = &v34;
-      do
-      {
-        v20 = *((BYTE *)v19 + 1);
-        v19 = (char *)v19 + 1;
-      }
-      while ( v20 );
-      memcpy(v19, &DstBuf, v18);
+      v35[0] = 0;
+      if ( strlen(DstBuf) < 2 )
+        strcat(v35, " ");
+      strcat(v35, DstBuf);
       /*v21 = &v34;
       do
         v22 = (v21++)[1];
@@ -829,12 +806,8 @@ void   addParticipantToRace(signed int a1)
       //v23 =drivers[v15].name;
 	  //v23 = &byte_460840[v15];
      // *(_WORD *)v21 = 46;
-	  v24 = malloc(24);
-	  
-      _itoa(drivers[v3].rank, buffer, 10);
-	  strcpy(v24, buffer);
-	  strcat(v24, ".");
-	  strcat(v24, drivers[v3].name);
+      strcat(v35, ".");
+      strcat(v35, drivers[v3].name);
 	  //v24 = &byte_460840[v15];
      /* do
         v25 = *v23++;
@@ -855,7 +828,7 @@ void   addParticipantToRace(signed int a1)
 	  //v32 = 9 * *((BYTE *)&word_461EB4 + race);
 	  v32 = 9 * participantsRace[race];
       //memcpy(v29, v30, v31);
-      drawTextWithFont((int)graphicsGeneral.fmed1aBpk, (int)&unk_445928, v24, 160 * (race  + 8 * v32) + 163874);
+      drawTextWithFont((int)graphicsGeneral.fmed1aBpk, (int)&unk_445928, v35, 160 * (race  + 8 * v32) + 163874);
       refreshAllScreen();
     }
   }
