@@ -11981,7 +11981,12 @@ int   sub_418B00(float a1, float a2, float a3)
   v16 = 0;
   //FIXED
  // v4 = &unk_45FF44;
-  index = 144;//posiciones desde dword_45FD00 que es el inicio de la paleta
+  //el original arranca en &DAT_0045ff44 (0x45FF44 = palette1[193]); su primera
+  //escritura es puVar1[-1] = 0x45FF40 = palette1[192] (palette1[0] = 0x45FC40,
+  //ver copyPalette1toPalette y sub_424240(64,...), 6ccecf5). index+3 debe dar 192
+  //en la primera vuelta, asi que arranca en 189, no en 144 (144 = 192-48, el
+  //mismo error de base que 6ccecf5 corrigio en sub_424240).
+  index = 189;
   v18 = 0.1 * a1;
   v19 = 0.1 * a2;
   v20 = 0.1 * a3;
@@ -12021,11 +12026,12 @@ int   sub_418B00(float a1, float a2, float a3)
     //*((_DWORD *)v10 + 1) = result;
     v10 = (char *)v10 + 12;
 
+	index = index + 3;
+
 	palette1[index] = colorToPaletteEntry((unsigned int)(unsigned __int64)(v14 * v11 + a1) << 16, 6553600);
 	palette1[index + 1] = colorToPaletteEntry((unsigned int)(unsigned __int64)(v14 * v12 + a2) << 16, 6553600);
 	palette1[index + 2] = colorToPaletteEntry((unsigned int)(unsigned __int64)(v14 * v13 + a3) << 16, 6553600);
 	result = palette1[index + 2];
-	index = index + 3;
     ++v9;
     v17 = v9;
   }
