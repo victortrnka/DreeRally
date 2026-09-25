@@ -19,22 +19,26 @@ int hash_index (hash_t *h, char *key) {
     int i;// = (int) hash(key) % h->size;
 	char *orig ="";
 	char * dest="";
-	dest =malloc(strlen(key));
+	dest =malloc(strlen(key) + 1);
 	if (dest != NULL) {
 		strcpy(dest, key);
 	}
 	for(i=0;i<h->filled;i++){
-		orig = malloc(strlen(h->keys[i]));
+		orig = malloc(strlen(h->keys[i]) + 1);
 		if (orig != NULL) {
 			strcpy(orig, h->keys[i]);
 		}
-		
+
 		if(strcmp(_strupr(orig),_strupr(dest))==0){
+			free(orig);
+			free(dest);
 			return i;
 		}
+		free(orig);
 	}
    /* while (h->keys[i] && h->keys[i] != key)
         i = (i + 1) % h->size;*/
+	free(dest);
 	return -1;
 }
  
