@@ -632,11 +632,6 @@ LABEL_32:
 //----- (004245D0) --------------------------------------------------------
 unsigned int drawStadistics()
 {
-  unsigned int v0; // eax@2
-  char *v1; // edi@2
-  char v2; // cl@3
-  char *v3; // edi@4
-  char v4; // al@5
   int v5; // ST24_4@6
 //  char *v6; // edi@8
 //  char v7; // al@9
@@ -669,55 +664,10 @@ unsigned int drawStadistics()
   unsigned int result; // eax@26
   int v35; // esi@27
   int v36; // edx@27
-  char *v37; // eax@27
-  signed int v38; // ecx@27
-  char v39; // dl@28
   int v40; // ecx@30
-  char *v41; // eax@30
-  signed int v42; // edx@30
-  char v43; // cl@31
-  char *v44; // edi@32
-  char v45; // al@33
-  unsigned int v46; // eax@34
-  char *v47; // edi@34
-  char v48; // cl@35
-  char *v49; // edi@36
-  char v50; // al@37
-  char *v51; // edi@39
-  char v52; // al@40
-  unsigned int v53; // eax@41
-  char *v54; // edi@41
-  char v55; // cl@42
-  unsigned int v56; // eax@43
-  char *v57; // edi@43
-  char v58; // cl@44
-  unsigned int v59; // eax@45
-  char *v60; // edi@45
-  char v61; // cl@46
   int v62; // edx@47
-  unsigned int v63; // eax@47
-  char *v64; // edi@47
-  char v65; // cl@48
   int v66; // edx@49
-  unsigned int v67; // eax@49
-  char *v68; // edi@49
-  char v69; // cl@50
   int v70; // ST24_4@51
-  int v71; // eax@57
-  char v72; // cl@58
-  char *v73; // edi@59
-  char v74; // al@60
-  unsigned int v75; // eax@61
-  void *v76; // edi@61
-  char v77; // cl@62
-  char *v78; // edi@63
-  char v79; // al@64
-  unsigned int v80; // eax@65
-  void *v81; // edi@65
-  char v82; // cl@66
-  unsigned int v83; // eax@67
-  char *v84; // edi@67
-  char v85; // cl@68
   int v86; // edx@69
   int v87; // eax@69
   char *v88; // edx@69
@@ -728,84 +678,14 @@ unsigned int drawStadistics()
   char v104; // bl@76
   int v106; // edx@78
   int v107; // ecx@78
-  char *v109; // edi@80
 //  char v110; // al@81
-  char *v111; // edi@84
-  char v112; // al@85
-  char *v113; // edi@88
-  char v114; // al@89
-  char *v115; // eax@94
-  char v116; // cl@95
-  char *v117; // eax@98
-  char v118; // cl@99
-  char *v119; // eax@102
-  char v120; // cl@103
-  int v121; // eax@106
-  char v122; // cl@107
-  char *v123; // edi@108
-  char v124; // al@109
-  char *v125; // eax@110
-  char v126; // cl@111
-  unsigned int v127; // eax@112
-  void *v128; // edi@112
-  char v129; // cl@113
-  char *v130; // edi@114
-  char v131; // al@115
-  char *v132; // eax@116
-  char v133; // cl@117
-  unsigned int v134; // eax@118
-  void *v135; // edi@118
-  char v136; // cl@119
-  char *v137; // eax@120
-  char v138; // cl@121
-  unsigned int v139; // eax@122
-  char *v140; // edi@122
-  char v141; // cl@123
   int v142; // ST24_4@124
-  char *v143; // eax@124
-  char v144; // dl@125
-  char *v145; // eax@128
-  char v146; // cl@129
-  char *v147; // eax@132
-  char v148; // cl@133
-  int v149; // eax@136
-  char v150; // cl@137
-  char *v151; // edi@138
-  char v152; // al@139
-  char *v153; // eax@140
-  char v154; // cl@141
-  unsigned int v155; // eax@142
-  void *v156; // edi@142
-  char v157; // cl@143
-  char *v158; // edi@144
-  char v159; // al@145
-  char *v160; // eax@146
-  char v161; // cl@147
-  unsigned int v162; // eax@148
-  void *v163; // edi@148
-  char v164; // cl@149
-  char *v165; // eax@150
-  char v166; // dl@151
-  unsigned int v167; // eax@152
-  char *v168; // edi@152
-  char v169; // cl@153
   int v170; // ST24_4@154
-  char v171; // [sp+Fh] [bp-A1h]@8
   char DstBuf[20]; // [sp+10h] [bp-A0h]@2
-  int v173; // [sp+24h] [bp-8Ch]@2
-  int v174; // [sp+28h] [bp-88h]@2
-  int v175; // [sp+2Ch] [bp-84h]@2
-  int v176; // [sp+30h] [bp-80h]@2
-  __int16 v177; // [sp+34h] [bp-7Ch]@47
-  char v178; // [sp+74h] [bp-3Ch]@51
-  char v179; // [sp+75h] [bp-3Bh]@54
-  char v180; // [sp+76h] [bp-3Ah]@54
-  char v181; // [sp+88h] [bp-28h]@51
-  char v182; // [sp+89h] [bp-27h]@56
-  char v183; // [sp+8Ah] [bp-26h]@56
-  char v184; // [sp+9Ch] [bp-14h]@51
-  char v185; // [sp+9Dh] [bp-13h]@52
-  char v186; // [sp+9Eh] [bp-12h]@52
+  char v173[80]; // [sp+24h] [bp-8Ch]@2
+  char v178[20]; // [sp+74h] [bp-3Ch]@51
+  char v181[20]; // [sp+88h] [bp-28h]@51
+  char v184[20]; // [sp+9Ch] [bp-14h]@51
   char *tmp = (char *)malloc(15);
   memcpy(screenBuffer, graphicsGeneral.menubg5Bpk, 0x4B000u);
   drawImageWithPosition((int)graphicsGeneral.rank1cBpk, 54, 386, (int)((char *)screenBuffer + 54060));
@@ -813,26 +693,12 @@ unsigned int drawStadistics()
   if ( isMultiplayerGame )
   {
     drawImageWithPosition((int)graphicsGeneral.resupok1Bpk, 272, 386, (int)((char *)screenBuffer + 53770));
-    v175 = 1919251558;
-    v173 = 1952543827;
-    v174 = 1629516661;
-    LOWORD(v176) = 32;
+    strcpy(v173, "Status after ");
     SDL_itoa(drivers[driverId].totalRaces, DstBuf, 10);
-    v0 = strlen(DstBuf) + 1;
-    v1 = &DstBuf[19];
-    do
-      v2 = (v1++)[1];
-    while ( v2 );
-    memcpy(v1, DstBuf, v0);
-    v3 = &DstBuf[19];
-    do
-      v4 = (v3++)[1];
-    while ( v4 );
-    *(_DWORD *)v3 = 1667330592;
-    *((_DWORD *)v3 + 1) = 695412837;
+    strcat(v173, DstBuf);
+    strcat(v173, " race(s)");
     v5 = (int)graphicsGeneral.fsma3aBpk;
-    v3[8] = 0;
-    drawTextWithFont(v5, (int)&letterSpacing_4458B0, (const char *)&v173, 289326);
+    drawTextWithFont(v5, (int)&letterSpacing_4458B0, v173, 289326);
     if ( isMultiplayerGame )
       drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, "Multiplayer Ranking", 55096);
   }
@@ -976,242 +842,102 @@ unsigned int drawStadistics()
   {
     v35 = selectedRace_462CE8;
     v36 = (unsigned __int8)circuitsToSelect_46126C[selectedRace_462CE8];
-    v37 = &aSuburbia[15 * v36];
-    v38 = (char *)&v173 - 15 * v36 - aSuburbia;
-    do
-    {
-      v39 = *v37;
-      v37[v38] = *v37;
-      ++v37;
-    }
-    while ( v39 );
+    strcpy(v173, circuits[v36]);
 	if (isMultiplayerGame)
 	{
 		v40 = (unsigned __int8)byte_45FC0F[dword_456BCC];
-		v41 = &aSuburbia[15 * v40];
-		v42 = (char *)&v173 - 15 * v40 - aSuburbia;
-		do
-		{
-			v43 = *v41;
-			v41[v42] = *v41;
-			++v41;
-		} while (v43);
+		strcpy(v173, circuits[v40]);
 		SDL_itoa(raceDrivers_456758, DstBuf, 10);
-		v44 = &DstBuf[19];
-		do
-			v45 = (v44++)[1];
-		while (v45);
-		*(_WORD *)v44 = 32;
-		v46 = strlen(DstBuf) + 1;
-		v47 = &DstBuf[19];
-		do
-			v48 = (v47++)[1];
-		while (v48);
-		memcpy(v47, DstBuf, v46);
-		v49 = &DstBuf[19];
-		do
-			v50 = (v49++)[1];
-		while (v50);
-		*(_DWORD *)v49 = 1634496557;//easy race
-		*((_DWORD *)v49 + 1) = 544367993;
-		*((_DWORD *)v49 + 2) = 1701011826;
-		*((_WORD *)v49 + 6) = 58;
+		strcat(v173, " ");
+		strcat(v173, DstBuf);
+		strcat(v173, "-player race:");
 	}
 	else if (selectedRace_462CE8)
 	{
 		switch (selectedRace_462CE8)
 		{
 		case RACE_MEDIUM:
-			v111 = &DstBuf[19];
-			do
-				v112 = (v111++)[1];
-			while (v112);
-			*(_DWORD *)v111 = 1684368672;//race medium
-
-			*((_DWORD *)v111 + 1) = 544044393;
-			*((_DWORD *)v111 + 2) = 1701011826;
-			*((_WORD *)v111 + 6) = 58;
+			strcat(v173, " medium race:");
 			break;
 		case RACE_HARD:
-			v113 = &DstBuf[19];
-			do
-				v114 = (v113++)[1];
-			while (v114);
-			*(_DWORD *)v113 = 1918986272;//race hard
-			*((_DWORD *)v113 + 1) = 1634869348;
-			*((_DWORD *)v113 + 2) = 3827043;
+			strcat(v173, " hard race:");
 			break;
 		case RACE_ARENA:
-			v173 = 543516756;//the arena
-			v174 = 1852142145;
-			LOWORD(v175) = 14945;
-			BYTE2(v175) = 0;
+			strcpy(v173, "The Arena:");
 			break;
 		}
 	}
 	else
 	{
-		v109 = (char *)malloc(20);
-		strcpy(v109, "easy race:");
-     /* v109 = &DstBuf[19];
-      do
-        v110 = (v109++)[1];
-      while ( v110 );
-      *(_DWORD *)v109 = 1935762720; //easy race:
-      *((_DWORD *)v109 + 1) = 1634869369;
-      *((_DWORD *)v109 + 2) = 3827043;*/
+		strcat(v173, " easy race:");
     }
-    drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, (const char *)&v173, 158440);
+    drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, v173, 158440);
     SDL_itoa(dword_456BD8, DstBuf, 10);
-    v51 = &v171;
-    do
-      v52 = (v51++)[1];
-    while ( v52 );
-    *(_WORD *)v51 = 46;
-    v173 = 1667329104;//Plac
-    v174 = 6778473;//ing
-    drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, (const char *)&v173, 173160);
-    LOWORD(v173) = 8250;//:
-    BYTE2(v173) = 0;
-    v53 = strlen(DstBuf) + 1;
-    v54 = &DstBuf[19];
-    do
-      v55 = (v54++)[1];
-    while ( v55 );
-    memcpy(v54, DstBuf, v53);
-    drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, (const char *)&v173, 173326);
+    strcat(DstBuf, ".");
+    strcpy(v173, "Placing");
+    drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, v173, 173160);
+    strcpy(v173, ": ");
+    strcat(v173, DstBuf);
+    drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, v173, 173326);
     SDL_itoa(userLasRacePriceIncome_456BDC, DstBuf, 10);
-    v173 = 1701011794;//Race
-    v174 = 1668180256;//inc
-    v175 = 6647151;//ome
-    drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, (const char *)&v173, 187880);
-    v173 = 2367546;//: 4
-    v56 = strlen(DstBuf) + 1;
-    v57 = &DstBuf[19];
-    do
-      v58 = (v57++)[1];
-    while ( v58 );
-    memcpy(v57, DstBuf, v56);
-    drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, (const char *)&v173, 188046);
+    strcpy(v173, "Race income");
+    drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, v173, 187880);
+    strcpy(v173, ": $");
+    strcat(v173, DstBuf);
+    drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, v173, 188046);
     SDL_itoa(userLastRaceIncomeNoPrice_456BE0, DstBuf, 10);
-    v174 = 1852383347; //s in
-    v175 = 1701670755;//come
-    v173 = 1970171714;//Bonu
-    LOBYTE(v176) = 0;
-    drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, (const char *)&v173, 202600);
-    v173 = 2367546;//: S
-    v59 = strlen(DstBuf) + 1;
-    v60 = &DstBuf[19];
-    do
-      v61 = (v60++)[1];
-    while ( v61 );
+    strcpy(v173, "Bonus income");
+    drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, v173, 202600);
+    strcpy(v173, ": $");
+    strcat(v173, DstBuf);
     v62 = (int)graphicsGeneral.fsma3aBpk;
-    memcpy(v60, DstBuf, v59);
-    drawTextWithFont(v62, (int)&letterSpacing_4458B0, (const char *)&v173, 202766);
+    drawTextWithFont(v62, (int)&letterSpacing_4458B0, v173, 202766);
     SDL_itoa(userLasRacePriceIncome_456BDC + userLastRaceIncomeNoPrice_456BE0, DstBuf, 10);
-    v173 = 1635020628;//Total
-    v175 = 1763730787;//ce i
-    v176 = 1836016494;//ncom
-    v174 = 1634869356;//l ra
-    v177 = 101;///e
-    drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, (const char *)&v173, 217320);
-    v173 = 2367546;//: e
-    v63 = strlen(DstBuf) + 1;
-    v64 = &DstBuf[19];
-    do
-      v65 = (v64++)[1];
-    while ( v65 );
+    strcpy(v173, "Total race income");
+    drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, v173, 217320);
+    strcpy(v173, ": $");
+    strcat(v173, DstBuf);
     v66 = (int)graphicsGeneral.fsma3aBpk;
-    memcpy(v64, DstBuf, v63);
-    drawTextWithFont(v66, (int)&letterSpacing_4458B0, (const char *)&v173, 217486);
+    drawTextWithFont(v66, (int)&letterSpacing_4458B0, v173, 217486);
     SDL_itoa(numberOfLaps, DstBuf, 10);
-    v173 = 1651340622;//Numb
-    v175 = 1634476134;//f la
-    LOWORD(v176) = 29552;//ps
-    v174 = 1864397413;//er o
-    BYTE2(v176) = 0;
-    drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, (const char *)&v173, 232040);
-    LOWORD(v173) = 8250;// :
-    BYTE2(v173) = 0;
-    v67 = strlen(DstBuf) + 1;
-    v68 = &DstBuf[19];
-    do
-      v69 = (v68++)[1];
-    while ( v69 );
-    memcpy(v68, DstBuf, 4 * (v67 >> 2));
+    strcpy(v173, "Number of laps");
+    drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, v173, 232040);
+    strcpy(v173, ": ");
+    strcat(v173, DstBuf);
     v70 = (int)graphicsGeneral.fsma3aBpk;
-    memcpy(&v68[4 * (v67 >> 2)], &DstBuf[4 * (v67 >> 2)], v67 & 3);
-    drawTextWithFont(v70, (int)&letterSpacing_4458B0, (const char *)&v173, 232206);
-    SDL_itoa(totalRaceMinutes_45EEC0, &v184, 10);
-    SDL_itoa(totalRaceSeconds_45EEBC, &v178, 10);
-    SDL_itoa(totalRaceMilliseconds_462D74, &v181, 10);
-    if ( strlen(&v184) == 1 )
+    drawTextWithFont(v70, (int)&letterSpacing_4458B0, v173, 232206);
+    SDL_itoa(totalRaceMinutes_45EEC0, v184, 10);
+    SDL_itoa(totalRaceSeconds_45EEBC, v178, 10);
+    SDL_itoa(totalRaceMilliseconds_462D74, v181, 10);
+    if ( strlen(v184) == 1 )
     {
-      v185 = v184;
-      v184 = 48;
-      v186 = 0;
+      v184[1] = v184[0];
+      v184[0] = 48;
+      v184[2] = 0;
     }
-    if ( strlen(&v178) == 1 )
+    if ( strlen(v178) == 1 )
     {
-      v179 = v178;
-      v178 = 48;
-      v180 = 0;
+      v178[1] = v178[0];
+      v178[0] = 48;
+      v178[2] = 0;
     }
-    if ( strlen(&v181) == 1 )
+    if ( strlen(v181) == 1 )
     {
-      v182 = v181;
-      v181 = 48;
-      v183 = 0;
+      v181[1] = v181[0];
+      v181[0] = 48;
+      v181[2] = 0;
     }
-    v71 = 0;
-    do
-    {
-      v72 = *(&v184 + v71);
-      DstBuf[v71++] = v72;
-    }
-    while ( v72 );
-    v73 = &v171;
-    do
-      v74 = (v73++)[1];
-    while ( v74 );
-    *(_WORD *)v73 = 58;
-    v75 = strlen(&v178) + 1;
-    v76 = &v171;
-    do
-    {
-      v77 = *((BYTE *)v76 + 1);
-      v76 = (char *)v76 + 1;
-    }
-    while ( v77 );
-    memcpy(v76, &v178, v75);
-    v78 = &v171;
-    do
-      v79 = (v78++)[1];
-    while ( v79 );
-    *(_WORD *)v78 = 46;
-    v80 = strlen(&v181) + 1;
-    v81 = &v171;
-    do
-    {
-      v82 = *((BYTE *)v81 + 1);
-      v81 = (char *)v81 + 1;
-    }
-    while ( v82 );
-    memcpy(v81, &v181, v80);
-    v173 = 1701011794;//Race
-    v174 = 1835627552;//tim
-    LOWORD(v175) = 101;//e
-    drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, (const char *)&v173, 246760);
-    BYTE2(v173) = 0;
-    LOWORD(v173) = 8250;// :
-    v83 = strlen(DstBuf) + 1;
-    v84 = &DstBuf[19];
-    do
-      v85 = (v84++)[1];
-    while ( v85 );
+    strcpy(DstBuf, v184);
+    strcat(DstBuf, ":");
+    strcat(DstBuf, v178);
+    strcat(DstBuf, ".");
+    strcat(DstBuf, v181);
+    strcpy(v173, "Race time");
+    drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, v173, 246760);
+    strcpy(v173, ": ");
+    strcat(v173, DstBuf);
     v86 = (int)graphicsGeneral.fsma3aBpk;
-    memcpy(v84, DstBuf, v83);
-    drawTextWithFont(v86, (int)&letterSpacing_4458B0, (const char *)&v173, 246926);
+    drawTextWithFont(v86, (int)&letterSpacing_4458B0, v173, 246926);
     v87 = 27 * driverId;
     v88 = &circuitsToSelect_46126C[selectedRace_462CE8];
     //El original indexaba la tabla de records con &dword_45F04C + 24*indice, pero aqui
@@ -1264,198 +990,71 @@ unsigned int drawStadistics()
       configuration.circuitRecords[recordIndex].sec = v107;
       configuration.circuitRecords[recordIndex].cen = v106;
     }
-    SDL_itoa(v91, &v184, 10);
-    SDL_itoa(currentRaceBestLapSeconds_45EB48, &v178, 10);
-    SDL_itoa(currentRaceBestLapMilliseconds_461FEC, &v181, 10);
-    v115 = &v184;
-    do
-      v116 = *v115++;
-    while ( v116 != v104 );
-    if ( v115 - &v185 == 1 )
+    SDL_itoa(v91, v184, 10);
+    SDL_itoa(currentRaceBestLapSeconds_45EB48, v178, 10);
+    SDL_itoa(currentRaceBestLapMilliseconds_461FEC, v181, 10);
+    if ( strlen(v184) == 1 )
     {
-      v185 = v184;
-      v184 = 48;
-      v186 = v104;
+      v184[1] = v184[0];
+      v184[0] = 48;
+      v184[2] = 0;
     }
-    v117 = &v178;
-    do
-      v118 = *v117++;
-    while ( v118 != v104 );
-    if ( v117 - &v179 == 1 )
+    if ( strlen(v178) == 1 )
     {
-      v179 = v178;
-      v178 = 48;
-      v180 = v104;
+      v178[1] = v178[0];
+      v178[0] = 48;
+      v178[2] = 0;
     }
-    v119 = &v181;
-    do
-      v120 = *v119++;
-    while ( v120 != v104 );
-    if ( v119 - &v182 == 1 )
+    if ( strlen(v181) == 1 )
     {
-      v182 = v181;
-      v181 = 48;
-      v183 = v104;
+      v181[1] = v181[0];
+      v181[0] = 48;
+      v181[2] = 0;
     }
-    v121 = 0;
-    do
-    {
-      v122 = *(&v184 + v121);
-      DstBuf[v121++] = v122;
-    }
-    while ( v122 != v104 );
-    v123 = &v171;
-    do
-      v124 = (v123++)[1];
-    while ( v124 != v104 );
-    v125 = &v178;
-    *(_WORD *)v123 = 58;
-    do
-      v126 = *v125++;
-    while ( v126 != v104 );
-    v127 = v125 - &v178;
-    v128 = &v171;
-    do
-    {
-      v129 = *((BYTE *)v128 + 1);
-      v128 = (char *)v128 + 1;
-    }
-    while ( v129 != v104 );
-    memcpy(v128, &v178, v127);
-    v130 = &v171;
-    do
-      v131 = (v130++)[1];
-    while ( v131 != v104 );
-    *(_WORD *)v130 = 46;
-    v132 = &v181;
-    do
-      v133 = *v132++;
-    while ( v133 != v104 );
-    v134 = v132 - &v181;
-    v135 = &v171;
-    do
-    {
-      v136 = *((BYTE *)v135 + 1);
-      v135 = (char *)v135 + 1;
-    }
-    while ( v136 != v104 );
-    memcpy(v135, &v181, v134);
-    v173 = 1953719618;//Best
-    v174 = 1885432864;//lap
-    LOBYTE(v175) = 0;
-    drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, (const char *)&v173, 261480);
-    LOWORD(v173) = 8250;// :
-    v137 = DstBuf;
-    BYTE2(v173) = 0;
-    do
-      v138 = *v137++;
-    while ( v138 != v104 );
-    v139 = v137 - DstBuf;
-    v140 = &DstBuf[19];
-    do
-      v141 = (v140++)[1];
-    while ( v141 != v104 );
-    memcpy(v140, DstBuf, 4 * (v139 >> 2));
+    strcpy(DstBuf, v184);
+    strcat(DstBuf, ":");
+    strcat(DstBuf, v178);
+    strcat(DstBuf, ".");
+    strcat(DstBuf, v181);
+    strcpy(v173, "Best lap");
+    drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, v173, 261480);
+    strcpy(v173, ": ");
+    strcat(v173, DstBuf);
     v142 = (int)graphicsGeneral.fsma3aBpk;
-    memcpy(&v140[4 * (v139 >> 2)], &DstBuf[4 * (v139 >> 2)], v139 & 3);
-    drawTextWithFont(v142, (int)&letterSpacing_4458B0, (const char *)&v173, 261646);
+    drawTextWithFont(v142, (int)&letterSpacing_4458B0, v173, 261646);
     recordIndex = (unsigned __int8)circuitsToSelect_46126C[selectedRace_462CE8] + 18 * drivers[driverId].carType;
-    SDL_itoa(configuration.circuitRecords[recordIndex].min, &v184, 10);
-    SDL_itoa(configuration.circuitRecords[recordIndex].sec, &v178, 10);
-    SDL_itoa(configuration.circuitRecords[recordIndex].cen, &v181, 10);
-    v143 = &v184;
-    do
-      v144 = *v143++;
-    while ( v144 != v104 );
-    if ( v143 - &v185 == 1 )
+    SDL_itoa(configuration.circuitRecords[recordIndex].min, v184, 10);
+    SDL_itoa(configuration.circuitRecords[recordIndex].sec, v178, 10);
+    SDL_itoa(configuration.circuitRecords[recordIndex].cen, v181, 10);
+    if ( strlen(v184) == 1 )
     {
-      v185 = v184;
-      v184 = 48;
-      v186 = v104;
+      v184[1] = v184[0];
+      v184[0] = 48;
+      v184[2] = 0;
     }
-    v145 = &v178;
-    do
-      v146 = *v145++;
-    while ( v146 != v104 );
-    if ( v145 - &v179 == 1 )
+    if ( strlen(v178) == 1 )
     {
-      v179 = v178;
-      v178 = 48;
-      v180 = v104;
+      v178[1] = v178[0];
+      v178[0] = 48;
+      v178[2] = 0;
     }
-    v147 = &v181;
-    do
-      v148 = *v147++;
-    while ( v148 != v104 );
-    if ( v147 - &v182 == 1 )
+    if ( strlen(v181) == 1 )
     {
-      v182 = v181;
-      v181 = 48;
-      v183 = v104;
+      v181[1] = v181[0];
+      v181[0] = 48;
+      v181[2] = 0;
     }
-    v149 = 0;
-    do
-    {
-      v150 = *(&v184 + v149);
-      DstBuf[v149++] = v150;
-    }
-    while ( v150 != v104 );
-    v151 = &v171;
-    do
-      v152 = (v151++)[1];
-    while ( v152 != v104 );
-    v153 = &v178;
-    *(_WORD *)v151 = 58;
-    do
-      v154 = *v153++;
-    while ( v154 != v104 );
-    v155 = v153 - &v178;
-    v156 = &v171;
-    do
-    {
-      v157 = *((BYTE *)v156 + 1);
-      v156 = (char *)v156 + 1;
-    }
-    while ( v157 != v104 );
-    memcpy(v156, &v178, v155);
-    v158 = &v171;
-    do
-      v159 = (v158++)[1];
-    while ( v159 != v104 );
-    v160 = &v181;
-    *(_WORD *)v158 = 46;
-    do
-      v161 = *v160++;
-    while ( v161 != v104 );
-    v162 = v160 - &v181;
-    v163 = &v171;
-    do
-    {
-      v164 = *((BYTE *)v163 + 1);
-      v163 = (char *)v163 + 1;
-    }
-    while ( v164 != v104 );
-    memcpy(v163, &v181, v162);
-    v174 = 1885432864;//lap
-    v175 = 1702257952;//eve
-    v173 = 1953719618;//Best
-    LOWORD(v176) = 114;//r
-    drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, (const char *)&v173, 276200);
-    LOWORD(v173) = 8250;// :
-    v165 = DstBuf;
-    BYTE2(v173) = 0;
-    do
-      v166 = *v165++;
-    while ( v166 != v104 );
-    v167 = v165 - DstBuf;
-    v168 = &DstBuf[19];
-    do
-      v169 = (v168++)[1];
-    while ( v169 != v104 );
-    memcpy(v168, DstBuf, 4 * (v167 >> 2));
+    strcpy(DstBuf, v184);
+    strcat(DstBuf, ":");
+    strcat(DstBuf, v178);
+    strcat(DstBuf, ".");
+    strcat(DstBuf, v181);
+    strcpy(v173, "Best lap ever");
+    drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, v173, 276200);
+    strcpy(v173, ": ");
+    strcat(v173, DstBuf);
     v170 = (int)graphicsGeneral.fsma3aBpk;
-    memcpy(&v168[4 * (v167 >> 2)], &DstBuf[4 * (v167 >> 2)], v167 & 3);
-    result = drawTextWithFont(v170, (int)&letterSpacing_4458B0, (const char *)&v173, 276366);
+    result = drawTextWithFont(v170, (int)&letterSpacing_4458B0, v173, 276366);
     dword_456BD8 = 0;
   }
   return result;
