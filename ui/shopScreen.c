@@ -1692,11 +1692,10 @@ void shopScreenMoveDown_421DF0()
 //----- (004210C0) --------------------------------------------------------
 int showCarBought()
 {
-  unsigned int v0; // eax@1
 //  void *v1; // edi@1
 //  char v2; // cl@2
   //int v3; // eax@3
-  char * v5; // [sp-1h] [bp-29h]@1
+  char v5[20]; // [sp-1h] [bp-29h]@1
   __int16 v6; // [sp+0h] [bp-28h]@1
   char DstBuf[100] = ""; // [sp+14h] [bp-14h]@1
 
@@ -1704,27 +1703,11 @@ int showCarBought()
   drawImageWithPosition2((int)((char *)carnameBpk + 1536 * actualCarSelected), 96, 16, (int)((char *)screenBuffer + 80016));
   drawMenuAnimation(16, 141, carAnimCurrentFrame_45FBA0, getCarBpkById(actualCarSelected), (int)&carAnimFrameSize_45FBA0[64 * actualCarSelected]);
   _itoa(cars[actualCarSelected].cost, &DstBuf, 10);
-  /*v6 = 36;
-  v0 = strlen(&DstBuf) + 1;
-  v1 = &v5;
-  do
-  {
-    v2 = *((BYTE *)v1 + 1);
-    v1 = (char *)v1 + 1;
-  }
-  while ( v2 );
-  memcpy(v1, &DstBuf, v0);*/
-
-   
-  v0 = strlen(DstBuf) + 1;
-
-  v5 = malloc(v0); //coste + el $
-strcpy(v5,"$"); /* copy name into the new var */
-	strcat(v5, DstBuf);
-	v6 = getBoxTextOffset(v5);//get small text size
+  strcpy(v5, "$");
+  strcat(v5, DstBuf);
+  v6 = getBoxTextOffset(v5);//get small text size
 
   drawInGamePrices(v5, v6 + 132496);
-  free(v5);
   createPopup(144, 114, 384, 119, 1);
   writeTextInScreen(&aVagabondBought[1760 * drivers[driverId].carType], 79530);
   writeTextInScreen((const char *)&unk_44E168 + 1760 * drivers[driverId].carType, 89770);
