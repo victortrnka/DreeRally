@@ -1,0 +1,45 @@
+# results-orig: the original dr.exe's version of results.keys, for
+#   make docker-test ORIG=1 SCENARIO=results-orig SECS=280
+#
+# Two differences from results.keys, both measured.
+#
+# 1. The intro-skip prefix. The original shows two extra publisher splash
+#    screens before its own intro/menu (Apogee, then Remedy) that our port
+#    does not render; measured with staggered shot:s1..s4 checkpoints:
+#      t=13s (1 Enter):  still on the Apogee splash
+#      t=17s (2 Enters): Remedy splash
+#      t=21s (3 Enters): main menu, "Start Racing" highlighted
+#      t=25s (4 Enters): already one level into "Start Racing" (overshoot)
+#    So the original needs three Enters where the port needs one; from the
+#    main menu through the sign-up screen it reuses results.keys's waits
+#    unchanged, since an earlier trial found the original and the port
+#    track each other exactly once both are past their respective intros
+#    (under CrossOver an identical key sequence
+#    reached the identical Driver's Licence screen in both).
+# 2. The race-finish wait. A first attempt at 155s (results.keys's value,
+#    which was enough for our port) caught the original's race still
+#    running at t=216s (out/results.png showed lap 1/4, not the results
+#    screen). Whether that is the original always racing longer or one
+#    slow track by chance is not established; 200s plus margin is used
+#    here rather than re-measuring further.
+enter w3000
+enter w3000
+enter w3500
+shot:menu
+enter w1500
+enter w1500
+t w200
+e w200
+s w200
+t w200
+enter w1200
+shot:licence
+enter w1500
+enter w3000
+enter w2500
+enter w20000
+enter w2000
+shot:race
+w200000
+enter w4000
+shot:results

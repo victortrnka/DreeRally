@@ -1,0 +1,50 @@
+# results: new game -> licence -> race -> RACE OVER -> race-results screen.
+#
+# Needs a long RUN_SECS: run as
+#   make docker-test SCENARIO=results SECS=220
+# (RUN_SECS=220 -> keys bound = RUN_SECS+30 = 250s; run.sh's own host
+# watchdog is RUN_SECS+120 = 340s, comfortably above both).
+#
+# Reuses race.keys's path to a running race (see race.keys for that half),
+# then waits out an AI-only race and screenshots the results screen that
+# shows all four finishing cars' colours (the 521609e car-palette
+# question). Measured:
+# AI-only races take 90-139s once running; this waits 155s for margin, then
+# 0-1 tracks worth of slack before RUN_SECS would stop the container.
+#
+# shot:licence and shot:race are extra checkpoints in
+# addition to shot:results.
+#
+# Post-race navigation: postRaceMain draws easyRaceResults() first (no key
+# needed - it runs as soon as the race-over condition is detected), which
+# already draws the four finishing cars via drawRightPositions/sub_424240
+# (ui/raceResultsScreen.c) - the exact function 521609e touched. So this
+# scenario does not need the down/down/down/down navigation once used to
+# reach the shop; the very first results screen is already the target.
+# The one `enter` sent after the wait is a no-op if postRaceMain already
+# auto-triggered (Enter was found to be ignored on these screens, only
+# certain other keys advance them) and dismisses "RACE OVER" if a keypress
+# was in fact needed - safe either way.
+#
+# Works for both our exe and the original dr.exe (make docker-test ORIG=1
+# SCENARIO=results) when the menu timing matches closely enough for the
+# same wait values; results-orig.keys exists because it does not.
+enter w3500
+shot:menu
+enter w1500
+enter w1500
+t w200
+e w200
+s w200
+t w200
+enter w1200
+shot:licence
+enter w1500
+enter w3000
+enter w2500
+enter w20000
+enter w2000
+shot:race
+w155000
+enter w4000
+shot:results
