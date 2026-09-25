@@ -89,7 +89,7 @@ run: $(OUT)/dreerally.exe
 	"$(CX)/wine" --bottle "$(BOTTLE)" --workdir "$(CURDIR)/run" "$(CURDIR)/run/dreerally.exe" $(ARGS)
 
 check-equiv:
-	tools/equiv/check-equiv.sh $(BASE)
+	LLVM=$(LLVM) tools/equiv/check-equiv.sh $(BASE)
 
 stats:
 	@python3 tools/stats.py

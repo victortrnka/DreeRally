@@ -11,10 +11,16 @@ IMAGE_BASE = 0x400000
 
 
 def make_pe(path, sections):
-    """Write a minimal PE32 image. sections: list of (name, va, raw_bytes)."""
+    """Write a minimal PE32 image. sections: list of (name, va, raw_bytes).
+
+    Real enough for llvm-objdump to disassemble: an "MZ" stub (objdump's PE
+    reader ignores everything else about it but requires the signature) and
+    IMAGE_SCN_CNT_CODE|MEM_EXECUTE|MEM_READ on every section.
+    """
     pe_offset = 0x40
     opt_size = 0xE0
     header = bytearray(0x400)
+    header[0:2] = b"MZ"
     struct.pack_into("<I", header, 0x3C, pe_offset)
     header[pe_offset:pe_offset + 4] = b"PE\0\0"
     struct.pack_into("<HH", header, pe_offset + 4, 0x14C, len(sections))
@@ -22,6 +28,7 @@ def make_pe(path, sections):
     opt = pe_offset + 24
     struct.pack_into("<H", header, opt, 0x10B)
     struct.pack_into("<I", header, opt + 28, IMAGE_BASE)
+    struct.pack_into("<I", header, opt + 56, 0x100000)  # SizeOfImage
     table = opt + opt_size
     body = bytearray()
     raw_ptr = len(header)
@@ -29,6 +36,7 @@ def make_pe(path, sections):
         entry = table + 40 * i
         header[entry:entry + 8] = name.encode().ljust(8, b"\0")
         struct.pack_into("<IIII", header, entry + 8, len(raw), va, len(raw), raw_ptr + len(body))
+        struct.pack_into("<I", header, entry + 36, 0x60000020)  # section characteristics
         body += raw
     Path(path).write_bytes(bytes(header) + bytes(body))
 
@@ -94,6 +102,105 @@ class CompareTest(unittest.TestCase):
             same, report = equiv.compare(base, work)
         self.assertFalse(same)
         self.assertIn(".data", "\n".join(report))
+
+    def test_moved_only_function_is_not_reported_as_changed(self):
+        # _a grows by one NOP, which shifts _b (a plain "mov eax, &_c" with no
+        # symbol renamed) one byte later. _b's raw bytes therefore differ
+        # (the embedded address changed), but its behaviour did not: this is
+        # the case the footprint listing exists for. _c's own byte (ret)
+        # never moves relative to itself, so it never even reaches the
+        # disassembly step.
+        with tempfile.TemporaryDirectory() as tmp:
+            base_text = b"\x90" + b"\xB8" + struct.pack("<I", 0x401006) + b"\xC3"
+            work_text = b"\x90\x90" + b"\xB8" + struct.pack("<I", 0x401007) + b"\xC3"
+            base = write_build(Path(tmp) / "base", base_text,
+                               [(0x401000, "_a"), (0x401001, "_b"), (0x401006, "_c")])
+            work = write_build(Path(tmp) / "work", work_text,
+                               [(0x401000, "_a"), (0x401002, "_b"), (0x401007, "_c")])
+            same, report = equiv.compare(base, work)
+        self.assertFalse(same)
+        text = "\n".join(report)
+        self.assertIn("functions changed (real): 1", text)
+        self.assertNotIn("_b", text)
+        self.assertIn("moved-only", text)
+
+
+IMAGE_LO = 0x400000
+IMAGE_HI = 0x900000
+
+
+class NormalizeTest(unittest.TestCase):
+    """normalize() answers 'did this function's own behaviour change?',
+    independent of where it (or anything it calls/reads) landed in the
+    image. A false 'no change' here would let a real edit hide inside the
+    moved-only bucket; a false 'changed' would drown each fix's
+    footprint check back in the address-shift noise this tool exists to
+    remove."""
+
+    def test_moved_call_and_data_target_is_not_a_change(self):
+        # Same call, same data read; only the callee/data addresses shifted
+        # (as every later symbol does when an earlier function's size
+        # changes). Must normalize identically across builds.
+        base_symbols = [(0x401000, "_caller", "x.obj"), (0x420000, "_callee", "x.obj"),
+                        (0x4b0000, "_table", "x.obj")]
+        work_symbols = [(0x401000, "_caller", "x.obj"), (0x420010, "_callee", "x.obj"),
+                        (0x4b0010, "_table", "x.obj")]
+        base_lines = [
+            "  401000:      \tcall\t0x420000 <.text+0x1f000>",
+            "  401005:      \tmov\teax, dword ptr [0x4b0000]",
+        ]
+        work_lines = [
+            "  401000:      \tcall\t0x420010 <.text+0x1f010>",
+            "  401005:      \tmov\teax, dword ptr [0x4b0010]",
+        ]
+        base_norm = equiv.normalize(base_lines, 0x401000, 0x401010, base_symbols, IMAGE_LO, IMAGE_HI)
+        work_norm = equiv.normalize(work_lines, 0x401000, 0x401010, work_symbols, IMAGE_LO, IMAGE_HI)
+        self.assertEqual(base_norm, work_norm)
+        self.assertEqual(base_norm, ["call _callee+0x0", "mov eax, dword ptr [_table+0x0]"])
+
+    def test_changed_immediate_is_a_change(self):
+        symbols = [(0x401000, "_f", "x.obj")]
+        base = ["  401000:      \tmov\teax, 0x5"]
+        work = ["  401000:      \tmov\teax, 0x6"]
+        base_norm = equiv.normalize(base, 0x401000, 0x401010, symbols, IMAGE_LO, IMAGE_HI)
+        work_norm = equiv.normalize(work, 0x401000, 0x401010, symbols, IMAGE_LO, IMAGE_HI)
+        self.assertNotEqual(base_norm, work_norm)
+
+    def test_call_to_different_symbol_is_a_change(self):
+        # Both targets are "addresses" that would survive relocation on
+        # their own; the point is the call moved from one real function to
+        # another one, which normalize() must not paper over.
+        symbols = [(0x401000, "_f", "x.obj"), (0x420000, "_foo", "x.obj"), (0x430000, "_bar", "x.obj")]
+        base = ["  401000:      \tcall\t0x420000 <.text+0x1f000>"]
+        work = ["  401000:      \tcall\t0x430000 <.text+0x2f000>"]
+        base_norm = equiv.normalize(base, 0x401000, 0x401010, symbols, IMAGE_LO, IMAGE_HI)
+        work_norm = equiv.normalize(work, 0x401000, 0x401010, symbols, IMAGE_LO, IMAGE_HI)
+        self.assertNotEqual(base_norm, work_norm)
+        self.assertEqual(base_norm, ["call _foo+0x0"])
+        self.assertEqual(work_norm, ["call _bar+0x0"])
+
+    def test_intrafunction_jump_uses_function_relative_offset(self):
+        symbols = [(0x401000, "_f", "x.obj"), (0x401020, "_g", "x.obj")]
+        lines = ["  401000:      \tjmp\t0x401010 <.text+0x10>"]
+        norm = equiv.normalize(lines, 0x401000, 0x401020, symbols, IMAGE_LO, IMAGE_HI)
+        self.assertEqual(norm, ["jmp .+0x10"])
+
+    def test_non_instruction_lines_are_not_part_of_the_listing(self):
+        # A parser regression that let a header/label line through would
+        # silently pad every normalized list, hiding real diffs behind a
+        # constant offset.
+        symbols = [(0x401000, "_f", "x.obj")]
+        lines = [
+            "",
+            "dreerally.exe:\tfile format coff-i386",
+            "",
+            "Disassembly of section .text:",
+            "",
+            "00401000 <.text>:",
+            "  401000:      \tret",
+        ]
+        norm = equiv.normalize(lines, 0x401000, 0x401010, symbols, IMAGE_LO, IMAGE_HI)
+        self.assertEqual(norm, ["ret"])
 
 
 if __name__ == "__main__":
