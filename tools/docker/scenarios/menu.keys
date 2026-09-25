@@ -1,0 +1,12 @@
+# menu: skip the intro and reach the main menu.
+#
+# The intro-skip count is not deterministic (it depends on which intro frame
+# is showing when each key lands), so this sends two Enters with generous
+# gaps, then Esc. Esc is "Previous menu": if the 2nd Enter only cleared the
+# intro, Esc on the main menu itself is a harmless no-op; if the 2nd Enter
+# also opened the "Start Racing" submenu (intro cleared unusually fast),
+# Esc backs out of it to the main menu. Either way this lands cleanly on the
+# main menu. Verified with screenshots.
+enter w2000
+enter w1800
+esc w1200

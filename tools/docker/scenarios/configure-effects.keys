@@ -1,0 +1,28 @@
+# configure-effects: crash-reproduction path -
+# Configure > Effect volume > Enter > Esc (deterministic). Exercises the Effect-volume popup
+# (showAdjustOptions) that used to smash the stack (fixed in 715098c).
+#
+# enter/enter/esc: reach the main menu (see menu.keys for why).
+# down/enter: Multiplayer Race is disabled, so one Down from the default
+#   "Start Racing" selection lands on "Configure" (skip-disabled behaviour,
+#   verified in the original trial); Enter opens it.
+# down/enter: Configure's items are Music Volume / Effect Volume / Define
+#   Keyboard / Define Gamepad-Joystick / Gamepad-Joystick Disabled /
+#   Previous menu - one Down from the default "Music Volume" lands on
+#   "Effect Volume"; Enter opens the popup.
+# wait, enter, esc: the exact repro - sit on the popup, confirm, leave
+#   Configure back to the main menu.
+#
+# Verified with screenshots: reaches "ADJUST EFFECT VOLUME: NN%", then
+# returns to the main menu with Configure highlighted, no crash (the bug
+# is fixed on this tree).
+enter w2000
+enter w1800
+esc w1200
+down w800
+enter w1500
+down w800
+enter w1500
+w3000
+enter w1500
+esc w1200
