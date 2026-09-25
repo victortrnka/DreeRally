@@ -53,6 +53,7 @@ int drawCarRightSide()
     int v43; // edi@41
     int v44; // esi@41
     int v45; // [sp+1Ch] [bp-2Ch]@5
+    int damagePercent;
 
     char* DstBuf = malloc(20); // [sp+34h] [bp-14h]@
     char* Str = malloc(20); // [sp+20h] [bp-28h]@1
@@ -143,9 +144,16 @@ int drawCarRightSide()
     //pinta #20
     drawTextWithFont(v18, (int)&unk_445928, Str, 214368);
     v19 = 0;
+    //la barra mide 44 px (100 de dano * 0.44). Se acota el dano por si un guardado
+    //trae un valor fuera de rango: aqui se escribe directo sobre screenBuffer.
+    damagePercent = drivers[driverId].damage;
+    if (damagePercent < 0)
+        damagePercent = 0;
+    if (damagePercent > 100)
+        damagePercent = 100;
     do
     {
-        v20 = (unsigned __int64)ceil((double)drivers[driverId].damage * 0.44);
+        v20 = (unsigned __int64)ceil((double)damagePercent * 0.44);
         v21 = (char*)screenBuffer + v19 + 196388;
         memset(v21, 0x3Fu, 4 * ((unsigned int)v20 >> 2));
         v19 += 640;
