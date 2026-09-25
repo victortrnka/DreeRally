@@ -6237,7 +6237,9 @@ int balanceIAEngineInRace_40B920()
     while ( 1 )
     {
       v5 = 1.0;
-      if ( (v1 != result || dword_464F6C) && raceParticipant2[v4].efectiveEngineBackup_4A6888 > 0 )
+      //el original testea pfVar7[4] = &dword_4A6888 + 4 floats = dword_4A6898 = damageBar,
+      //no efectiveEngineBackup_4A6888 (pfVar7[0])
+      if ( (v1 != result || dword_464F6C) && raceParticipant2[v4].damageBar_4A6898 > 0 )
       {
 		  //v6 es el numero de vai zones cubiertas en la carrera
        // v6 = v2 * (unsigned __int8)currentLap_4A7E08[864 * result] + actualVaiZone_4A7D00[216 * result];
