@@ -532,7 +532,7 @@ void   previewRaceScreen(signed int participants)
   int v283; // [sp+D4h] [bp-20h]@1
   int v284; // [sp+D8h] [bp-1Ch]@1
   int v285; // [sp+DCh] [bp-18h]@1
-  char DstBuf; // [sp+E0h] [bp-14h]@47
+  char DstBuf[20]; // [sp+E0h] [bp-14h]@47
    int indexRaceParticipant = 0;
   int iDriver = 0;  
   int maxDriverPoints = getMaxDriverPoints(driverId);
@@ -732,8 +732,8 @@ void   previewRaceScreen(signed int participants)
 		//en funcion del circuito seleccionado saca el TRx
 		//v29 = &v251 + (unsigned __int8)circuitsToSelect_46126C[0];
 		strcpy(raceFilePrefix_45EA50, "TR");
-		SDL_itoa((circuitsToSelect_46126C[0]%9)+1, &DstBuf, 10);
-		strcat(raceFilePrefix_45EA50, &DstBuf);
+		SDL_itoa((circuitsToSelect_46126C[0]%9)+1, DstBuf, 10);
+		strcat(raceFilePrefix_45EA50, DstBuf);
         /*v30 = (char *)&raceFilePrefix_45EA50[-(unsigned __int8)circuitsToSelect_46126C[0]] - (char *)&v251;
         do
         {
@@ -773,8 +773,8 @@ void   previewRaceScreen(signed int participants)
         v37 = &v251 + (unsigned __int8)circuitsToSelect_46126C[1];
 		//v37 = &v251 + (unsigned __int8)byte_46126D;
 		strcpy(raceFilePrefix_45EA50, "TR");
-		SDL_itoa((circuitsToSelect_46126C[1] % 9) + 1, &DstBuf, 10);
-		strcat(raceFilePrefix_45EA50, &DstBuf);
+		SDL_itoa((circuitsToSelect_46126C[1] % 9) + 1, DstBuf, 10);
+		strcat(raceFilePrefix_45EA50, DstBuf);
         v38 = (char *)&raceFilePrefix_45EA50[-(unsigned __int8)circuitsToSelect_46126C[1]] - (char *)&v251;
 		//v38 = (char *)&raceFilePrefix_45EA50[-(unsigned __int8)byte_46126D] - (char *)&v251;
         do
@@ -812,8 +812,8 @@ void   previewRaceScreen(signed int participants)
         drawImageWithPosition((int)tsahpeBpk_45EB5C, 360, 274, (int)((char *)screenBuffer + 64264));
         v45 = &v251 + (unsigned __int8)circuitsToSelect_46126C[2];
 		strcpy(raceFilePrefix_45EA50, "TR");
-		SDL_itoa((circuitsToSelect_46126C[2] % 9) + 1, &DstBuf, 10);
-		strcat(raceFilePrefix_45EA50, &DstBuf);
+		SDL_itoa((circuitsToSelect_46126C[2] % 9) + 1, DstBuf, 10);
+		strcat(raceFilePrefix_45EA50, DstBuf);
         v46 = (char *)&raceFilePrefix_45EA50[-(unsigned __int8)circuitsToSelect_46126C[2]] - (char *)&v251;
 		//v45 = &v251 + (unsigned __int8)byte_46126E;
 		//v46 = (char *)&raceFilePrefix_45EA50[-(unsigned __int8)byte_46126E] - (char *)&v251;
@@ -869,8 +869,8 @@ LABEL_44:
     }
   }
   strcpy(Str, getLanguageEntry("NUMBER OF LAPS: "));
-  SDL_itoa(numberOfLaps, &DstBuf, 10);
-  strcat(Str, &DstBuf);
+  SDL_itoa(numberOfLaps, DstBuf, 10);
+  strcat(Str, DstBuf);
   /*v51 = strlen(&DstBuf) + 1;
   v52 = (char *)&v246 + 3;
   do
@@ -890,13 +890,13 @@ LABEL_44:
     while ( v55 );
     v56 = (double)dword_4456E8 * 0.3;
     *(_WORD *)v54 = 36;
-    SDL_itoa((unsigned __int64)v56, &DstBuf, 10);
-    v57 = strlen(&DstBuf) + 1;
+    SDL_itoa((unsigned __int64)v56, DstBuf, 10);
+    v57 = strlen(DstBuf) + 1;
     v58 = (char *)&v246 + 3;
     do
       v59 = (v58++)[1];
     while ( v59 );
-    memcpy(v58, &DstBuf, v57);
+    memcpy(v58, DstBuf, v57);
   }
   else if ( selectedRace_462CE8 )
   {
@@ -1030,8 +1030,8 @@ LABEL_44:
 		v87 = 0;
 		v245 = 0;
 		memset(Str, "\0", strlen(Str));
-		SDL_itoa(drivers[currentDriverId].rank, &DstBuf, 10);
-		strcpy(Str, &DstBuf);
+		SDL_itoa(drivers[currentDriverId].rank, DstBuf, 10);
+		strcpy(Str, DstBuf);
 		strcat(Str, ".\0");
         do
           v245 += (unsigned __int8)letterSpacing_4458B0[90+(unsigned __int8)Str[v87++]];
