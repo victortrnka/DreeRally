@@ -735,13 +735,9 @@ int reloadRepairAnimation()
   int v2; // eax@2
   __int64 v3; // rax@3
   int v4; // eax@3
-  unsigned int v5; // eax@5
-  char *v6; // edx@5
-  void *v7; // edi@5
 //  char v8; // cl@6
   int v9; // eax@8
   int v10; // eax@8
-  char v11; // cl@11
   int v12; // eax@12
   int v13; // eax@12
   signed int v14; // esi@12
@@ -749,8 +745,7 @@ int reloadRepairAnimation()
   unsigned __int8 v16; // of@12
   int v17; // esi@36
   char *DstBuf =malloc(100); // [sp+8h] [bp-28h]@2
-  char v20; // [sp+1Bh] [bp-15h]@5
-  __int16 v21; // [sp+1Ch] [bp-14h]@5
+  char v21[20]; // [sp+1Ch] [bp-14h]@5
 
   drawImageWithPosition2((int)bases44Bpk, 96, 96, (int)((char *)screenBuffer + 162248));
   drawMenuAnimation(328, 269, repairAnimCurrentFrame_45EEAC, (int)repaaniBpk, (int)&repairAnimFrameSize_446308);
@@ -763,16 +758,8 @@ int reloadRepairAnimation()
     if ( useWeapons )
       v10 /= 2;
     SDL_itoa(v10, DstBuf, 10);
-    v21 = 36;
-    v6 = DstBuf;
-    v5 = strlen(DstBuf) + 1;
-    v7 = &v20;
-    do
-    {
-      v11 = *((int8*)v7 + 1);
-      v7 = (char *)v7 + 1;
-    }
-    while ( v11 );
+    strcpy(v21, "$");
+    strcat(v21, DstBuf);
   }
   else
   {
@@ -790,13 +777,12 @@ int reloadRepairAnimation()
       v4 = cars[v2].repairCost / 10;
     }
     SDL_itoa(drivers[driverId].damage * v4, DstBuf, 10);
-	v6= "";
-	strcpy(v6,"$"); /* copy name into the new var */
-	strcat(v6, DstBuf);
+    strcpy(v21, "$");
+    strcat(v21, DstBuf);
   }
 //  memcpy(v7, v6, v5);
-  v12 = getBoxTextOffset(v6);
-  drawInGamePrices(v6, v12 + 214728);
+  v12 = getBoxTextOffset(v21);
+  drawInGamePrices(v21, v12 + 214728);
   v13 = drivers[driverId].damage;
   v14 = 0;
   v16 = __OFSUB__(v13, 100);
