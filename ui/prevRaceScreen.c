@@ -318,8 +318,6 @@ void   previewRaceScreen(signed int participants)
   char v71; // cl@72
   int v72; // ebp@76
   int v73; // esi@76
-  char *v74; // edi@76
-  char v75; // al@77
   char *v76; // eax@78
   int v77; // ebx@78
   unsigned int v78; // edx@78
@@ -971,11 +969,7 @@ LABEL_44:
     v72 = raceIdParticipants[0];
 	v73 = raceIdParticipants[0];
     SDL_itoa(drivers[v73].rank, Str, 10);
-    v74 = (char *)&v246 + 3;
-    do
-      v75 = (v74++)[1];
-    while ( v75 );
-    *(_WORD *)v74 = 46;
+    strcat(Str, ".");
     v76 = Str;
     v77 = 0;
     v78 = 0;
