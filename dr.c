@@ -4174,7 +4174,6 @@ signed int   racePauseMenu_4064A0(int a1)
   signed int v11; // edi@15
   signed int v12; // ecx@34
   signed int v13; // eax@36
-  char *v14; // ecx@36
   int v15; // edi@38
   signed int v16; // esi@38
   int v17; // eax@41
@@ -4182,8 +4181,7 @@ signed int   racePauseMenu_4064A0(int a1)
   int v19; // ecx@41
   signed int result; // eax@48
   signed int v21; // [sp+8h] [bp-334h]@1
-  int v22[102]; // [sp+Ch] [bp-330h]@35
-  char v23; // [sp+1A4h] [bp-198h]@36
+  int v22[204]; // [sp+Ch] [bp-330h]@35
 
   v21 = 0;
 
@@ -4308,14 +4306,12 @@ signed int   racePauseMenu_4064A0(int a1)
   }
   while ( v12 < 102 );
   v13 = 102;
-  v14 = &v23;
-  //v14 = &v22;
- /* do
+  do
   {
-    v22[v13++] = *(_DWORD *)v14;
-    v14 -= 4;
+    v22[v13] = v22[204 - v13];
+    ++v13;
   }
-  while ( v13 < 204 );*/
+  while ( v13 < 204 );
   dword_503220 = 0;
   dword_464F18 = 0;
   v15 = 0;
