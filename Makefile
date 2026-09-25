@@ -110,36 +110,49 @@ $(OUT)/keys.exe: $(OUT)/keys.obj
 	  /out:$@ $< user32.lib kernel32.lib
 
 # docker-test: builds and runs the game headless in Docker (see
-# tools/docker/). Uses its own run-docker/ runtime dir, never run/, so it
-# never collides with a CrossOver run in progress.
+# tools/docker/). Uses its own run-docker/ (or run-docker-orig/) runtime
+# dir, never run/, so it never collides with a CrossOver run in progress.
 #   DOCKER_ARGS -> DR_ARGS  (dreerally.exe args, default "-window -nosound")
-#   KEYS      -> DR_KEYS  (keys.exe tokens; ignored if SCENARIO is set)
+#   KEYS      -> DR_KEYS  (keys.exe tokens, incl. "shot:<label>"; ignored if
+#                SCENARIO is set)
 #   SHOTS     -> DR_SHOTS (screenshot offsets, default "3:intro 9:menu")
 #   SECS      -> RUN_SECS (seconds before stopping the game, default 12)
 #   OUT_SHOTS -> where screenshots/log/status land (default build/docker-out)
 #   SCENARIO  -> reads KEYS from tools/docker/scenarios/<name>.keys instead
+#   ORIG      -> 1 runs the original dr.exe (+ msvcr71.dll) copied from
+#                DR_DATA instead of our built dreerally.exe. DR_DATA/the
+#                Steam bottle are only ever read, never modified.
 DOCKER_ARGS ?= -window -nosound
 KEYS      ?=
 SHOTS     ?= 3:intro 9:menu
 SECS      ?= 12
 OUT_SHOTS ?= build/docker-out
 SCENARIO  ?=
+ORIG      ?= 0
 
 ifneq ($(SCENARIO),)
 SCENARIO_FILE := tools/docker/scenarios/$(SCENARIO).keys
 KEYS := $(shell sed -e 's/\#.*//' $(SCENARIO_FILE) 2>/dev/null | tr '\n' ' ' | tr -s ' ')
 endif
 
+RUN_DIR := run-docker$(if $(filter 1,$(ORIG)),-orig)
+
 docker-test: $(OUT)/dreerally.exe $(OUT)/keys.exe
 	@test -d "$(DR_DATA)" || { echo "Death Rally data not found: DR_DATA=$(DR_DATA)"; exit 1; }
 	@if [ -n "$(SCENARIO)" ]; then test -f "$(SCENARIO_FILE)" || { echo "no such scenario: $(SCENARIO_FILE)"; exit 1; }; fi
-	@rm -rf run-docker
-	@mkdir -p run-docker
-	@for f in $(RUNTIME_FILES); do cp -p "$(DR_DATA)/$$f" run-docker/ || exit 1; done
-	@cp $(OUT)/dreerally.exe run-docker/
-	@cp $(OUT)/keys.exe run-docker/
+	@rm -rf $(RUN_DIR)
+	@mkdir -p $(RUN_DIR)
+	@for f in $(RUNTIME_FILES); do cp -p "$(DR_DATA)/$$f" $(RUN_DIR)/ || exit 1; done
+	@if [ "$(ORIG)" = "1" ]; then \
+	  test -f "$(DR_DATA)/dr.exe" || { echo "original dr.exe not found under DR_DATA=$(DR_DATA)"; exit 1; }; \
+	  cp -p "$(DR_DATA)/dr.exe" $(RUN_DIR)/dreerally.exe || exit 1; \
+	  test -f "$(DR_DATA)/msvcr71.dll" && { cp -p "$(DR_DATA)/msvcr71.dll" $(RUN_DIR)/ || exit 1; } || true; \
+	else \
+	  cp $(OUT)/dreerally.exe $(RUN_DIR)/ || exit 1; \
+	fi
+	@cp $(OUT)/keys.exe $(RUN_DIR)/
 	@mkdir -p $(OUT_SHOTS)
-	RUNTIME_DIR="$(CURDIR)/run-docker" OUT_DIR="$(CURDIR)/$(OUT_SHOTS)" \
+	RUNTIME_DIR="$(CURDIR)/$(RUN_DIR)" OUT_DIR="$(CURDIR)/$(OUT_SHOTS)" \
 	  DR_ARGS="$(DOCKER_ARGS)" DR_KEYS="$(KEYS)" DR_SHOTS="$(SHOTS)" RUN_SECS="$(SECS)" \
 	  NAME="dreerally-docker-test-$$$$" \
 	  tools/docker/run.sh
