@@ -493,7 +493,7 @@ void   previewRaceScreen(signed int participants)
   int v244; // [sp+20h] [bp-D4h]@73
   int v245; // [sp+24h] [bp-D0h]@88
   int v246; // [sp+28h] [bp-CCh]@16
-  char Str[16]; // [sp+2Ch] [bp-C8h]@14
+  char Str[40]; // [sp+2Ch] [bp-C8h]@14
   int v248; // [sp+30h] [bp-C4h]@43
   int v249; // [sp+34h] [bp-C0h]@43
   int v250; // [sp+38h] [bp-BCh]@43
