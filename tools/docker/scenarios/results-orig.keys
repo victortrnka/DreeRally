@@ -22,6 +22,12 @@
 #    screen). Whether that is the original always racing longer or one
 #    slow track by chance is not established; 200s plus margin is used
 #    here rather than re-measuring further.
+#
+# The verified run's shot:results landed on "Medium Race Results", not
+# "Easy Race Results" as our port's results.keys did on the same key
+# sequence (both runs were screenshotted). Both still show all
+# four finishing cars with distinct colours, which is what this scenario
+# is for; why the category differs was not investigated further.
 enter w3000
 enter w3000
 enter w3500
