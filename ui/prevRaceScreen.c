@@ -322,8 +322,6 @@ void   previewRaceScreen(signed int participants)
   int v77; // ebx@78
   unsigned int v78; // edx@78
   char v79; // cl@79
-  char *v80; // ecx@82
-  char v81; // dl@83
   signed int i; // ebp@85
 //  int v83; // esi@86
 //  int v84; // ebx@86
@@ -984,14 +982,7 @@ LABEL_44:
       while ( v78 < strlen(Str) );
     }
     drawTextWithFont((int)graphicsGeneral.fmed1aBpk, (int)&unk_445928, Str, 138403 - v77);
-    v80 = &byte_460840[v73 * 4];
-    do
-    {
-      v81 = *v80;
-      v80[&Str[-108 * v72] - byte_460840] = *v80;
-      ++v80;
-    }
-    while ( v81 );
+    strcpy(Str, drivers[v73].name);
     _strupr(Str);
     drawTextWithFont((int)graphicsGeneral.fmed1aBpk, (int)&unk_445928, Str, 153736);
     drawImageWithPosition2((int)*(&graphicsGeneral.face01Bpk + drivers[v73].face), 64, 64, (int)((char *)screenBuffer + 107685));
