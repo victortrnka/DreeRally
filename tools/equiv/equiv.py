@@ -33,6 +33,19 @@ HEX_TOKEN = re.compile(r"0x[0-9a-fA-F]+")
 # section-relative, not the address we already substitute, and it does not
 # survive relocation, so it is dropped rather than normalized.
 OBJDUMP_ANNOTATION = re.compile(r"\s*<[^>]*>")
+BARE_HEX = re.compile(r"^0x[0-9a-fA-F]+$")
+
+# Relative call/jmp/jcc/loop (E8/E9/0F8x/E0-E3 with a rel8/rel32
+# displacement): the linker resolves these at link time as an IP-relative
+# offset, so the printed target is always an address, and unlike an
+# absolute address embedded as data it never carries a base relocation.
+BRANCH_MNEMONICS = {
+    "call", "jmp",
+    "je", "jne", "jz", "jnz", "jg", "jge", "jl", "jle",
+    "ja", "jae", "jb", "jbe", "jc", "jnc", "jo", "jno",
+    "js", "jns", "jp", "jnp", "jpe", "jpo", "jcxz", "jecxz",
+    "loop", "loope", "loopne", "loopz", "loopnz",
+}
 
 
 def read_pe(path):
@@ -98,25 +111,46 @@ def resolve_symbol(symbols, addr):
 
 
 def parse_line(line):
-    """The mnemonic+operands text of one objdump instruction line, with the
-    address column dropped. None for headers, section/symbol labels and
-    blank lines, which carry no instruction."""
+    """(addr, text): text is the mnemonic+operands with the address column
+    dropped and tabs collapsed to single spaces. (None, None) for headers,
+    section/symbol labels and blank lines, which carry no instruction."""
     m = INSTR_LINE.match(line)
     if not m:
-        return None
-    return m.group(2).replace("\t", " ").strip()
+        return None, None
+    return int(m.group(1), 16), m.group(2).replace("\t", " ").strip()
 
 
-def normalize_line(text, fn_start, fn_end, symbols, image_lo, image_hi):
+def is_direct_branch(mnemonic, operand):
+    """Whether `mnemonic operand` is a relative call/jmp/jcc/loop to a bare
+    address (rule a): these are always addresses, and unlike a
+    data reference they never carry a base relocation, so rule b (below)
+    would otherwise wrongly leave them as unrelocated literals."""
+    return mnemonic in BRANCH_MNEMONICS and BARE_HEX.match(operand) is not None
+
+
+def has_reloc(reloc_vas, start, end):
+    """Whether any HIGHLOW base-relocation VA falls in [start, end); reloc_vas
+    is sorted ascending."""
+    i = bisect.bisect_left(reloc_vas, start)
+    return i < len(reloc_vas) and reloc_vas[i] < end
+
+
+def normalize_line(text, fn_start, fn_end, symbols, image_lo, image_hi, relocated):
     """Replace every operand address that falls inside the image with a form
     that survives relocation: function-relative for a target inside this
-    same function, symbol-relative otherwise. Numbers outside the image
-    (immediates, stack offsets) are left untouched."""
+    same function, symbol-relative otherwise. A number is only an address
+    if it is a direct branch target (rule a) or
+    `relocated` says this instruction's own byte range carries a base
+    relocation (rule b); every other in-image-looking number is a literal
+    the compiler happened to pick, and is compared verbatim like any other
+    immediate or stack offset."""
     text = OBJDUMP_ANNOTATION.sub("", text)
+    mnemonic, _, operand = text.partition(" ")
+    is_address = relocated or is_direct_branch(mnemonic, operand.strip())
 
     def replace(m):
         n = int(m.group(0), 16)
-        if not (image_lo <= n < image_hi):
+        if not is_address or not (image_lo <= n < image_hi):
             return m.group(0)
         if fn_start <= n < fn_end:
             return ".+0x%x" % (n - fn_start)
@@ -129,18 +163,49 @@ def normalize_line(text, fn_start, fn_end, symbols, image_lo, image_hi):
     return HEX_TOKEN.sub(replace, text)
 
 
-def normalize(lines, fn_start, fn_end, symbols, image_lo, image_hi):
+def normalize(lines, fn_start, fn_end, symbols, image_lo, image_hi, reloc_vas):
     """Turn one function's raw objdump output lines into a relocation-
     insensitive instruction list: two builds normalize to the same list
     exactly when the function's own behaviour is unchanged, even if the
     function (or anything it calls or reads) moved in the image."""
+    parsed = [parse_line(line) for line in lines]
+    parsed = [(addr, text) for addr, text in parsed if addr is not None]
     out = []
-    for line in lines:
-        text = parse_line(line)
-        if text is None:
-            continue
-        out.append(normalize_line(text, fn_start, fn_end, symbols, image_lo, image_hi))
+    for i, (addr, text) in enumerate(parsed):
+        next_addr = parsed[i + 1][0] if i + 1 < len(parsed) else fn_end
+        relocated = has_reloc(reloc_vas, addr, next_addr)
+        out.append(normalize_line(text, fn_start, fn_end, symbols, image_lo, image_hi, relocated))
     return out
+
+
+def parse_base_relocations(reloc_bytes, image_base):
+    """The sorted list of VAs with a HIGHLOW (type 3) base relocation, from
+    a .reloc section's raw bytes: a sequence of per-page blocks, each a
+    (page RVA, block size) header followed by 16-bit (type:4, offset:12)
+    entries. Type 0 (ABSOLUTE, used only to pad a block to a WORD count) and
+    any other type are skipped; this target only has HIGHLOW ones."""
+    vas = []
+    off = 0
+    n = len(reloc_bytes)
+    while off + 8 <= n:
+        page_rva, block_size = struct.unpack_from("<II", reloc_bytes, off)
+        if block_size < 8 or off + block_size > n:
+            break
+        for i in range((block_size - 8) // 2):
+            entry = struct.unpack_from("<H", reloc_bytes, off + 8 + 2 * i)[0]
+            if entry >> 12 == 3:  # IMAGE_REL_BASED_HIGHLOW
+                vas.append(image_base + page_rva + (entry & 0xFFF))
+        off += block_size
+    vas.sort()
+    return vas
+
+
+def is_library_obj(obj):
+    """Whether a map object string names a member of a prebuilt library
+    (e.g. "libvcruntime:...undname.obj", "SDL:...SDL.lib") rather than one
+    of the game's own .obj files (always a bare relative path such as
+    "bpaUtil.obj", so never containing ':')."""
+    return ":" in obj
 
 
 def instr_addr(line):
@@ -203,9 +268,26 @@ def pair_functions(base_funcs, work_funcs):
     return pairs, added, removed, False
 
 
-def text_footprint(base_exe, work_exe, base_ib, base_hi, work_ib, work_hi, base_text, work_text):
+def _raw_differing(pairs, base_text, base_ib, work_text, work_ib):
+    out = []
+    for bf, wf in pairs:
+        b_bytes = _bytes_of(base_text, bf[0] - base_ib, bf[1] - base_ib)
+        w_bytes = _bytes_of(work_text, wf[0] - work_ib, wf[1] - work_ib)
+        if b_bytes != w_bytes:
+            out.append((bf, wf))
+    return out
+
+
+def text_footprint(base_exe, work_exe, base_ib, base_hi, work_ib, work_hi, base_secs, work_secs):
     """The footprint report lines for a .text that differs: which paired
-    functions really changed, vs. moved-only collateral, vs. added/removed."""
+    functions really changed, vs. moved-only collateral, vs. added/removed.
+    Library-object functions are excluded from the listing
+    and folded into a single count instead: they are frequently compiler-
+    generated jump/lookup tables that disassemble as meaningless garbage,
+    so per-function detail for them
+    would just reintroduce the noise this tool exists to remove.
+    """
+    base_text, work_text = base_secs[".text"], work_secs[".text"]
     base_map = read_map(Path(base_exe).with_suffix(".map"))
     work_map = read_map(Path(work_exe).with_suffix(".map"))
     base_start, base_end = base_ib + base_text[0], base_ib + base_text[0] + len(base_text[1])
@@ -214,22 +296,25 @@ def text_footprint(base_exe, work_exe, base_ib, base_hi, work_ib, work_hi, base_
     work_funcs = functions_in(work_map, work_start, work_end)
 
     pairs, added, removed, fallback = pair_functions(base_funcs, work_funcs)
+    game_pairs = [p for p in pairs if not is_library_obj(p[0][3])]
+    lib_pairs = [p for p in pairs if is_library_obj(p[0][3])]
+    game_added = [f for f in added if not is_library_obj(f[3])]
+    lib_added = [f for f in added if is_library_obj(f[3])]
+    game_removed = [f for f in removed if not is_library_obj(f[3])]
+    lib_removed = [f for f in removed if is_library_obj(f[3])]
 
-    raw_differ = []
-    for bf, wf in pairs:
-        b_bytes = _bytes_of(base_text, bf[0] - base_ib, bf[1] - base_ib)
-        w_bytes = _bytes_of(work_text, wf[0] - work_ib, wf[1] - work_ib)
-        if b_bytes != w_bytes:
-            raw_differ.append((bf, wf))
+    game_raw_differ = _raw_differing(game_pairs, base_text, base_ib, work_text, work_ib)
+    lib_raw_differ = _raw_differing(lib_pairs, base_text, base_ib, work_text, work_ib)
 
     report = []
     if fallback:
         report.append("  name pairing failed for most functions (mass rename?); paired by order instead")
-    report.append("  functions with different bytes: %d" % len(raw_differ))
+    report.append("  functions with different bytes: %d" % len(game_raw_differ))
 
     changed = []
     moved_only = 0
-    if raw_differ:
+    lib_changed = 0
+    if game_raw_differ or lib_raw_differ:
         base_dump = dump_text(base_exe, base_start, base_end)
         work_dump = dump_text(work_exe, work_start, work_end)
         base_addrs = [instr_addr(l) for l in base_dump]
@@ -239,15 +324,24 @@ def text_footprint(base_exe, work_exe, base_ib, base_hi, work_ib, work_hi, base_
         work_dump = [l for l, a in zip(work_dump, work_addrs) if a is not None]
         work_addrs = [a for a in work_addrs if a is not None]
 
-        for bf, wf in raw_differ:
+        base_reloc = parse_base_relocations(base_secs.get(".reloc", (0, b""))[1], base_ib)
+        work_reloc = parse_base_relocations(work_secs.get(".reloc", (0, b""))[1], work_ib)
+
+        def changed_after_normalize(bf, wf):
             b_lines = lines_in(base_dump, base_addrs, bf[0], bf[1])
             w_lines = lines_in(work_dump, work_addrs, wf[0], wf[1])
-            b_norm = normalize(b_lines, bf[0], bf[1], base_map, base_ib, base_hi)
-            w_norm = normalize(w_lines, wf[0], wf[1], work_map, work_ib, work_hi)
-            if b_norm == w_norm:
-                moved_only += 1
-            else:
+            b_norm = normalize(b_lines, bf[0], bf[1], base_map, base_ib, base_hi, base_reloc)
+            w_norm = normalize(w_lines, wf[0], wf[1], work_map, work_ib, work_hi, work_reloc)
+            return b_norm != w_norm
+
+        for bf, wf in game_raw_differ:
+            if changed_after_normalize(bf, wf):
                 changed.append((bf, wf))
+            else:
+                moved_only += 1
+        for bf, wf in lib_raw_differ:
+            if changed_after_normalize(bf, wf):
+                lib_changed += 1
     changed.sort(key=lambda p: p[0][0])
 
     report.append("  functions changed (real): %d" % len(changed))
@@ -255,14 +349,20 @@ def text_footprint(base_exe, work_exe, base_ib, base_hi, work_ib, work_hi, base_
         report.append("    0x%x %s -> %s  size 0x%x -> 0x%x  %s" % (
             bf[0], bf[2], wf[2], bf[1] - bf[0], wf[1] - wf[0], wf[3]))
     report.append("  moved-only (collateral, bytes differ but normalized code does not): %d" % moved_only)
-    if added:
-        report.append("  added: %d" % len(added))
-        for f in added:
+    report.append("  library functions with different bytes: %d (not listed, %d changed after normalization)"
+                  % (len(lib_raw_differ), lib_changed))
+    if game_added:
+        report.append("  added: %d" % len(game_added))
+        for f in game_added:
             report.append("    0x%x %s  %s" % (f[0], f[2], f[3]))
-    if removed:
-        report.append("  removed: %d" % len(removed))
-        for f in removed:
+    if game_removed:
+        report.append("  removed: %d" % len(game_removed))
+        for f in game_removed:
             report.append("    0x%x %s  %s" % (f[0], f[2], f[3]))
+    if lib_added:
+        report.append("  library added: %d (not listed)" % len(lib_added))
+    if lib_removed:
+        report.append("  library removed: %d (not listed)" % len(lib_removed))
     if changed:
         bf, wf = changed[0]
         report.append("  inspect the first one:")
@@ -288,7 +388,7 @@ def compare(base_exe, work_exe):
 
     if ".text" in differing and ".text" in base_secs and ".text" in work_secs:
         report.extend(text_footprint(base_exe, work_exe, base_ib, base_hi, work_ib, work_hi,
-                                     base_secs[".text"], work_secs[".text"]))
+                                     base_secs, work_secs))
     return False, report
 
 
