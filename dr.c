@@ -8985,6 +8985,17 @@ LABEL_19:
 //void draw3dElements_4116D0()
 
 //----- (00411D10) --------------------------------------------------------
+//recalculateCarBoundary_411D10 turns every mark coordinate into a pixel with
+//the same inline sequence at all 20 sites: __ftol(x), add 1.0 (0x441654) when
+//x minus that is >= 0.5 (0x4412a0), then __ftol again. __ftol truncates towards
+//zero, so positive values round half up and negative values are truncated.
+static int roundHalfUpToInt(float x)
+{
+  if ( x - (int)x >= 0.5 )
+    return (int)(x + 1.0);
+  return (int)x;
+}
+
 int recalculateCarBoundary_411D10()
 {
   int result; // eax@1
@@ -9201,14 +9212,8 @@ int recalculateCarBoundary_411D10()
           //otras tres se reinterpretaban con *(float*)&, y los "if (!x) x = x + 1.0"
           //comparaban campos que no correspondian. Ahora los campos son float y el
           //ajuste sigue el mismo patron que el bloque de derrapes de mas abajo.
-          v15 = raceParticipantIngame[v1].lastFrontLeftAbsoluteXPosition_4A7E18;
-          if ( !v15 )
-            v15 = v15 + 1.0;
-          v17 = (unsigned __int64)v15;
-          v21 = raceParticipantIngame[v1].lastFrontLeftAbsoluteYPosition_4A7E1C;
-          if ( !v21 )
-            v21 = v21 + 1.0;
-          v23 = v17 + circuitWidth_464F40 * (unsigned __int64)v21;
+          v17 = roundHalfUpToInt(raceParticipantIngame[v1].lastFrontLeftAbsoluteXPosition_4A7E18);
+          v23 = v17 + circuitWidth_464F40 * roundHalfUpToInt(raceParticipantIngame[v1].lastFrontLeftAbsoluteYPosition_4A7E1C);
           if ( (*((BYTE *)trxImaBpk_50A16C + v23) & 0xF) == 15 )
           {
             *((BYTE *)circuitMatrixHxW_5034F8 + v23) = trxBLOTab_479D40[*((BYTE *)circuitMatrixHxW_5034F8 + v23)];
@@ -9220,14 +9225,8 @@ int recalculateCarBoundary_411D10()
                                                                             + 1)];
           }
 
-          v27 = raceParticipantIngame[v1].lastFrontRightAbsoluteXPosition_4A7E28;
-          if ( !v27 )
-            v27 = v27 + 1.0;
-          v29 = (unsigned __int64)v27;
-          v33 = raceParticipantIngame[v1].lastFrontRightAbsoluteYPosition_4A7E2C;
-          if ( !v33 )
-            v33 = v33 + 1.0;
-          v35 = v29 + circuitWidth_464F40 * (unsigned __int64)v33;
+          v29 = roundHalfUpToInt(raceParticipantIngame[v1].lastFrontRightAbsoluteXPosition_4A7E28);
+          v35 = v29 + circuitWidth_464F40 * roundHalfUpToInt(raceParticipantIngame[v1].lastFrontRightAbsoluteYPosition_4A7E2C);
           if ( (*((BYTE *)trxImaBpk_50A16C + v35) & 0xF) == 15 )
           {
             *((BYTE *)circuitMatrixHxW_5034F8 + v35) = trxBLOTab_479D40[*((BYTE *)circuitMatrixHxW_5034F8 + v35)];
@@ -9239,14 +9238,8 @@ int recalculateCarBoundary_411D10()
                                                                             + 1)];
           }
 
-          v39 = raceParticipantIngame[v1].lastBackLeftAbsoluteXPosition_4A7E38;
-          if ( !v39 )
-            v39 = v39 + 1.0;
-          v41 = (unsigned __int64)v39;
-          v45 = raceParticipantIngame[v1].lastBackLeftAbsoluteYPosition_4A7E3C;
-          if ( !v45 )
-            v45 = v45 + 1.0;
-          v47 = v41 + circuitWidth_464F40 * (unsigned __int64)v45;
+          v41 = roundHalfUpToInt(raceParticipantIngame[v1].lastBackLeftAbsoluteXPosition_4A7E38);
+          v47 = v41 + circuitWidth_464F40 * roundHalfUpToInt(raceParticipantIngame[v1].lastBackLeftAbsoluteYPosition_4A7E3C);
           if ( (*((BYTE *)trxImaBpk_50A16C + v47) & 0xF) == 15 )
           {
             *((BYTE *)circuitMatrixHxW_5034F8 + v47) = trxBLOTab_479D40[*((BYTE *)circuitMatrixHxW_5034F8 + v47)];
@@ -9258,14 +9251,8 @@ int recalculateCarBoundary_411D10()
                                                                             + 1)];
           }
 
-          v51 = raceParticipantIngame[v1].lastBackRightAbsoluteXPosition_4A7E48;
-          if ( !v51 )
-            v51 = v51 + 1.0;
-          v53 = (unsigned __int64)v51;
-          v57 = raceParticipantIngame[v1].lastBackRightAbsoluteYPosition_4A7E4C;
-          if ( !v57 )
-            v57 = v57 + 1.0;
-          v59 = v53 + circuitWidth_464F40 * (unsigned __int64)v57;
+          v53 = roundHalfUpToInt(raceParticipantIngame[v1].lastBackRightAbsoluteXPosition_4A7E48);
+          v59 = v53 + circuitWidth_464F40 * roundHalfUpToInt(raceParticipantIngame[v1].lastBackRightAbsoluteYPosition_4A7E4C);
           if ( (*((BYTE *)trxImaBpk_50A16C + v59) & 0xF) == 15 )
           {
             *((BYTE *)circuitMatrixHxW_5034F8 + v59) = trxBLOTab_479D40[*((BYTE *)circuitMatrixHxW_5034F8 + v59)];
@@ -9357,38 +9344,15 @@ int recalculateCarBoundary_411D10()
                 if ( !*v83 )
                 {
                   *v83 = 1;
-                  v84 = (raceParticipantIngame[v1].backLeftAbsoluteXPosition_4A7E30);
-                  v85 = (raceParticipantIngame[v1].backLeftAbsoluteXPosition_4A7E30);
-                  v87 = (raceParticipantIngame[v1].backLeftAbsoluteXPosition_4A7E30);
-                  if ( !v87 )
-                    v87 = v87 + 1.0;
-                  raceParticipantIngame[v1].dword_4A7F5C[v176] = (int)v87;
-                  v89 = (raceParticipantIngame[v1].backLeftAbsoluteYPosition_4A7E34);
-                  v90 = (raceParticipantIngame[v1].backLeftAbsoluteYPosition_4A7E34);
-                  v92 = (raceParticipantIngame[v1].backLeftAbsoluteYPosition_4A7E34);
-                  if ( !v92 )
-                    v92 = v92 + 1.0;
-                  raceParticipantIngame[v1].dword_4A7FD4[v176] = (int)v92;
+                  raceParticipantIngame[v1].dword_4A7F5C[v176] = roundHalfUpToInt(raceParticipantIngame[v1].backLeftAbsoluteXPosition_4A7E30);
+                  raceParticipantIngame[v1].dword_4A7FD4[v176] = roundHalfUpToInt(raceParticipantIngame[v1].backLeftAbsoluteYPosition_4A7E34);
                   v82 = 1;
                 }
                 if (!raceParticipantIngame[v1].dword_4A7F20[v176])
                 {
                   raceParticipantIngame[v1].dword_4A7F20[v176] = 1;
-                  v94 = (raceParticipantIngame[v1].backRightAbsoluteXPosition_4A7E40);
-                  v95 = (raceParticipantIngame[v1].backRightAbsoluteXPosition_4A7E40);
-                  v97 =(raceParticipantIngame[v1].backRightAbsoluteXPosition_4A7E40);
-                  //if ( !v98 )
-				  if ( !v97 )                  
-                    v97 = v97 + 1.0;
-                  raceParticipantIngame[v1].dword_4A7F98[v176] = (int)v97;
-                  v99 = (raceParticipantIngame[v1].backRightAbsoluteYPosition_4A7E44);
-                  v100 =(raceParticipantIngame[v1].backRightAbsoluteYPosition_4A7E44);
-                  v102 = (raceParticipantIngame[v1].backRightAbsoluteYPosition_4A7E44);
-                  //if ( !v103 )
-				  if ( !v102 )
-                  
-                    v102 = v102 + 1.0;
-                  raceParticipantIngame[v1].dword_4A8010[v176] = (int)v102;
+                  raceParticipantIngame[v1].dword_4A7F98[v176] = roundHalfUpToInt(raceParticipantIngame[v1].backRightAbsoluteXPosition_4A7E40);
+                  raceParticipantIngame[v1].dword_4A8010[v176] = roundHalfUpToInt(raceParticipantIngame[v1].backRightAbsoluteYPosition_4A7E44);
                   v81 = 1;
                 }
                 ++v83;
@@ -9409,18 +9373,8 @@ int recalculateCarBoundary_411D10()
                   || raceParticipant2[v106].efectiveEngine_4A6884 * 0.85 <raceParticipantIngame[ v1].carVelocity_4A7DB0
                   || !(raceParticipantIngame[ currentDriverSelectedIndex_503518].dword_4A7D20[dword_4A7A20] & IN_RACE_ACELERATE))//acelerar )
                 {
-                  v107 =(raceParticipantIngame[v1].lastFrontLeftAbsoluteXPosition_4A7E18);
-                  v108 = (raceParticipantIngame[v1].lastFrontLeftAbsoluteXPosition_4A7E18);
-                  v110 = (raceParticipantIngame[v1].lastFrontLeftAbsoluteXPosition_4A7E18);
-                  if ( !v110 )
-                    v110 = v110 + 1.0;
-                  v112 = (unsigned __int64)v110;
-                  v113 = (raceParticipantIngame[v1].lastFrontLeftAbsoluteYPosition_4A7E1C);
-                  v114 = (raceParticipantIngame[v1].lastFrontLeftAbsoluteYPosition_4A7E1C);
-                  v116 =(raceParticipantIngame[v1].lastFrontLeftAbsoluteYPosition_4A7E1C);
-                  if ( !v116 )
-                    v116 = v116 + 1.0;
-                  v118 = v112 + circuitWidth_464F40 * (unsigned __int64)v116;
+                  v112 = roundHalfUpToInt(raceParticipantIngame[v1].lastFrontLeftAbsoluteXPosition_4A7E18);
+                  v118 = v112 + circuitWidth_464F40 * roundHalfUpToInt(raceParticipantIngame[v1].lastFrontLeftAbsoluteYPosition_4A7E1C);
                   if ( (*((BYTE *)trxImaBpk_50A16C + v118) & 0xF) == 15 )
                   {
                     *((BYTE *)circuitMatrixHxW_5034F8 + v118) = trxSKITab_501AA0[*((BYTE *)circuitMatrixHxW_5034F8 + v118)];
@@ -9434,18 +9388,8 @@ int recalculateCarBoundary_411D10()
                                                                                      + 1)];
                     v106 = currentDriverSelectedIndex_503518;
                   }
-                  v119 = raceParticipantIngame[v106].lastFrontRightAbsoluteXPosition_4A7E28;
-                  v120 = raceParticipantIngame[v106].lastFrontRightAbsoluteXPosition_4A7E28;
-                  v122 = raceParticipantIngame[v106].lastFrontRightAbsoluteXPosition_4A7E28;
-                  if ( !v122 )
-                    v122 = v122 + 1.0;
-                  v124 = (unsigned __int64)v122;
-                  v125 = raceParticipantIngame[v106].lastFrontRightAbsoluteYPosition_4A7E2C;
-                  v126 = raceParticipantIngame[v106].lastFrontRightAbsoluteYPosition_4A7E2C;
-                  v128 = raceParticipantIngame[v106].lastFrontRightAbsoluteYPosition_4A7E2C;
-                  if ( !v128 )
-                    v128 = v128 + 1.0;
-                  v130 = v124 + circuitWidth_464F40 * (unsigned __int64)v128;
+                  v124 = roundHalfUpToInt(raceParticipantIngame[v106].lastFrontRightAbsoluteXPosition_4A7E28);
+                  v130 = v124 + circuitWidth_464F40 * roundHalfUpToInt(raceParticipantIngame[v106].lastFrontRightAbsoluteYPosition_4A7E2C);
                   if ( (*((BYTE *)trxImaBpk_50A16C + v130) & 0xF) == 15 )
                   {
                     *((BYTE *)circuitMatrixHxW_5034F8 + v130) = trxSKITab_501AA0[*((BYTE *)circuitMatrixHxW_5034F8 + v130)];
@@ -9460,18 +9404,8 @@ int recalculateCarBoundary_411D10()
                     v106 = currentDriverSelectedIndex_503518;
                   }
                 }
-                v131 = raceParticipantIngame[v106].lastBackLeftAbsoluteXPosition_4A7E38;
-                v132 = raceParticipantIngame[v106].lastBackLeftAbsoluteXPosition_4A7E38;
-                v134 = raceParticipantIngame[v106].lastBackLeftAbsoluteXPosition_4A7E38;
-                if ( !v134 )
-                  v134 = v134 + 1.0;
-                v136 = (unsigned __int64)v134;
-                v137 = raceParticipantIngame[v106].lastBackLeftAbsoluteYPosition_4A7E3C;
-                v138 = raceParticipantIngame[v106].lastBackLeftAbsoluteYPosition_4A7E3C;
-                v140 = raceParticipantIngame[v106].lastBackLeftAbsoluteYPosition_4A7E3C;
-                if ( !v140 )
-                  v140 = v140 + 1.0;
-                v142 = v136 + circuitWidth_464F40 * (unsigned __int64)v140;
+                v136 = roundHalfUpToInt(raceParticipantIngame[v106].lastBackLeftAbsoluteXPosition_4A7E38);
+                v142 = v136 + circuitWidth_464F40 * roundHalfUpToInt(raceParticipantIngame[v106].lastBackLeftAbsoluteYPosition_4A7E3C);
                 if ( (*((BYTE *)trxImaBpk_50A16C + v142) & 0xF) == 15 )
                 {
                   *((BYTE *)circuitMatrixHxW_5034F8 + v142) = trxSKITab_501AA0[*((BYTE *)circuitMatrixHxW_5034F8 + v142)];
@@ -9485,18 +9419,8 @@ int recalculateCarBoundary_411D10()
                                                                                    + 1)];
                   v106 = currentDriverSelectedIndex_503518;
                 }
-                v143 = raceParticipantIngame[v106].lastBackRightAbsoluteXPosition_4A7E48;
-                v144 = raceParticipantIngame[v106].lastBackRightAbsoluteXPosition_4A7E48;
-                v146 = raceParticipantIngame[v106].lastBackRightAbsoluteXPosition_4A7E48;
-                if ( !v146 )
-                  v146 = v146 + 1.0;
-                v148 = (unsigned __int64)v146;
-                v149 = raceParticipantIngame[v106].lastBackRightAbsoluteYPosition_4A7E4C;
-                v150 = raceParticipantIngame[v106].lastBackRightAbsoluteYPosition_4A7E4C;
-                v152 = raceParticipantIngame[v106].lastBackRightAbsoluteYPosition_4A7E4C;
-                if ( !v152 )
-                  v152 = v152 + 1.0;
-                v154 = v148 + circuitWidth_464F40 * (unsigned __int64)v152;
+                v148 = roundHalfUpToInt(raceParticipantIngame[v106].lastBackRightAbsoluteXPosition_4A7E48);
+                v154 = v148 + circuitWidth_464F40 * roundHalfUpToInt(raceParticipantIngame[v106].lastBackRightAbsoluteYPosition_4A7E4C);
                 if ( (*((BYTE *)trxImaBpk_50A16C + v154) & 0xF) == 15 )
                 {
                   *((BYTE *)circuitMatrixHxW_5034F8 + v154) = trxSKITab_501AA0[*((BYTE *)circuitMatrixHxW_5034F8 + v154)];
