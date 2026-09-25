@@ -24,10 +24,12 @@ from pathlib import Path
 MAP_LINE = re.compile(
     r"^\s*[0-9a-fA-F]{4}:[0-9a-fA-F]{8}\s+(?P<name>\S+)\s+(?P<va>[0-9a-fA-F]{8,16})(?:\s+(?P<obj>\S.*))?$")
 
-# "  401010:      \tmov\teax, dword ptr [ebp + 0xc]"
-# (llvm-objdump -d --no-show-raw-insn -M intel; a header/label line has no
-# colon right after the leading hex run, so this only matches instructions.)
-INSTR_LINE = re.compile(r"^\s*([0-9a-fA-F]+):\s*(.*)$")
+# "  44afc8: c7 05 4c dc 99 00 00 00 00 00\tmov\tdword ptr [0x99dc4c], 0x0"
+# (llvm-objdump -d -M intel, raw bytes shown: needed to map
+# an operand back to its own 4-byte field for the per-operand relocation
+# check. A header/label line has no tab right after the leading hex run,
+# so this only matches instructions.)
+INSTR_LINE = re.compile(r"^\s*([0-9a-fA-F]+):\s*([0-9a-fA-F ]*)\t(.*)$")
 HEX_TOKEN = re.compile(r"0x[0-9a-fA-F]+")
 # objdump's own "<.text+0x1234>" annotation on call/jmp targets: it is
 # section-relative, not the address we already substitute, and it does not
@@ -83,7 +85,10 @@ def functions_in(symbols, start_va, end_va):
     """Symbols inside [start_va, end_va) as (start, end, name, obj).
 
     A function ends where the next symbol starts; aliases sharing an address
-    collapse into the last one.
+    collapse into the last one. This -- and therefore the whole footprint
+    listing below -- relies on /opt:noicf (Makefile LDFLAGS): if the linker
+    ever folded two identical functions into one, they would collapse into
+    a single map entry here too, silently dropping one from the footprint.
     """
     code = [s for s in symbols if start_va <= s[0] < end_va]
     functions = []
@@ -111,20 +116,22 @@ def resolve_symbol(symbols, addr):
 
 
 def parse_line(line):
-    """(addr, text): text is the mnemonic+operands with the address column
-    dropped and tabs collapsed to single spaces. (None, None) for headers,
-    section/symbol labels and blank lines, which carry no instruction."""
+    """(addr, raw, text): raw is the instruction's own bytes (objdump's raw-
+    bytes column) and text is the mnemonic+operands, with the address and
+    byte columns dropped and tabs collapsed to single spaces. (None, None,
+    None) for headers, section/symbol labels and blank lines, which carry
+    no instruction."""
     m = INSTR_LINE.match(line)
     if not m:
-        return None, None
-    return int(m.group(1), 16), m.group(2).replace("\t", " ").strip()
+        return None, None, None
+    return int(m.group(1), 16), bytes.fromhex(m.group(2)), m.group(3).replace("\t", " ").strip()
 
 
 def is_direct_branch(mnemonic, operand):
     """Whether `mnemonic operand` is a relative call/jmp/jcc/loop to a bare
-    address (rule a): these are always addresses, and unlike a
-    data reference they never carry a base relocation, so rule b (below)
-    would otherwise wrongly leave them as unrelocated literals."""
+    address (rule a): these are always addresses, and unlike a data
+    reference they never carry a base relocation, so rule b (below) would
+    otherwise wrongly leave them as unrelocated literals."""
     return mnemonic in BRANCH_MNEMONICS and BARE_HEX.match(operand) is not None
 
 
@@ -135,22 +142,60 @@ def has_reloc(reloc_vas, start, end):
     return i < len(reloc_vas) and reloc_vas[i] < end
 
 
-def normalize_line(text, fn_start, fn_end, symbols, image_lo, image_hi, relocated):
+def find_operand_offsets(raw, n):
+    """Byte offsets in `raw` (one instruction's own bytes) where the
+    little-endian encoding of the 32-bit value `n` starts. An instruction
+    can embed the same value twice (e.g. two operands that happen to
+    match); every occurrence is reported, in order, so each can be checked
+    against the relocation table independently."""
+    needle = struct.pack("<I", n & 0xFFFFFFFF)
+    offsets = []
+    start = 0
+    while True:
+        i = raw.find(needle, start)
+        if i < 0:
+            return offsets
+        offsets.append(i)
+        start = i + 1
+
+
+def normalize_line(addr, raw, text, fn_start, fn_end, symbols, image_lo, image_hi, reloc_vas, stats):
     """Replace every operand address that falls inside the image with a form
     that survives relocation: function-relative for a target inside this
     same function, symbol-relative otherwise. A number is only an address
-    if it is a direct branch target (rule a) or
-    `relocated` says this instruction's own byte range carries a base
-    relocation (rule b); every other in-image-looking number is a literal
-    the compiler happened to pick, and is compared verbatim like any other
-    immediate or stack offset."""
+    if it is a direct branch target (rule a), or
+    the specific 4-byte little-endian field it is encoded in, within this
+    instruction's own raw bytes, is covered by a HIGHLOW base relocation
+    (rule b) -- decided per operand, not per instruction, so an unrelocated
+    immediate sitting next to a relocated address in the same instruction
+    (e.g. `mov dword ptr [ADDR], IMM`) is judged on its own encoding, not
+    the instruction's as a whole. Every other number -- including a token
+    whose encoding cannot be found in the raw bytes at all, which is
+    tallied in `stats` rather than guessed at -- is a literal, compared
+    verbatim like any other immediate or stack offset."""
     text = OBJDUMP_ANNOTATION.sub("", text)
     mnemonic, _, operand = text.partition(" ")
-    is_address = relocated or is_direct_branch(mnemonic, operand.strip())
+    branch = is_direct_branch(mnemonic, operand.strip())
+    used = set()
 
     def replace(m):
         n = int(m.group(0), 16)
-        if not is_address or not (image_lo <= n < image_hi):
+        if not (image_lo <= n < image_hi):
+            return m.group(0)
+        if branch:
+            is_address = True
+        else:
+            is_address = False
+            for off in find_operand_offsets(raw, n):
+                if off in used:
+                    continue
+                used.add(off)
+                is_address = has_reloc(reloc_vas, addr + off, addr + off + 4)
+                stats["found"] += 1
+                break
+            else:
+                stats["not_found"] += 1
+        if not is_address:
             return m.group(0)
         if fn_start <= n < fn_end:
             return ".+0x%x" % (n - fn_start)
@@ -163,22 +208,25 @@ def normalize_line(text, fn_start, fn_end, symbols, image_lo, image_hi, relocate
     return HEX_TOKEN.sub(replace, text)
 
 
-def normalize(lines, fn_start, fn_end, symbols, image_lo, image_hi, reloc_vas):
-    """Turn one function's raw objdump output lines into a relocation-
-    insensitive instruction list: two builds normalize to the same list
-    exactly when the function's own behaviour is unchanged, even if the
-    function (or anything it calls or reads) moved in the image."""
-    parsed = [parse_line(line) for line in lines]
-    parsed = [(addr, text) for addr, text in parsed if addr is not None]
+def normalize(lines, fn_start, fn_end, symbols, image_lo, image_hi, reloc_vas, stats=None):
+    """Turn one function's raw objdump output lines (with raw bytes shown --
+    see find_operand_offsets) into a relocation-insensitive instruction
+    list: two builds normalize to the same list exactly when the function's
+    own behaviour is unchanged, even if the function (or anything it calls
+    or reads) moved in the image. `stats`, if given, accumulates
+    {"found": N, "not_found": N} across every operand this call decides."""
+    if stats is None:
+        stats = {"found": 0, "not_found": 0}
     out = []
-    for i, (addr, text) in enumerate(parsed):
-        next_addr = parsed[i + 1][0] if i + 1 < len(parsed) else fn_end
-        relocated = has_reloc(reloc_vas, addr, next_addr)
-        out.append(normalize_line(text, fn_start, fn_end, symbols, image_lo, image_hi, relocated))
+    for line in lines:
+        addr, raw, text = parse_line(line)
+        if addr is None:
+            continue
+        out.append(normalize_line(addr, raw, text, fn_start, fn_end, symbols, image_lo, image_hi, reloc_vas, stats))
     return out
 
 
-def parse_base_relocations(reloc_bytes, image_base):
+def parse_base_relocations(reloc_bytes_, image_base):
     """The sorted list of VAs with a HIGHLOW (type 3) base relocation, from
     a .reloc section's raw bytes: a sequence of per-page blocks, each a
     (page RVA, block size) header followed by 16-bit (type:4, offset:12)
@@ -186,18 +234,34 @@ def parse_base_relocations(reloc_bytes, image_base):
     any other type are skipped; this target only has HIGHLOW ones."""
     vas = []
     off = 0
-    n = len(reloc_bytes)
+    n = len(reloc_bytes_)
     while off + 8 <= n:
-        page_rva, block_size = struct.unpack_from("<II", reloc_bytes, off)
+        page_rva, block_size = struct.unpack_from("<II", reloc_bytes_, off)
         if block_size < 8 or off + block_size > n:
             break
         for i in range((block_size - 8) // 2):
-            entry = struct.unpack_from("<H", reloc_bytes, off + 8 + 2 * i)[0]
+            entry = struct.unpack_from("<H", reloc_bytes_, off + 8 + 2 * i)[0]
             if entry >> 12 == 3:  # IMAGE_REL_BASED_HIGHLOW
                 vas.append(image_base + page_rva + (entry & 0xFFF))
         off += block_size
     vas.sort()
     return vas
+
+
+def reloc_bytes(secs, which):
+    """The build's .reloc section's raw bytes, or a loud error. equiv.py
+    needs it to tell a relocated address from a literal that
+    merely looks like one; every build in this project links with base
+    relocations on (no /FIXED), so a missing or empty .reloc means the
+    build itself is broken, not something to silently treat as "nothing is
+    relocated" (which would quietly turn every real address reference into
+    a literal and resurrect the false positives rule b fixed)."""
+    section = secs.get(".reloc")
+    if section is None or len(section[1]) == 0:
+        raise SystemExit(
+            "check-equiv: %s has no .reloc section, or it is empty -- "
+            "cannot tell a relocated address from a literal without it" % which)
+    return section[1]
 
 
 def is_library_obj(obj):
@@ -219,11 +283,13 @@ def objdump_tool():
 
 
 def dump_text(exe, start, end):
-    """Disassemble [start, end) of exe once; return its raw output lines."""
+    """Disassemble [start, end) of exe once, with raw bytes shown
+    (needed to resolve an operand's relocation per-token, see
+    find_operand_offsets); return its raw output lines."""
     tool = objdump_tool()
     try:
         result = subprocess.run(
-            [tool, "-d", "--no-show-raw-insn", "-M", "intel",
+            [tool, "-d", "-M", "intel",
              "--start-address=0x%x" % start, "--stop-address=0x%x" % end, str(exe)],
             capture_output=True, text=True)
     except OSError as e:
@@ -324,14 +390,15 @@ def text_footprint(base_exe, work_exe, base_ib, base_hi, work_ib, work_hi, base_
         work_dump = [l for l, a in zip(work_dump, work_addrs) if a is not None]
         work_addrs = [a for a in work_addrs if a is not None]
 
-        base_reloc = parse_base_relocations(base_secs.get(".reloc", (0, b""))[1], base_ib)
-        work_reloc = parse_base_relocations(work_secs.get(".reloc", (0, b""))[1], work_ib)
+        base_reloc = parse_base_relocations(reloc_bytes(base_secs, base_exe), base_ib)
+        work_reloc = parse_base_relocations(reloc_bytes(work_secs, work_exe), work_ib)
+        stats = {"found": 0, "not_found": 0}
 
         def changed_after_normalize(bf, wf):
             b_lines = lines_in(base_dump, base_addrs, bf[0], bf[1])
             w_lines = lines_in(work_dump, work_addrs, wf[0], wf[1])
-            b_norm = normalize(b_lines, bf[0], bf[1], base_map, base_ib, base_hi, base_reloc)
-            w_norm = normalize(w_lines, wf[0], wf[1], work_map, work_ib, work_hi, work_reloc)
+            b_norm = normalize(b_lines, bf[0], bf[1], base_map, base_ib, base_hi, base_reloc, stats)
+            w_norm = normalize(w_lines, wf[0], wf[1], work_map, work_ib, work_hi, work_reloc, stats)
             return b_norm != w_norm
 
         for bf, wf in game_raw_differ:
