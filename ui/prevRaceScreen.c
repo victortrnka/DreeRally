@@ -1397,14 +1397,13 @@ LABEL_534:
         drugQuest_456BB4 = -drugQuest_456BB4;
       if ( killOneQuest_456BB8 > 0 )
       {
-		  //cambiar a racePositions[0][0];
-        if ( LOBYTE(dword_45EB50[selectedRace_462CE8]) == killQuestDriverId_456BBC )
+        if ( racePositions[selectedRace_462CE8][0] == killQuestDriverId_456BBC )
           v133 = 0;
-        if ( BYTE1(dword_45EB50[selectedRace_462CE8]) == killQuestDriverId_456BBC )
+        if ( racePositions[selectedRace_462CE8][1] == killQuestDriverId_456BBC )
           v133 = 1;
-        if ( BYTE2(dword_45EB50[selectedRace_462CE8]) == killQuestDriverId_456BBC )
+        if ( racePositions[selectedRace_462CE8][2] == killQuestDriverId_456BBC )
           v133 = 2;
-        if ( BYTE3(dword_45EB50[selectedRace_462CE8]) == killQuestDriverId_456BBC )
+        if ( racePositions[selectedRace_462CE8][3] == killQuestDriverId_456BBC )
           v133 = 3;
         if ( raceParticipant[v133].damage != 100 )
           killOneQuest_456BB8 = -killOneQuest_456BB8;
