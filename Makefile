@@ -47,7 +47,7 @@ else
 $(error PROFILE must be debug or equiv)
 endif
 
-.PHONY: all clean setup-run run check-equiv
+.PHONY: all clean setup-run run check-equiv stats
 
 BASE ?= HEAD
 
@@ -90,3 +90,6 @@ run: $(OUT)/dreerally.exe
 
 check-equiv:
 	tools/equiv/check-equiv.sh $(BASE)
+
+stats:
+	@python3 tools/stats.py
