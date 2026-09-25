@@ -15511,6 +15511,14 @@ LABEL_49:
   {
     switch (event.type)
     {
+      case SDL_ACTIVEEVENT:
+        if (!event.active.gain && (event.active.state & (SDL_APPINPUTFOCUS | SDL_APPACTIVE)))
+        {
+          memset(keysRead_45E0C0, 0, sizeof(keysRead_45E0C0));
+          dword_456BF8 = 0;
+          dword_456BFC = 0;
+        }
+        break;
       case SDL_KEYDOWN: //2
 		  if (event.key.keysym.sym == SDLK_RETURN) //return 
 			 
