@@ -191,24 +191,6 @@ void enterShop()
   char *v24; // edi@21
   char v25; // al@22
   int v26; // ST44_4@23
-  unsigned int v27; // eax@25
-  char *v28; // edi@25
-  char v29; // cl@26
-  char *v30; // edi@27
-  char v31; // al@28
-  int v32; // ST44_4@29
-  int v33; // ecx@29*
-  char *v34; // eax@29
-  char *v35; // esi@29
-  char v36; // dl@30
-  char *v37; // edi@31
-  char v38; // al@32
-  char *v39; // edi@33
-  char v40; // al@34
-  unsigned int v41; // eax@35
-  char *v42; // edi@35
-  char v43; // cl@36
-  int v44; // ST44_4@37
   signed int v45; // ebp@38
   int v46; // esi@39
 //  bool v47; // zf@39
@@ -260,7 +242,7 @@ void enterShop()
   int v93; // eax@132
   signed int v94; // edx@132
   int v95; // ecx@132
-  char* youcould = malloc(100);
+  char youcould[60];
   int v96; // [sp+8h] [bp-68h]@7
   int v99[50]; // [sp+34h] [bp-3Ch]@9   8//coger 100 101 102 103 y juntarlo
   char DstBuf[100]; // [sp+20h] [bp-50h]@6
@@ -355,71 +337,19 @@ void enterShop()
           return;
         loadMenuSoundEffect(1u, 28, 0, configuration.effectsVolume, dword_4451A0);
         createPopup(144, 114, 384, 119, 1);
-        ///v101 = 1701257316;//d eg	
-        v99[0] = 544567129;//you
-        v100 = 1819635575;//woul
-        v102 = 543236212;//t a
-        v103 = 36;
-        _itoa(v5, DstBuf, 10);
-        v27 = strlen(DstBuf) + 1;
-        v28 = &DstBuf[19];
-        do
-          v29 = (v28++)[1];
-        while ( v29 );
-        memcpy(v28, DstBuf, v27);
-        v30 = &DstBuf[19];
-        do
-          v31 = (v30++)[1];
-        while ( v31 );
-        *(_DWORD *)v30 = 1717924384;
-        v32 = (int)graphicsGeneral.fsma3cBpk;
-        *((_DWORD *)v30 + 1) = 6581877;
-        
-        youcould = "You could get a $";
+        strcpy(youcould, "You would get a $");
         _itoa(v5, DstBuf, 10);
         strcat(youcould, DstBuf);
         strcat(youcould, " refund");
-        drawTextWithFont(v32, (int)&letterSpacing_4458B0, youcould, 79530);
+        drawTextWithFont((int)graphicsGeneral.fsma3cBpk, (int)&letterSpacing_4458B0, youcould, 79530);
         memcpy(&v99, "from your old car and upgrades.", 0x20u);
         drawTextWithFont((int)graphicsGeneral.fsma3cBpk, (int)&letterSpacing_4458B0, (const char *)&v99, 89770);
-        //v33 = 1760 * actualCarSelected;
-        v34 = &aVagabond[1760 * actualCarSelected];
-        v35 = (char *)((char *)&v99 - v34);
-        do
-        {
-          v36 = *v34;
-          v34[(_DWORD)v35] = *v34;
-          ++v34;
-        }
-        while ( v36 );
-        v37 = &DstBuf[19];
-        do
-          v38 = (v37++)[1];
-        while ( v38 );
-        *(_DWORD *)v37 = 1970239264;
-        *((_DWORD *)v37 + 1) = 1663067244;
-        *((_DWORD *)v37 + 2) = 544502639;
-        v37[12] = 0;
-        _itoa((cars[actualCarSelected].cost) - v5, DstBuf, 10);
-        v39 = &DstBuf[19];
-        do
-          v40 = (v39++)[1];
-        while ( v40 );
-        *(_WORD *)v39 = 36;
-        v41 = strlen(DstBuf) + 1;
-        v42 = &DstBuf[19];
-        do
-          v43 = (v42++)[1];
-        while ( v43 );
-        memcpy(v42, DstBuf, 4 * (v41 >> 2));
-        v44 = (int)graphicsGeneral.fsma3cBpk;
-        memcpy(&v42[4 * (v41 >> 2)], &DstBuf[4 * (v41 >> 2)], v41 & 3);
 
-        youcould = cars[actualCarSelected].name;
-        strcat(youcould, " would cost $\0");
+        strcpy(youcould, cars[actualCarSelected].name);
+        strcat(youcould, " would cost $");
         _itoa((cars[actualCarSelected].cost) - v5, DstBuf, 10);
         strcat(youcould, DstBuf);
-        drawTextWithFont(v44, (int)&letterSpacing_4458B0, youcould, 100010);
+        drawTextWithFont((int)graphicsGeneral.fsma3cBpk, (int)&letterSpacing_4458B0, youcould, 100010);
         v100 = 1702060392;
         //v101 = 544500000;
         v99[0] = 1668445520;
@@ -842,7 +772,6 @@ LABEL_154:
       }
       break;
     case CONTINUE:
-        free(youcould);
       if ( drivers[driverId].damage != 100 || useWeapons )
       {
         if ( isMultiplayerGame )
@@ -929,7 +858,6 @@ LABEL_154:
       }
       break;
     default:
-        free(youcould);
       return;
   }
 }
