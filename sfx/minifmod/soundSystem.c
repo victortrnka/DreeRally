@@ -1566,7 +1566,7 @@ double temp;
 	finalvol *= (double)(signed int)mod->globalvolume;	
 	// Any half arsed compiler will convert this into 1 constant at compile time.
 	finalvol *= (double)(255.0f / (64.0f * 64.0f * 65536.0f * 64.0f)) * 0.5f;
-	volume = (int)finalvol>>5; ////BYGFIX-------------------------------------------------------------------------/20 sobra
+	volume = (int)finalvol;
 /*    v6 = (unsigned __int64)((double)(*(_DWORD *)(a1 + 16) + *(_DWORD *)(a1 + 24))
                           * (double)*(signed int *)(a1 + 52)
                           * (double)*(signed int *)(a1 + 88)
