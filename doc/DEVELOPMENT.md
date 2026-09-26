@@ -23,8 +23,8 @@ CrossOver. Everything below runs on Apple Silicon.
 | `make stats` | Remaining Hex-Rays names per file (cleanup progress) |
 | `make clean` | Removes `build/` |
 
-If the game data lives elsewhere, pass `DR_DATA=/path/to/Death Rally` to
-`make setup-run`. `run/` holds its own `dr.cfg` and saves, separate from the
+If the game data lives elsewhere, pass `DR_DATA="/path/to/Death Rally"` to
+`make setup-run` (quote it: the path contains spaces). `run/` holds its own `dr.cfg` and saves, separate from the
 original game's.
 
 Command-line flags: `-gl` turns OpenGL off (`checkArgs` in `config.c` clears
@@ -33,11 +33,8 @@ Command-line flags: `-gl` turns OpenGL off (`checkArgs` in `config.c` clears
 its return value, and the only reader of `mainArgs.configWindow`
 (`inicializeScreen`) guards a `v1 = 0` that already ran unconditionally just
 above it — the game always starts windowed regardless of this flag. Both
-`make run ARGS="-window"` and `ARGS="-window -gl"` reach the main menu under
-CrossOver: the startup crash seen in both modes was `initDrivers`'
-out-of-bounds read, fixed in `7ac71d3`; the flags only pick the GL vs.
-software-style rendering path, which headless parity testing found visually
-identical either way.
+`make run ARGS="-window"` and `ARGS="-window -gl"` work under CrossOver; the
+flag only picks the GL or non-GL rendering path, and both look the same.
 
 ## Crashes
 
@@ -80,15 +77,19 @@ Every commit is one or the other:
   commit message names the original function address and the evidence.
   `make check-equiv` must list exactly the functions you meant to change.
 
-Moving functions between files changes code layout even when the code is
-unchanged, so it is not covered by `check-equiv` yet.
+Moving functions between files changes the link layout even when the code is
+unchanged, so `check-equiv` prints `DIFFERENT`. The relocation-aware listing
+should then report no real changes, only moved functions, but no such commit
+has been made yet, so treat moves as unproven.
 
 ### `make check-equiv` output
 
-- `EQUIVALENT` (exit 0): every section of the built PE is byte-identical to
-  `BASE`.
-- `DIFFERENT` (exit 1), with a size diff per differing section, and for
-  `.text`:
+- `EQUIVALENT`: `make check-equiv` exits 0; every section of the built PE is
+  byte-identical to `BASE`.
+- `DIFFERENT`: the checker exits 1, which make reports as
+  `make: *** [check-equiv] Error 1`; `make` itself then exits **2**, so test
+  `$? -ne 0` in scripts. The output has a size diff per differing section, and
+  for `.text`:
   - `functions with different bytes: N` — raw count, before normalization.
   - `functions changed (real): N`, followed by the list (`0xADDR name -> name
     size 0x.. -> 0x..  obj`). This list must be exactly the function(s) you
