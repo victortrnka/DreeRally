@@ -324,10 +324,7 @@ typedef struct RacePopupMemory
 	int unk_479EE4; // weak  -28 posicion y donde pintar
 int unk_479EE8; // weak 24
 int unk_479EEC; // weak 20
-int * unk_479EF0; // weak 16 puntero que contiene la imagen a mostras :)
-int unk_479EF4; // weak 12
-int unk_479EF8; // weak 8
-int unk_479EFC; // weak 4
+int unk_479EF0[4]; // weak 16 buffer inline con la imagen a mostrar (no es puntero)
 
 char unk_479F00; // weak
 

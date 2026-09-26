@@ -4240,7 +4240,6 @@ signed int   racePauseMenu_4064A0(int a1)
 	  racePopupMemory[v7].unk_479EE4 = 0;
 	  racePopupMemory[v7].unk_479EEC = 0;
 	  racePopupMemory[v7].unk_479EE8 = 0;
-	  racePopupMemory[v7].unk_479EF0 = malloc(4); ///TODO FIX puesto por mi
     v7 += 1;
   }
   while ( v7 < 969);
