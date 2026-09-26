@@ -16,17 +16,13 @@ void powerUpTaken_410050()
     signed int* v1; // esi@1
     int v2; // ebp@4
     int v3; // ebx@4
-    unsigned int v4; // eax@9
-    char* v5; // esi@9
-    void* v6; // edi@9
     char v7; // cl@10
     char* v8; // edi@12
     char v9; // al@13
     char v10; // cl@16
     int v11; // [sp+14h] [bp-14h]@1
     char DstBuf[20]; // [sp+18h] [bp-10h]@9
-    char v13; // [sp+1Fh] [bp-9h]@9
-    __int16 v14; // [sp+20h] [bp-8h]@9
+    char v13[12]; // [sp+1Fh] [bp-9h]@9
     int index = 0;
     v0 = Val;
     //v1 = (signed int)&unk_501BB4;
@@ -43,32 +39,22 @@ void powerUpTaken_410050()
                 switch (powerups[index].lastPowerUp_ID_501BB8)
                 {
                 case POWERUP_SMALL_MONEY:
-                    SDL_itoa(v0, &DstBuf, 10);
-                    strcat(&DstBuf, "$");
-                    v6 = DstBuf;
-                    v5 = &DstBuf;
-                    v4 = strlen(&DstBuf);
+                    strcpy(DstBuf, "$");
+                    SDL_itoa(v0, v13, 10);
+                    strcat(DstBuf, v13);
                     goto LABEL_17;
                 case POWERUP_SMALL_REPAIR:
                 case POWERUP_BIG_REPAIR:
                     SDL_itoa(powerups[index].repairpercentage_501BBC, &DstBuf, 10);
                     strcat(&DstBuf, "%");
-                    v6 = DstBuf;
-                    v5 = &DstBuf;
-                    v4 = strlen(&DstBuf);
                     goto LABEL_17;
 
                 case POWERUP_BIG_MONEY:
-                    SDL_itoa(10 * v0, &DstBuf, 10);
-                    strcat(&DstBuf, "$");
-                    v6 = DstBuf;
-                    v5 = &DstBuf;
-                    v4 = strlen(&DstBuf);
+                    strcpy(DstBuf, "$");
+                    SDL_itoa(10 * v0, v13, 10);
+                    strcat(DstBuf, v13);
                 LABEL_17:
-                    //esta pintando en mal posicion
-                    memcpy(v6, v5, v4);
-                    writeTextInRace_402510((v3 << 9) + v2, (const char*)&v14);
-                    //v1 = v11;
+                    writeTextInRace_402510((v3 << 9) + v2, (const char*)&DstBuf);
                 LABEL_18:
                     v0 = Val;
                     break;
