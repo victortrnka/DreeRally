@@ -1202,7 +1202,7 @@ void enterBlackMarketScreen()
       copyImageToBuffer((int)((char *)contaniBpk + v5), (int)dword_461EA4);
       drawImageWithPosition2((int)dword_461EA4, 96, 64, (int)((char *)screenBuffer + 172592));	  
       drawKeyCursor(172592, (char *)screenBuffer + 172592, 0x60u, 64);
-	  continueAnimCurrentFrame_4611D0 = continueAnimCurrentFrame_4611D0 % 2;//% 24;
+	  continueAnimCurrentFrame_4611D0 = (continueAnimCurrentFrame_4611D0 + 1) % 23;
     }
     v10 = 0;
     v11 =0;
@@ -1267,7 +1267,7 @@ void enterBlackMarketScreen()
       copyImageToBuffer((int)((char *)contaniBpk + v22), (int)dword_461EA4);
       drawImageWithPosition2((int)dword_461EA4, 96, 64, (int)((char *)screenBuffer + 172592));
       drawKeyCursor(172592, (char *)screenBuffer + 172592, 0x60u, 64);
-	  continueAnimCurrentFrame_4611D0 = continueAnimCurrentFrame_4611D0 % 24;
+	  continueAnimCurrentFrame_4611D0 = (continueAnimCurrentFrame_4611D0 + 1) % 23;
     }
     if ( v60 % 2 && showUndergroundPopup_456B78 )
       drawCursor(164, 321);
@@ -1371,7 +1371,7 @@ void enterBlackMarketScreen()
         copyImageToBuffer((int)((char *)contaniBpk + v36), (int)dword_461EA4);
         drawImageWithPosition2((int)dword_461EA4, 96, 64, (int)((char *)screenBuffer + 172592));
         drawKeyCursor(172592, (char *)screenBuffer + 172592, 0x60u, 64);
-		continueAnimCurrentFrame_4611D0 = continueAnimCurrentFrame_4611D0 % 24;
+		continueAnimCurrentFrame_4611D0 = (continueAnimCurrentFrame_4611D0 + 1) % 23;
         break;
       default:
         break;
@@ -1537,7 +1537,7 @@ void enterBlackMarketScreen()
         copyImageToBuffer((int)((char *)contaniBpk + v47), (int)dword_461EA4);
         drawImageWithPosition2((int)dword_461EA4, 96, 64, (int)((char *)screenBuffer + 172592));
         drawKeyCursor(172592, (char *)screenBuffer + 172592, 0x60u, 64);
-		continueAnimCurrentFrame_4611D0 = continueAnimCurrentFrame_4611D0 % 24;
+		continueAnimCurrentFrame_4611D0 = (continueAnimCurrentFrame_4611D0 + 1) % 23;
       }
       else if ( v62 != -1 )
       {

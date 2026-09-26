@@ -1096,7 +1096,7 @@ LABEL_44:
             {
               drawMenuAnimation(432, 269, continueAnimCurrentFrame_4611D0, (int)contaniBpk, (int)continueAnimFramesSize_4611D0);
               drawKeyCursor(172592, (char *)screenBuffer + 172592, 0x60u, 64);
-			  continueAnimCurrentFrame_4611D0 = continueAnimCurrentFrame_4611D0 % 22;
+			  continueAnimCurrentFrame_4611D0 = (continueAnimCurrentFrame_4611D0 + 1) % 23;
             }
           }
         }
@@ -1469,7 +1469,7 @@ LABEL_166:
       case CONTINUE:
         drawMenuAnimation(432, 269, continueAnimCurrentFrame_4611D0, (int)contaniBpk, (int)continueAnimFramesSize_4611D0);
         drawKeyCursor(172592, (char *)screenBuffer + 172592, 0x60u, 64);
-		continueAnimCurrentFrame_4611D0 = (continueAnimCurrentFrame_4611D0 + 1)%2; ///aqui va 24 p\F2prque son 22 frames
+		continueAnimCurrentFrame_4611D0 = (continueAnimCurrentFrame_4611D0 + 1) % 23; ///aqui va 23 p\F2prque son 23 frames
         
         break;
       default:
