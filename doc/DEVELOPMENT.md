@@ -63,9 +63,27 @@ own text. See "Common translation bugs" below.
 
 ## Sound
 
-The build currently defines `_NO_MINIFMOD` (minifmod's MSVC inline assembly
-doesn't build with clang-cl yet), so in-race sound effects are off; music
-(via FMOD) works.
+`_NO_MINIFMOD` is gone: `sfx/minifmod/soundSystem.c` (the minifmod mixer used
+for in-race sound effects) builds with clang-cl, and in-race sound effects are
+on. Music (via FMOD) works as before. Notes for anyone touching this area:
+
+- `libincludes/minifmod/Sound.h` pulls in real `<windows.h>`/`<mmsystem.h>`,
+  which redefines `BYTE`/`WORD`/`DWORD`/`LONG` with different underlying types
+  than `defs.h`. `sfx/minifmod/soundSystem.h` keeps real windows.h out (it
+  stands in the handful of types Sound.h actually needs) rather than touching
+  `defs.h`'s typedefs project-wide.
+- clang-cl's MS-style `__asm` accepts `[reg].field` only when it can infer
+  the struct type from a plain, directly-assigned C variable; every other
+  register-relative field access in the ported asm needs an explicit
+  `[reg]STRUCT.field`, and ambiguous-size memory/immediate comparisons need
+  an explicit `dword ptr`. Both are spelled out with the identical resulting
+  instructions - see `sfx/minifmod/soundSystem.c`.
+- `libs/minifmod.lib` is on the link line but no longer contributes any
+  object to the binary: `soundSystem.c` now defines the handful of globals
+  (`FSOUND_Channel`, `FSOUND_MixBlock`, `FMUSIC_Channel`,
+  `FMUSIC_DummyInstrument`, `FSOUND_Software_RealBlock`) that would otherwise
+  pull in `libs/minifmod.lib`'s own threaded/waveOut mixer path, which needs
+  imports and a CRT exception helper this build doesn't otherwise have.
 
 ## Refactor or fix?
 
