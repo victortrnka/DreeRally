@@ -4345,8 +4345,9 @@ signed int   racePauseMenu_4064A0(int a1)
   waitWithRefresh();
   copyBuffer2Screen((void *)screenPtr, Memory, 16000);
   copyBuffer2Screen(Memory, dword_47926C, 16000);
-  //while ( sub_406330() < v15 )
- // {
+  v9 = sub_406330();
+  while ( v9 < v15 )
+  {
     dword_5034F0 = dword_4A9EAC;
     if ( dword_4A9EAC < 1 )
       dword_5034F0 = 1;
@@ -4355,11 +4356,12 @@ signed int   racePauseMenu_4064A0(int a1)
     waitWithRefresh();
     copyBuffer2Screen((void *)screenPtr, Memory, 16000);
     copyBuffer2Screen(Memory, dword_47926C, 16000);
-  //}
+    v9 = sub_406330();
+  }
   stopSoundChannel_43C3E0(5u);
-  //copyBuffer2Screen((void *)screenPtr, dword_47926C, 16000);
- /// free(Memory);
- // free(dword_47926C);
+  copyBuffer2Screen((void *)screenPtr, dword_47926C, 16000);
+  free(Memory);
+  free(dword_47926C);
   dword_4A9EAC = 0;
   dword_503510 = 0;
   dword_503500 = dword_4A8D2C;
