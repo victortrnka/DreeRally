@@ -33,6 +33,7 @@ RUN dpkg --add-architecture i386 && \
         wine wine32 \
         xvfb x11-apps x11-utils imagemagick procps \
         libgl1-mesa-dri libgl1-mesa-dri:i386 libglx-mesa0 libglx-mesa0:i386 libgl1 libgl1:i386 \
+        pulseaudio pulseaudio-utils \
     && rm -rf /var/lib/apt/lists/*
 
 COPY entrypoint.sh /entrypoint.sh

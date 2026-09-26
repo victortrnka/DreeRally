@@ -120,6 +120,9 @@ $(OUT)/keys.exe: $(OUT)/keys.obj
 #   ORIG      -> 1 runs the original dr.exe (+ msvcr71.dll) copied from
 #                DR_DATA instead of our built dreerally.exe. DR_DATA/the
 #                Steam bottle are only ever read, never modified.
+#   AUDIO     -> 1 records a PulseAudio null-sink monitor to audio.wav in
+#                OUT_SHOTS for the whole run. Needs DOCKER_ARGS without
+#                -nosound.
 DOCKER_ARGS ?= -window -nosound
 KEYS      ?=
 SHOTS     ?= 3:intro 9:menu
@@ -127,6 +130,7 @@ SECS      ?= 12
 OUT_SHOTS ?= build/docker-out
 SCENARIO  ?=
 ORIG      ?= 0
+AUDIO     ?= 0
 
 ifneq ($(SCENARIO),)
 SCENARIO_FILE := tools/docker/scenarios/$(SCENARIO).keys
@@ -152,5 +156,6 @@ docker-test: $(OUT)/dreerally.exe $(OUT)/keys.exe
 	@mkdir -p $(OUT_SHOTS)
 	RUNTIME_DIR="$(CURDIR)/$(RUN_DIR)" OUT_DIR="$(CURDIR)/$(OUT_SHOTS)" \
 	  DR_ARGS="$(DOCKER_ARGS)" DR_KEYS="$(KEYS)" DR_SHOTS="$(SHOTS)" RUN_SECS="$(SECS)" \
+	  AUDIO="$(AUDIO)" \
 	  NAME="dreerally-docker-test-$$$$" \
 	  tools/docker/run.sh

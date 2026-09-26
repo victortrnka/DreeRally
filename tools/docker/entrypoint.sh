@@ -16,6 +16,10 @@
 #             ~60s for the game window before giving up), so a hang in any
 #             one segment cannot outlive the overall bound.
 #   RUN_SECS  total seconds to let the game run before stopping it (default 12)
+#   AUDIO     1 = start PulseAudio with a null sink and record its monitor
+#             to audio.wav in OUT_DIR for the whole run (opt-in: off by
+#             default, since it costs a PulseAudio daemon + a parec process
+#             most runs don't need). Requires DR_ARGS without -nosound.
 #
 # Exit code / STATUS: 0 only for STATUS=alive or STATUS=exited(rc=0). Every
 # other STATUS (crashed, exited(rc=N) with N!=0, setup-failed, xvfb-failed,
@@ -76,6 +80,32 @@ timeout 15 wine reg add "HKCU\\Software\\Wine\\WineDbg" /v ShowCrashDialog /t RE
 timeout 15 wineserver -w >>"$LOG" 2>&1 || true
 
 log "wine --version: $(wine --version)"
+
+AUDIO="${AUDIO:-0}"
+PAREC_PID=""
+if [ "$AUDIO" = "1" ]; then
+	export XDG_RUNTIME_DIR=/tmp/xdg-runtime
+	mkdir -p "$XDG_RUNTIME_DIR"
+	log "starting PulseAudio (null sink) for audio capture"
+	if ! PULSE_SERVER= pulseaudio -D --exit-idle-time=-1 --disallow-exit >>"$OUT_DIR/pulse.log" 2>&1; then
+		fail_setup "pulseaudio failed to start"
+	fi
+	PULSE_UP=0
+	for i in $(seq 1 50); do
+		if pactl info >>"$OUT_DIR/pulse.log" 2>&1; then
+			PULSE_UP=1
+			break
+		fi
+		sleep 0.1
+	done
+	[ "$PULSE_UP" -eq 1 ] || fail_setup "pulseaudio did not come up"
+	pactl load-module module-null-sink sink_name=drsink sink_properties=device.description=drsink >>"$OUT_DIR/pulse.log" 2>&1 \
+		|| fail_setup "module-null-sink failed to load"
+	pactl set-default-sink drsink >>"$OUT_DIR/pulse.log" 2>&1 || true
+	parec --device=drsink.monitor --file-format=wav "$OUT_DIR/audio.wav" >>"$OUT_DIR/pulse.log" 2>&1 &
+	PAREC_PID=$!
+	log "recording drsink.monitor to audio.wav (parec pid $PAREC_PID)"
+fi
 
 if ! cd "$RUNTIME_DIR"; then
 	fail_setup "cd $RUNTIME_DIR failed (bad mount?)"
@@ -182,6 +212,13 @@ else
 	else
 		STATUS="exited(rc=$RC)"
 	fi
+fi
+
+if [ -n "$PAREC_PID" ]; then
+	# SIGTERM (not -9) so parec finalizes the WAV header before exiting.
+	kill "$PAREC_PID" 2>/dev/null || true
+	wait "$PAREC_PID" 2>/dev/null || true
+	log "audio capture stopped ($(du -h "$OUT_DIR/audio.wav" 2>/dev/null | cut -f1 || echo '?'))"
 fi
 
 timeout 15 wineserver -k >>"$LOG" 2>&1 || true

@@ -42,6 +42,7 @@ docker run --rm --platform linux/amd64 --name "$NAME" \
 	-e DR_SHOTS="${DR_SHOTS:-3:intro 9:menu}" \
 	-e DR_KEYS="${DR_KEYS:-}" \
 	-e RUN_SECS="$RUN_SECS" \
+	-e AUDIO="${AUDIO:-0}" \
 	"$IMAGE" &
 DOCKER_PID=$!
 
