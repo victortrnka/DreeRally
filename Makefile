@@ -19,9 +19,7 @@ PROFILE ?= debug
 OUT     ?= build/$(PROFILE)
 OBJS    := $(SRCS:%.c=$(OUT)/obj/%.obj)
 
-# _NO_MINIFMOD is temporary: minifmod's MSVC inline assembly (sfx/minifmod/soundSystem.c)
-# does not build with clang-cl yet, so in-race sound effects are off in this build.
-DEFINES  = /DWIN32 /D_WINDOWS /D_CRT_SECURE_NO_WARNINGS /DUNICODE /D_UNICODE /D_NO_MINIFMOD
+DEFINES  = /DWIN32 /D_WINDOWS /D_CRT_SECURE_NO_WARNINGS /DUNICODE /D_UNICODE
 INCLUDES = /Ilibincludes /Ilibs \
            /imsvc $(XWIN)/crt/include /imsvc $(XWIN)/sdk/include/ucrt \
            /imsvc $(XWIN)/sdk/include/um /imsvc $(XWIN)/sdk/include/shared

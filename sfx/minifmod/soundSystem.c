@@ -3,6 +3,8 @@
 #include "soundSystem.h"
 #include "../../defs.h"
 #include <math.h>
+#include <string.h>
+#include <stdio.h>
 
 int (  *FSOUND_File_OpenCallback_456C9C)(_DWORD) = NULL; // weak
 int (  *FSOUND_File_CloseCallback_456CA0)(_DWORD) = NULL; // weak
@@ -15,6 +17,26 @@ char streamId_4444F8[] = "Extended Module:"; // weak
 char byte_456C35 = '\0'; // weak
 
 FMUSIC_MODULE * FMUSIC_PlayingSong_456C30 = NULL; // weak
+
+// minifmod/Sound.h and minifmod/Music.h declare these five as plain
+// (unsuffixed) externs, and this file is the only one that uses them
+// (FSOUND_Channel, FMUSIC_Channel, FMUSIC_DummyInstrument and
+// FSOUND_Software_RealBlock: real reads and writes throughout the mixer
+// below; FSOUND_MixBlock.data: read once, but the result is a dead local -
+// see FSOUND_Software_Fill_43DCB0). Defining them here keeps that storage
+// in this file instead of pulling it from libs/minifmod.lib: that .lib's
+// objects providing them (Fsound.obj, music_formatxm.obj) need real
+// CreateThread/waveOut*/Sleep imports and drag in a CRT exception-handling
+// helper (__except_handler4_common) this build's CRT libs don't provide,
+// for a whole threaded/waveOut output path this port never calls into.
+// Sizes match minifmod.lib's own common-symbol sizes
+// (256 FSOUND_CHANNEL, 32 FMUSIC_CHANNEL - the latter also matches the
+// `172 * mod->numchannels` memset below).
+FSOUND_CHANNEL FSOUND_Channel[256];
+FSOUND_SoundBlock FSOUND_MixBlock;
+FMUSIC_CHANNEL FMUSIC_Channel[32];
+FMUSIC_INSTRUMENT FMUSIC_DummyInstrument;
+volatile int FSOUND_Software_RealBlock;
 
 int FSOUND_Software_FillBlock_456C3C = 0; // weak
 int FSOUND_BufferSize_45C4C4; // weak
@@ -500,7 +522,7 @@ int   FSOUND_MixerClipCopy_Float32_43DE30(void *dest, void *src, long len)
 		__asm
 		{
 			mov eax, srcptr
-			fld [eax]
+			fld dword ptr [eax]
 			add srcptr, 4
 			fistp val
 		}
@@ -548,7 +570,7 @@ int    FSOUND_Mixer_FPU_Ramp_43DEA0(void *mixptr, int len)
 		je		MixExit						//			  ... then skip this channel!
 
 		// get pointer to sample buffer
-		mov		eax, [ebx].buff
+		mov		eax, [ebx]FSOUND_SAMPLE.buff
 		mov		mix_samplebuff, eax
 
 		//==============================================================================================
@@ -568,22 +590,22 @@ int    FSOUND_Mixer_FPU_Ramp_43DEA0(void *mixptr, int len)
 
 	CalculateLoopCount:
 		mov		mix_count, eax
-		mov		esi, [ecx].mixpos
+		mov		esi, [ecx]FSOUND_CHANNEL.mixpos
 		mov		ebp, FSOUND_OUTPUTBUFF_END	
 		mov		mix_endflag, ebp			// set a flag to say mixing will end when end of output buffer is reached
 
-		cmp		[ecx].speeddir, FSOUND_MIXDIR_FORWARDS
+		cmp		dword ptr [ecx]FSOUND_CHANNEL.speeddir, FSOUND_MIXDIR_FORWARDS
 		jne		samplesleftbackwards
 
 		// work out how many samples left from mixpos to loop end	
-		mov		edx, [ebx].loopstart
-		add		edx, [ebx].looplen
+		mov		edx, [ebx]FSOUND_SAMPLE.loopstart
+		add		edx, [ebx]FSOUND_SAMPLE.looplen
         cmp     esi, edx
         jle     subtractmixpos
-        mov     edx, [ebx+FSOUND_SAMPLE.length]
+        mov     edx, [ebx]FSOUND_SAMPLE.length
     subtractmixpos:
 		sub		edx, esi					// eax = samples left (loopstart+looplen-mixpos)
-		mov		eax, [ecx].mixposlo
+		mov		eax, [ecx]FSOUND_CHANNEL.mixposlo
 		xor		ebp, ebp
 		sub		ebp, eax
 		sbb		edx, 0
@@ -592,11 +614,11 @@ int    FSOUND_Mixer_FPU_Ramp_43DEA0(void *mixptr, int len)
 
 	samplesleftbackwards:
 		// work out how many samples left from mixpos to loop start
-		mov		edx, [ecx].mixpos
-		mov		eax, [ecx].mixposlo
+		mov		edx, [ecx]FSOUND_CHANNEL.mixpos
+		mov		eax, [ecx]FSOUND_CHANNEL.mixposlo
 
 		sub		eax, 0h
-		sbb		edx, [ebx].loopstart
+		sbb		edx, [ebx]FSOUND_SAMPLE.loopstart
 
 	samplesleftfinish:          
 
@@ -608,8 +630,8 @@ int    FSOUND_Mixer_FPU_Ramp_43DEA0(void *mixptr, int len)
 		shr		edx, 8
 		
 		// now samples left = EDX:EAX -> hhhhhlll
-		mov		ebp, [ecx].speedhi
-		mov		edi, [ecx].speedlo
+		mov		ebp, [ecx]FSOUND_CHANNEL.speedhi
+		mov		edi, [ecx]FSOUND_CHANNEL.speedlo
 
         // do a paranoid divide by 0 check
         test    ebp, ebp
@@ -653,35 +675,35 @@ int    FSOUND_Mixer_FPU_Ramp_43DEA0(void *mixptr, int len)
 		mov		mix_count_old, eax			// remember mix count before modifying it	
 		
 		mov		mix_rampcount, 0
-		cmp		[ecx].ramp_count, 0
+		cmp		dword ptr [ecx]FSOUND_CHANNEL.ramp_count, 0
 		je		volumerampstart
 
 		// if it tries to continue an old ramp, but the target has changed, 
 		// set up a new ramp
-		mov		eax, [ecx].leftvolume
-		mov		edx, [ecx].ramp_lefttarget
+		mov		eax, [ecx]FSOUND_CHANNEL.leftvolume
+		mov		edx, [ecx]FSOUND_CHANNEL.ramp_lefttarget
 		cmp		eax,edx
 		jne		volumerampstart
-		mov		eax, [ecx].rightvolume
-		mov		edx, [ecx].ramp_righttarget
+		mov		eax, [ecx]FSOUND_CHANNEL.rightvolume
+		mov		edx, [ecx]FSOUND_CHANNEL.ramp_righttarget
 		cmp		eax,edx
 		jne		volumerampstart
 
 		// restore old ramp
-		mov		eax, [ecx].ramp_count
+		mov		eax, [ecx]FSOUND_CHANNEL.ramp_count
 		mov		mix_rampcount, eax
-		mov		eax, [ecx].ramp_leftspeed
+		mov		eax, [ecx]FSOUND_CHANNEL.ramp_leftspeed
 		mov		mix_rampspeedleft, eax
-		mov		eax, [ecx].ramp_rightspeed
+		mov		eax, [ecx]FSOUND_CHANNEL.ramp_rightspeed
 		mov		mix_rampspeedright, eax
 
 		jmp		novolumerampR
 
 	volumerampstart:
-		mov		eax, [ecx].leftvolume
-		mov		edx, [ecx].ramp_leftvolume 
+		mov		eax, [ecx]FSOUND_CHANNEL.leftvolume
+		mov		edx, [ecx]FSOUND_CHANNEL.ramp_leftvolume 
 		shr		edx, 8
-		mov		[ecx].ramp_lefttarget, eax
+		mov		[ecx]FSOUND_CHANNEL.ramp_lefttarget, eax
 		sub		eax, edx
 		cmp		eax, 0
 		je		novolumerampL
@@ -692,15 +714,15 @@ int    FSOUND_Mixer_FPU_Ramp_43DEA0(void *mixptr, int len)
 		fmul	mix_1overvolumerampsteps_456C98
 		fstp	mix_rampspeedleft
 		mov		eax, mix_rampspeedleft
-		mov		[ecx].ramp_leftspeed, eax
+		mov		[ecx]FSOUND_CHANNEL.ramp_leftspeed, eax
 		mov		eax, mix_volumerampsteps_456C94
 		mov		mix_rampcount, eax
 
 	novolumerampL:
-		mov		eax, [ecx].rightvolume
-		mov		edx, [ecx].ramp_rightvolume 
+		mov		eax, [ecx]FSOUND_CHANNEL.rightvolume
+		mov		edx, [ecx]FSOUND_CHANNEL.ramp_rightvolume 
 		shr		edx, 8
-		mov		[ecx].ramp_righttarget, eax
+		mov		[ecx]FSOUND_CHANNEL.ramp_righttarget, eax
 		sub		eax, edx
 		cmp		eax, 0
 		je		novolumerampR
@@ -711,7 +733,7 @@ int    FSOUND_Mixer_FPU_Ramp_43DEA0(void *mixptr, int len)
 		fmul	mix_1overvolumerampsteps_456C98
 		fstp	mix_rampspeedright
 		mov		eax, mix_rampspeedright
-		mov		[ecx].ramp_rightspeed, eax
+		mov		[ecx]FSOUND_CHANNEL.ramp_rightspeed, eax
 		mov		eax, mix_volumerampsteps_456C94
 		mov		mix_rampcount, eax
 
@@ -720,7 +742,7 @@ int    FSOUND_Mixer_FPU_Ramp_43DEA0(void *mixptr, int len)
 		cmp		eax, 0
 		jle		volumerampend
 
-		mov		[ecx].ramp_count, eax
+		mov		[ecx]FSOUND_CHANNEL.ramp_count, eax
 		cmp		mix_count, eax
 		jbe		volumerampend	// dont clamp mixcount 
 		mov		mix_count, eax
@@ -733,21 +755,21 @@ int    FSOUND_Mixer_FPU_Ramp_43DEA0(void *mixptr, int len)
 		mov		ecx, mix_cptr
 
 		// right volume
-		mov		eax, [ecx].rightvolume
+		mov		eax, [ecx]FSOUND_CHANNEL.rightvolume
 		mov		mix_temp1, eax
 		fild	mix_temp1
 		fmul	mix_1over255 
 		fstp	mix_rightvol
 
 		// left volume
-		mov		eax, [ecx].leftvolume
+		mov		eax, [ecx]FSOUND_CHANNEL.leftvolume
 		mov		mix_temp1, eax
 		fild	mix_temp1
 		fmul	mix_1over255 
 		fstp	mix_leftvol
 
 		// right ramp volume
-		mov		eax, [ecx].ramp_rightvolume
+		mov		eax, [ecx]FSOUND_CHANNEL.ramp_rightvolume
 		mov		mix_temp1, eax
 		fild	mix_temp1
 		fmul	mix_1over256			// first convert from 24:8 to 0-255
@@ -755,7 +777,7 @@ int    FSOUND_Mixer_FPU_Ramp_43DEA0(void *mixptr, int len)
 		fstp	mix_ramprightvol
 
 		// left ramp volume
-		mov		eax, [ecx].ramp_leftvolume
+		mov		eax, [ecx]FSOUND_CHANNEL.ramp_leftvolume
 		mov		mix_temp1, eax
 		fild	mix_temp1
 		fmul	mix_1over256			// first convert from 24:8 to 0-255
@@ -772,14 +794,14 @@ int    FSOUND_Mixer_FPU_Ramp_43DEA0(void *mixptr, int len)
 		// ebp = mixpos low
 
 		mov		eax, mix_cptr
-		mov		ebx, [eax].speedlo
-		mov		ecx, [eax].speedhi
+		mov		ebx, [eax]FSOUND_CHANNEL.speedlo
+		mov		ecx, [eax]FSOUND_CHANNEL.speedhi
 	//  mov		edx, mix_count
-		mov		ebp, [eax].mixposlo
-		mov		esi, [eax].mixpos
+		mov		ebp, [eax]FSOUND_CHANNEL.mixposlo
+		mov		esi, [eax]FSOUND_CHANNEL.mixpos
 		mov		edi, mix_mixbuffptr		// point edi to 16bit output stream
 
-		cmp		[eax].speeddir, FSOUND_MIXDIR_FORWARDS
+		cmp		dword ptr [eax]FSOUND_CHANNEL.speeddir, FSOUND_MIXDIR_FORWARDS
 		je		NoChangeSpeed
 		xor		ebx, 0FFFFFFFFh
 		xor		ecx, 0FFFFFFFFh
@@ -1041,9 +1063,9 @@ MixLoopStart16:
 			mov		ecx, mix_cptr		// load ecx with channel pointer
 
 			mov		eax, mix_rampleftvol
-			mov		[ecx].ramp_leftvolume, eax
+			mov		[ecx]FSOUND_CHANNEL.ramp_leftvolume, eax
 			mov		eax, mix_ramprightvol
-			mov		[ecx].ramp_rightvolume, eax
+			mov		[ecx]FSOUND_CHANNEL.ramp_rightvolume, eax
 
 			mov		eax, mix_count
 			mov		edx, mix_rampcount
@@ -1053,23 +1075,23 @@ MixLoopStart16:
 			mov		mix_rampspeedleft, 0		// clear out volume ramp
 			mov		mix_rampspeedright, 0		// clear out volume ramp
 			mov		mix_rampcount, edx
-			mov		[ecx].ramp_count, edx
+			mov		[ecx]FSOUND_CHANNEL.ramp_count, edx
 	
 			// if rampcount now = 0, a ramp has FINISHED, so finish the rest of the mix
 			cmp		edx, 0
 			jne		DoOutputbuffEnd
 
 			// clear out the ramp speeds
-			mov		[ecx].ramp_leftspeed, 0
-			mov		[ecx].ramp_rightspeed, 0
+			mov		dword ptr [ecx]FSOUND_CHANNEL.ramp_leftspeed, 0
+			mov		dword ptr [ecx]FSOUND_CHANNEL.ramp_rightspeed, 0
 
 			// clamp the 2 volumes together in case the speed wasnt accurate enough!
-			mov		edx, [ecx].leftvolume
+			mov		edx, [ecx]FSOUND_CHANNEL.leftvolume
 			shl		edx, 8
-			mov		[ecx].ramp_leftvolume, edx
-			mov		edx, [ecx].rightvolume
+			mov		[ecx]FSOUND_CHANNEL.ramp_leftvolume, edx
+			mov		edx, [ecx]FSOUND_CHANNEL.rightvolume
 			shl		edx, 8
-			mov		[ecx].ramp_rightvolume, edx
+			mov		[ecx]FSOUND_CHANNEL.ramp_rightvolume, edx
 
 			// is it 0 because ramp ended only? or both ended together??
 			// if sample ended together with ramp.. problems .. loop isnt handled
@@ -1078,8 +1100,8 @@ MixLoopStart16:
 			je		DoOutputbuffEnd
 
 			// start again and continue rest of mix
-			mov		[ecx].mixpos, esi
-			mov		[ecx].mixposlo, ebp
+			mov		[ecx]FSOUND_CHANNEL.mixpos, esi
+			mov		[ecx]FSOUND_CHANNEL.mixposlo, ebp
 			
 			mov		eax, mix_mixbuffend	// find out how many OUTPUT samples left to mix 
 			sub		eax, edi
@@ -1101,21 +1123,21 @@ MixLoopStart16:
 			mov		ebx, mix_sptr				// load ebx with sample pointer
 			mov		ecx, mix_cptr				// load ecx with sample pointer
 
-			mov		dl,	[ebx].loopmode
+			mov		dl,	[ebx]FSOUND_SAMPLE.loopmode
 
 			// check for normal loop
 			test	dl, FSOUND_LOOP_NORMAL
 			jz		CheckBidiLoop
 
-			mov		eax, [ebx].loopstart
-			add		eax, [ebx].looplen
+			mov		eax, [ebx]FSOUND_SAMPLE.loopstart
+			add		eax, [ebx]FSOUND_SAMPLE.looplen
 		rewindsample:
-			sub		esi, [ebx].looplen
+			sub		esi, [ebx]FSOUND_SAMPLE.looplen
 			cmp		esi, eax
 			jae		rewindsample
 
-			mov		[ecx].mixpos, esi
-			mov		[ecx].mixposlo, ebp
+			mov		[ecx]FSOUND_CHANNEL.mixpos, esi
+			mov		[ecx]FSOUND_CHANNEL.mixposlo, ebp
 			mov		eax, mix_mixbuffend			// find out how many samples left to mix for the output buffer
 			sub		eax, edi
 			shr		eax, 3						// eax now holds # of samples left, go recalculate mix_count!!!
@@ -1129,11 +1151,11 @@ MixLoopStart16:
 		CheckBidiLoop:
 			test	dl, FSOUND_LOOP_BIDI
 			jz		NoLoop
-			cmp		[ecx].speeddir, FSOUND_MIXDIR_FORWARDS
+			cmp		dword ptr [ecx]FSOUND_CHANNEL.speeddir, FSOUND_MIXDIR_FORWARDS
 			je		BidiForward
 
 		BidiBackwards:
-			mov		eax, [ebx].loopstart
+			mov		eax, [ebx]FSOUND_SAMPLE.loopstart
 			dec		eax
 	//		mov		edx, 0ffffff00h
 			mov		edx, 0ffffffffh
@@ -1142,45 +1164,45 @@ MixLoopStart16:
 				
 			mov		esi, eax
 			mov		ebp, edx					// esi:ebp = loopstart - mixpos
-			mov		eax, [ebx].loopstart
+			mov		eax, [ebx]FSOUND_SAMPLE.loopstart
 			mov		edx, 0h
 			add		ebp, edx
 			adc		esi, eax					// esi:ebp += loopstart
 				
-			mov		[ecx].speeddir, FSOUND_MIXDIR_FORWARDS
+			mov		dword ptr [ecx]FSOUND_CHANNEL.speeddir, FSOUND_MIXDIR_FORWARDS
 
-			mov		eax, [ebx].loopstart
-			add		eax, [ebx].looplen
+			mov		eax, [ebx]FSOUND_SAMPLE.loopstart
+			add		eax, [ebx]FSOUND_SAMPLE.looplen
 			cmp		esi, eax
 			jge		BidiForward
 
 			jmp		BidiFinish
 		BidiForward:
-			mov		eax, [ebx].loopstart
-			add		eax, [ebx].looplen
+			mov		eax, [ebx]FSOUND_SAMPLE.loopstart
+			add		eax, [ebx]FSOUND_SAMPLE.looplen
 			mov		edx, 0h
 			sub		edx, ebp
 			sbb		eax, esi				
 			mov		esi, eax
 			mov		ebp, edx					// esi:ebp = loopstart+looplen - mixpos
 
-			mov		eax, [ebx].loopstart
-			add		eax, [ebx].looplen
+			mov		eax, [ebx]FSOUND_SAMPLE.loopstart
+			add		eax, [ebx]FSOUND_SAMPLE.looplen
 			dec		eax
 	//		mov		edx, 0ffffff00h
 			mov		edx, 0ffffffffh
 			add		ebp, edx
 			adc		esi, eax
 
-			mov		[ecx].speeddir, FSOUND_MIXDIR_BACKWARDS
+			mov		dword ptr [ecx]FSOUND_CHANNEL.speeddir, FSOUND_MIXDIR_BACKWARDS
 
-			cmp		esi, [ebx].loopstart
+			cmp		esi, [ebx]FSOUND_SAMPLE.loopstart
 			jl		BidiBackwards
 
 		BidiFinish:
 
-			mov		[ecx].mixpos, esi
-			mov		[ecx].mixposlo, ebp
+			mov		[ecx]FSOUND_CHANNEL.mixpos, esi
+			mov		[ecx]FSOUND_CHANNEL.mixposlo, ebp
 
 			mov		eax, mix_mixbuffend			// find out how many samples left to mix for the output buffer
 			sub		eax, edi
@@ -1201,8 +1223,8 @@ MixLoopStart16:
 		FinishUpChannel:
 			mov		ecx, [mix_cptr]
 
-			mov		[ecx].mixposlo, ebp
-			mov		[ecx].mixpos, esi			// reset mixpos based on esi for next time around
+			mov		[ecx]FSOUND_CHANNEL.mixposlo, ebp
+			mov		[ecx]FSOUND_CHANNEL.mixpos, esi			// reset mixpos based on esi for next time around
 
 		//===================================================================================================
 		// EXIT
@@ -2347,7 +2369,7 @@ LABEL_94:
                   while ( v40 < sptr_v48->length);
                 }*/
               }
-				  (signed short *)buff = (signed short *)sptr_v48->buff;
+				  buff = (signed short *)sptr_v48->buff;
 					
 						// BUGFIX 1.3 - removed click for end of non looping sample (also size optimized a bit)
 						if (sptr_v48->loopmode == FSOUND_LOOP_BIDI)
