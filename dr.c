@@ -1240,14 +1240,14 @@ int dword_4A7EAC[256]; // weak
 int dword_4A7EB0[256]; // weak
 int dword_4A7EB4[256]; // weak
 int drawFlames_4A7EB8[1024]; // weak
-int dword_4A7EBC[256]; // weak
-int dword_4A7EC0[256]; // weak
+int dword_4A7EBC[1024]; // weak
+int dword_4A7EC0[1024]; // weak
 int dword_4A7EC4[256]; // weak
 int dword_4A7EC8[256]; // weak
 int dword_4A7ECC[256]; // weak
 int dword_4A7ED0[256]; // weak
-int dword_4A7ED4[256]; // weak
-int dword_4A7ED8[256]; // weak
+int dword_4A7ED4[1024]; // weak
+int dword_4A7ED8[1024]; // weak
 //int spriteBurnOffset_4A7EDC[256]; // weak
 int lastUserTicks_4A7EE0[1024]; // weak //son 4 pero esta en estructura
 int dword_4A7EE4[256]; // weak
@@ -8023,7 +8023,7 @@ LABEL_63:
   
   if ( v59 - 260 < 0 )
     *v60 = 0;
-  v61 = v32;
+  v61 = 216 * v32;
   v62 = dword_4AA3E4;
   v63 = dword_50350C;
   dword_4A7EBC[v61] = dword_4A7CF0;
