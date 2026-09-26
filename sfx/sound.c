@@ -336,7 +336,7 @@ void   loadMusic(int a1, char * music1, int a3, char* soundEffect)
 			
 
 				FMUSIC_PlaySong_43DA40(musicModuleModified_456C24);
-				sound_stream = FSOUND_Stream_Create(sub_43C220, 4096, FSOUND_UNSIGNED, 44100, 0); //int length,unsigned int mode 80,int samplerate,int userdata
+				sound_stream = FSOUND_Stream_Create(sub_43C220, 4096, FSOUND_STEREO | FSOUND_16BITS, 44100, 0); //int length,unsigned int mode 0x50,int samplerate,int userdata
 				soundStream = sound_stream;
 				channel = FSOUND_Stream_Play(-1, sound_stream);
 				channel_456C10 = channel;
