@@ -266,8 +266,6 @@ int drawShadows_40D7B0()
             v4 = trxSHA8Bpk_46E8E0[v1];
             //v2 *= 4;
 
-            //TODO FIX 
-            if (v2 > 200) v2 = 0;
             v5 = trxSHA3Bpk_479280[v3] - circuitImageOffsetX_456ABC;
             v6 = trxSHA3Bpk_479280[v2] - circuitImageOffsetX_456ABC;
             v7 = trxSHA3Bpk_479280[v4] - circuitImageOffsetX_456ABC;
