@@ -63,9 +63,11 @@ own text. See "Common translation bugs" below.
 
 ## Sound
 
-`_NO_MINIFMOD` is gone: `sfx/minifmod/soundSystem.c` (the minifmod mixer used
-for in-race sound effects) builds with clang-cl, and in-race sound effects are
-on. Music (via FMOD) works as before. Notes for anyone touching this area:
+The Makefile no longer defines `_NO_MINIFMOD`: `sfx/minifmod/soundSystem.c`
+(the minifmod mixer used for sound effects) builds with clang-cl, and sound
+effects are on. The `#ifndef _NO_MINIFMOD` guards stay in the sources because
+`Makefile.linux` still defines it. Music (via FMOD) works as before. Notes for
+anyone touching this area:
 
 - `libincludes/minifmod/Sound.h` pulls in real `<windows.h>`/`<mmsystem.h>`,
   which redefines `BYTE`/`WORD`/`DWORD`/`LONG` with different underlying types
@@ -222,8 +224,8 @@ For both: verify against the original with Ghidra
 list exactly the function(s) you changed.
 
 Practical tips:
-- Some sources are ISO-8859, not UTF-8. The shell aliases `grep` to `ugrep`,
-  which silently skips non-UTF-8 files — use `command grep -a`. Edit
+- Some sources are ISO-8859, not UTF-8. Plain `grep` may treat them as binary
+  or (with ugrep) skip them; use `grep -a`. Edit
   byte-preservingly (e.g. `LC_ALL=C perl -pi`) and confirm the encoding is
   unchanged with `file` afterwards.
 - For frame-layout instrumentation, use `__builtin_frame_address(0)`; a
