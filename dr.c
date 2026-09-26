@@ -7223,6 +7223,7 @@ LABEL_118:
         v31 = raceParticipantIngame[v5].absolutePositionX_4A7DB4;
         v32 = raceParticipantIngame[v75].absolutePositionX_4A7DB4;
         v34 = raceParticipantIngame[v5].absolutePositionX_4A7DB4;
+        v35 = raceParticipantIngame[v5].absolutePositionX_4A7DB4 < raceParticipantIngame[v75].absolutePositionX_4A7DB4;
         if ( v35 )
         {
           raceParticipantIngame[v5].absolutePositionX_4A7DB4 = v34 - 0.6;
@@ -7238,6 +7239,7 @@ LABEL_118:
         v37 = raceParticipantIngame[v5].absolutePositionY_4A7DB8;
         v38 = raceParticipantIngame[v75].absolutePositionY_4A7DB8;
         v40 = raceParticipantIngame[v5].absolutePositionY_4A7DB8;
+        v41 = raceParticipantIngame[v5].absolutePositionY_4A7DB8 < raceParticipantIngame[v75].absolutePositionY_4A7DB8;
         if ( v41 )
         {
           raceParticipantIngame[v5].absolutePositionY_4A7DB8 = v40 - 0.6;
