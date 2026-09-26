@@ -13083,7 +13083,7 @@ int sub_4224E0()
   {
     v29 = 0;
     v14 =0;
-	 index = 192; //offset de la paleta
+	 index = 576; //offset de la paleta (palette1[0]=0x45FC40, unk_460544 -> index 577, first write index 576)
 	//int index = 192;
 	//v14 = (signed int)&unk_460544;
     do
