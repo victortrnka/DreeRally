@@ -13401,10 +13401,10 @@ void   recalcRank(int a1)
   driverId = v2 - driverId - 1;
   if ( v2 > 0 )
   {
-    v6 = (signed int)drivers[0].rank;
+    v6 = (signed int)&drivers[0].rank;
     do
     {
-      if ( *(_DWORD *)(v6 - 4) != *(_DWORD *)(v6 - 112) || v6 <= drivers[0].rank )
+      if ( *(_DWORD *)(v6 - 4) != *(_DWORD *)(v6 - 112) || v6 <= (signed int)&drivers[0].rank )
         v7 = v5 + 1;
       else
         v7 = *(_DWORD *)(v6 - 108);
