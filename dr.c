@@ -8434,6 +8434,7 @@ int drawRocket_40F450()
         v13 = v10 / 4 << 8;//12288 es el tama\F1o de la images y tiene 24 sprites 12288/24=512 bytes por sprite
         v23 = 16;
 		//if(debug==1) v13=0;
+		//v11 selecciona el sprite (0=rocket1Bpk, 1=rocket2Bpk), no es un offset de bytes
         do
         {
           v14 = 0;
@@ -8441,16 +8442,16 @@ int drawRocket_40F450()
           {
 
 			  //v11 es para poner rocker2bpks
-            v15 = *((BYTE *)rocket1Bpk + v11 + v13 + v14);
+            v15 = *((BYTE *)(v11 ? rocket2Bpk : rocket1Bpk) + v13 + v14);
             if ( v15 )
               *(BYTE *)(v14 + v12 + dword_464F14 + v8 + 96) = v15;
-            v16 = *((BYTE *)&rocket1Bpk + v11 + v13 + v14 + 1);
+            v16 = *((BYTE *)(v11 ? rocket2Bpk : rocket1Bpk) + v13 + v14 + 1);
             if ( v16 )
               *(BYTE *)(v14 + v12 + dword_464F14 + v8 + 97) = v16;
-            v17 = *((BYTE *)rocket1Bpk + v11 + v13 + v14 + 2);
+            v17 = *((BYTE *)(v11 ? rocket2Bpk : rocket1Bpk) + v13 + v14 + 2);
             if ( v17 )
               *(BYTE *)(v14 + v12 + dword_464F14 + v8 + 98) = v17;
-            v18 = *((BYTE *)rocket1Bpk + v11 + v13 + v14 + 3);
+            v18 = *((BYTE *)(v11 ? rocket2Bpk : rocket1Bpk) + v13 + v14 + 3);
             if ( v18 )
               *(BYTE *)(v14 + v12 + dword_464F14 + v8 + 99) = v18;
             v14 += 4;
