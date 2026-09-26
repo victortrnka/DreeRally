@@ -1969,7 +1969,7 @@ LABEL_348:
         v217 = raceParticipant[v214].damage;
         ++v214;
        // v215 += 21;
-        drivers[v216].racesWon = v217;
+        drivers[v216].damage = v217;
       }
       while ( v214 < participants);
     }
