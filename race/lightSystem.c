@@ -102,7 +102,7 @@ int   iluminateTriangle_43D530(int pos1x, int pos1y, int pos2x, int pos2y, int p
     }
     else
     {
-        v10 = pos2y > pos3y ? 0 : 4;
+        v10 = pos1y > pos3y ? 0 : 4;
     }
     v11 = positions[1 + v8];
     //v11 = *(&v48 + v8);
