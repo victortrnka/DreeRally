@@ -13389,7 +13389,7 @@ void   recalcRank(int a1)
 	v4 = a1 - 1;
     do
     {
-      memcpy(&drivers[v3], &drivers[v4], sizeof(drivers[v3]));
+      memcpy(&drivers[v3], (Driver *)v1 + v4, sizeof(drivers[v3]));
       v4 = v4-1;
 	  v3 = v3 + 1;
       --a1;
