@@ -344,7 +344,7 @@ int   postRaceMain(int argc, const char **argv, const char **envp)
     v54 = eventDetected();
     v56 = v54;
   }
-  while ( !v54 || v54==28 );
+  while ( !v54 );
   if ( v54 != 1 )
     v56 = 0;
   mediumRaceResults(v56,0 , 0);
