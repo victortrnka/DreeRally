@@ -192,8 +192,8 @@ int   loadMenuSoundEffect(unsigned __int8 channelNumber, char soundNumber, int a
 	//a2 es el indice del sonido
   int result; // eax@1
 
-  result = mainArgs.configNoSoundEffect;
-  if ( mainArgs.configNoSoundEffect)	
+  result = mainArgs.configNoSound;
+  if ( !mainArgs.configNoSound)
 	#ifndef _NO_MINIFMOD
 	    result = FMUSIC_UpdateXMNote_43EC40(musicModuleModified_456C24, channelNumber - 1, soundNumber - 1, a5, (a4 << 6 >> 16) + 16);
 	#endif
@@ -234,9 +234,9 @@ int   stopSoundChannel_43C3E0(unsigned __int8 a1)
 		*(_DWORD *)(result + 40) = 0;
 		*(_DWORD *)(result + 28) = 0;
 		*(_DWORD *)(result + 24) = 0;*/
-	
+		result = (int)ccptr;
 	  }
-	  return ccptr;
+	  return result;
 	#endif
 }
 
