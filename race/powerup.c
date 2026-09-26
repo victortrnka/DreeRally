@@ -54,7 +54,7 @@ void powerUpTaken_410050()
                     SDL_itoa(10 * v0, v13, 10);
                     strcat(DstBuf, v13);
                 LABEL_17:
-                    writeTextInRace_402510((v3 << 9) + v2, (const char*)&DstBuf);
+                    writeTextInRace_402510((v3 << 9) + v2 + 0x60, (const char*)&DstBuf);
                 LABEL_18:
                     v0 = Val;
                     break;
