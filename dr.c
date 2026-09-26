@@ -9026,7 +9026,6 @@ static void applyTrackMark(const unsigned char *remapTable, int x, int y)
   map[base + circuitWidth_464F40 + 1]= remapTable[map[base + circuitWidth_464F40 + 1]];
 }
 
-//----- (00411D10) --------------------------------------------------------
 //recalculateCarBoundary_411D10 turns every mark coordinate into a pixel with
 //the same inline sequence at all 20 sites: __ftol(x), add 1.0 (0x441654) when
 //x minus that is >= 0.5 (0x4412a0), then __ftol again. __ftol truncates towards
@@ -9038,6 +9037,7 @@ static int roundHalfUpToInt(float x)
   return (int)x;
 }
 
+//----- (00411D10) --------------------------------------------------------
 int recalculateCarBoundary_411D10()
 {
   int result; // eax@1
