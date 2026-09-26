@@ -7780,7 +7780,7 @@ int shotAction_40E180()
     return result;
 
   v4 = 37 * currentDriverSelectedIndex_503518 + raceParticipant2[currentDriverSelectedIndex_503518].activeWeapon_4A68E0;
-  drawFlames_4A7EB8[v3] = 1;
+  drawFlames_4A7EB8[216 * v3] = 1;
 
   v5 = 37 * v0 + raceParticipant2[currentDriverSelectedIndex_503518].activeWeapon_4A68E0;
   activeWeapon = raceParticipant2[currentDriverSelectedIndex_503518].activeWeapon_4A68E0;
