@@ -5,16 +5,34 @@
 This guide outlines useful resources, tools and processes for contribution to
 DreeRally.
 
-## Code style guide
+## Goal
 
-At this moment there is no codestyle defined.
+DreeRally is a *readable decompilation*: every function stays 1:1 with the
+original `dr.exe`, but with real names, types and structs instead of Hex-Rays
+artifacts (`sub_*`, `dword_*`, `*(_DWORD *)(a1 + 12)`).
 
-## Offsets
+## Naming
 
-It is usefull to have the original offset for both methods and variables, simply substitute like this:
+* Functions get plain camelCase names: `sub_40D920` -> `drawCarInRace`.
+  Do not append the address to the name any more.
+* Keep the `//----- (0040D920) -----` marker above every function. It links the
+  function to the original binary, and the Ghidra tools read it.
+* Globals: `dword_4A7DBC` -> `carSpeed`, with the original address in a comment
+  at the definition (`// 0x4A7DBC`).
+* Existing names with an address suffix (`drawCarInRace_40D920`) are renamed
+  gradually, as ordinary refactor commits.
+* Identifiers and comments are in English. Translate Spanish comments when you
+  touch them.
 
-* Methods: sub_123455-> mi_new_name_123455
-* Varaibles dword_123455 -> miVariable_123455
+## Commits
+
+* Prefix the subject with `refactor:`, `fix:`, `build:` or `docs:`.
+* Keep subjects short (at most 50 characters).
+* A `refactor:` commit must pass `make check-equiv` (see `doc/DEVELOPMENT.md`).
+* A `fix:` commit explains what changes and why it matches the original
+  (function address and evidence), and ends with the trailers
+  `Original: 0x<addr> <name>` and `Checked: <evidence>` as its last paragraph.
+* Never mix refactoring and behaviour changes in one commit.
 
 ## Branches
 

@@ -30,11 +30,11 @@ Follow us on [Dreerally](http://www.dreerally.com)
 ![alt tag](http://www.dreerally.com/wp-content/uploads/2016/12/Captura3.jpg)
 ![alt tag](http://www.dreerally.com/wp-content/uploads/2016/12/Captura4.jpg)
 
-# Building with Visual Studio 2010-2017
-- Open the project solution `DreeRally.sln`, choose `Debug` or `Release`, and then `Build Solution`.
-
-# Building under Linux
-- Run make -f Makefile.linux
+# Building
+- macOS (with CrossOver): see [doc/DEVELOPMENT.md](doc/DEVELOPMENT.md).
+- Windows: open `DreeRally.sln` in Visual Studio 2022, choose `Debug` or `Release` (Win32), then `Build Solution`.
+- Linux: `make -f Makefile.linux` (unmaintained).
+- Headless test runs: see doc/DEVELOPMENT.md (Docker)
 
 
 # Installing
@@ -54,7 +54,7 @@ In this version you can add a few parameters when you launch dreerally:
 At this moment multiplayer is not implemented.
 
 # Contributing
-[Guidelines](docs/CONTRIBUTING.md)
+[Guidelines](doc/CONTRIBUTING.md)
 
 # Translations
 Here is the way to add a new language:
