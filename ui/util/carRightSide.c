@@ -144,8 +144,8 @@ int drawCarRightSide()
     //pinta #20
     drawTextWithFont(v18, (int)&unk_445928, Str, 214368);
     v19 = 0;
-    //la barra mide 44 px (100 de dano * 0.44). Se acota el dano por si un guardado
-    //trae un valor fuera de rango: aqui se escribe directo sobre screenBuffer.
+    //the bar is 44 px wide (100 damage * 0.44). The damage is clamped in case a save
+    //holds an out-of-range value: this writes directly into screenBuffer.
     damagePercent = drivers[driverId].damage;
     if (damagePercent < 0)
         damagePercent = 0;

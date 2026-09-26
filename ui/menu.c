@@ -2022,7 +2022,7 @@ char seeStadistics_42C940()
   //esto es mio 
   v26 = malloc(10);
   v25 = malloc(10);
-  //mismo caso: postRaceMain solo mira argc, y v25/v26 no estaban inicializados.
+  //same case: postRaceMain only checks argc, and v25/v26 were not initialized.
   postRaceMain(2, (const char **)"", (const char **)"");
   memcpy(screenBuffer, graphicsGeneral.menubg5Bpk, 0x4B000u);
   drawMenu(INITIAL_MENU, 0);

@@ -281,12 +281,12 @@ typedef struct RaceParticipantIngame {
 	int hasFinishedTheRace_4A7E0C; // weak
 	int frontLeftAbsoluteXPosition_4A7E10; // weak
 	int frontLeftAbsoluteYPosition_4A7E14; // weak
-	float lastFrontLeftAbsoluteXPosition_4A7E18; // weak  relacionado con la anterios
- 	float lastFrontLeftAbsoluteYPosition_4A7E1C; // weak relacionado con la anterios
+	float lastFrontLeftAbsoluteXPosition_4A7E18; // weak  related to the previous one
+ 	float lastFrontLeftAbsoluteYPosition_4A7E1C; // weak related to the previous one
 	int frontRightAbsoluteXPosition_4A7E20;
 	int frontRightAbsoluteYPosition_4A7E24; // weak
-	float lastFrontRightAbsoluteXPosition_4A7E28; // weak relacionado con la anterios
-	float lastFrontRightAbsoluteYPosition_4A7E2C; // weak relacionado con la anterios
+	float lastFrontRightAbsoluteXPosition_4A7E28; // weak related to the previous one
+	float lastFrontRightAbsoluteYPosition_4A7E2C; // weak related to the previous one
 	int backLeftAbsoluteXPosition_4A7E30; // weak  //esquina de atras izquierda
 	int backLeftAbsoluteYPosition_4A7E34; // weak
 	float lastBackLeftAbsoluteXPosition_4A7E38; // weak

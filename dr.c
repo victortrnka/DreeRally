@@ -5641,9 +5641,9 @@ int calculateCircuitReversed_40A9A0()
     raceParticipantIngame[v35].absolutePositionY_4A7DB8 = (double)(v39 - 1);
     if ( v27 )
       raceParticipantIngame[v35].directionRotation_4A7D0C = v40 + 95;
-    //cada participante tiene su propio banco de 96 rotaciones dentro de participantCarBpk.
-    //Sin el 96*v35 los cuatro coches apuntaban al banco del participante 0 y en la parrilla
-    //de los circuitos invertidos salian los cuatro identicos hasta el primer tick de fisica.
+    //Each participant has its own bank of 96 rotations inside participantCarBpk.
+    //Without the 96*v35, the four cars pointed to participant 0's bank and on the grid
+    //of the reversed tracks all four came out identical until the first physics tick.
     v41 = 1600 * (raceParticipantIngame[v35].directionRotation_4A7D0C + 96 * v35);
     v42 = raceParticipantIngame[v35].directionRotation_4A7D0C * 3.75;
     raceParticipantIngame[v35].carAngle_4A7DAC = v42;
@@ -6229,9 +6229,9 @@ int balanceIAEngineInRace_40B920()
   int v7; // ecx@10
   int v8; // [sp+0h] [bp-34h]@2
 
-  //El original guardaba estas constantes como floats en la pila (v9..v20) y las leia con
-  //*((float *)&v9 + 2 * dificultad). Estaban declaradas como int, asi que 0.07 etc. se
-  //truncaban a 0 y la IA no compensaba nunca su motor. Aqui quedan como tablas por dificultad.
+  //The original stored these constants as floats on the stack (v9..v20) and read them with
+  //*((float *)&v9 + 2 * difficulty). They were declared as int, so 0.07 etc. were
+  //truncated to 0 and the AI never compensated its engine. Here they are kept as per-difficulty tables.
   static const float engineBoostOneZoneBehind[3]  = { 0.07f, 0.11f, 0.18f }; // v9,  v11, v13
   static const float engineBoostTwoZonesBehind[3] = { 0.12f, 0.20f, 0.32f }; // v10, v12, v14
   static const float engineCutOneZoneAhead[3]     = { 0.12f, 0.06f, 0.03f }; // v15, v17, v19
@@ -6257,8 +6257,8 @@ int balanceIAEngineInRace_40B920()
     while ( 1 )
     {
       v5 = 1.0;
-      //el original testea pfVar7[4] = &dword_4A6888 + 4 floats = dword_4A6898 = damageBar,
-      //no efectiveEngineBackup_4A6888 (pfVar7[0])
+      //the original tests pfVar7[4] = &dword_4A6888 + 4 floats = dword_4A6898 = damageBar,
+      //not efectiveEngineBackup_4A6888 (pfVar7[0])
       if ( (v1 != result || dword_464F6C) && raceParticipant2[v4].damageBar_4A6898 > 0 )
       {
 		  //v6 es el numero de vai zones cubiertas en la carrera
@@ -6280,9 +6280,9 @@ int balanceIAEngineInRace_40B920()
       }
       result = numberOfParticipants_508D24;
 
-	  //el original escribia sobre el participante actual (*(v3 - 1)) y despues avanzaba el
-	  //puntero. Al incrementar antes, el factor iba al participante siguiente, el 0 nunca se
-	  //actualizaba y la ultima vuelta escribia en raceParticipant2[4], fuera del array.
+	  //the original wrote to the current participant (*(v3 - 1)) and then advanced the
+	  //pointer. By incrementing first, the factor went to the next participant, 0 was never
+	  //updated and the last loop wrote to raceParticipant2[4], outside the array.
 	  raceParticipant2[v4].efectiveEngine_4A6884 = v5 * raceParticipant2[v4].efectiveEngineBackup_4A6888;
      // *((float *)v3 - 1) = v5 * *(float *)v3;
       //v3 += 37;
@@ -7049,8 +7049,8 @@ LABEL_115:
       if ( (v8 & 0x80000000) != 0 )
       {
         v10 = 0;
-        //HIDWORD(v8) es edx, que es v11: el limite del barrido en Y.
-        //Tal como estaba, v11 se quedaba con basura de la iteracion anterior.
+        //HIDWORD(v8) is edx, which is v11: the Y scan limit.
+        //As it was, v11 would retain garbage from the previous iteration.
         v11 = (signed int)v8 + 40;
 		v12 = -(signed int)v8;
       }
@@ -7079,9 +7079,9 @@ LABEL_115:
           v17 = v83 - v76;
           do
           {
-            //v5 ya es el indice del participante (antes era 864*indice y quedo un /4 suelto,
-            //asi que siempre se comparaba contra el sprite del participante 0 y los coches
-            //se atravesaban en vez de chocar).
+            //v5 is already the participant index (it used to be 864*index and a stray /4 was left,
+            //so it was always compared against participant 0's sprite and the cars
+            //were passing through instead of colliding).
             if ( *((BYTE *)participantCarBpk_5034FC + v15 + raceParticipantIngame[v5].participantBpkOffser_4A7D10 + v16) > 3u
               && *((BYTE *)participantCarBpk_5034FC + v17 + v78 + raceParticipantIngame[v6].participantBpkOffser_4A7D10 + v16) > 3u )
             {
@@ -8338,8 +8338,8 @@ int showSmoke_40F070(int result)
 {
   RaceParticipantIngame *participant = &raceParticipantIngame[currentDriverSelectedIndex_503518];
   int side, slot, row, column;
-  //el original alterna los dos lados por slot (side0 slot0, side1 slot0, side0 slot1, ...),
-  //no todos los side0 seguidos de todos los side1: el bucle externo es slot, el interno side.
+  //the original alternates the two sides per slot (side0 slot0, side1 slot0, side0 slot1, ...),
+  //not all side0 followed by all side1: the outer loop is slot, the inner one side.
   for (slot = 0; slot < 15; ++slot)
   {
     for (side = 0; side < 2; ++side)
@@ -9250,10 +9250,10 @@ int recalculateCarBoundary_411D10()
         v171 = (raceParticipantIngame[v1].backRightAbsoluteXPosition_4A7E40 - raceParticipantIngame[v1].lastBackRightAbsoluteXPosition_4A7E48) / v8;
         for ( i = (raceParticipantIngame[v1].backRightAbsoluteYPosition_4A7E44 - raceParticipantIngame[v1].lastBackRightAbsoluteYPosition_4A7E4C) / v8; dword_481BE8 < v7; ++dword_481BE8 )
         {
-          //Las cuatro esquinas se leen igual: antes la primera se tomaba como int y las
-          //otras tres se reinterpretaban con *(float*)&, y los "if (!x) x = x + 1.0"
-          //comparaban campos que no correspondian. Ahora los campos son float y el
-          //ajuste sigue el mismo patron que el bloque de derrapes de mas abajo.
+          //The four corners are read the same: previously the first was taken as int and the
+          //other three were reinterpreted with *(float*)&, and the "if (!x) x = x + 1.0"
+          //compared fields that didn't correspond. Now the fields are float and the
+          //adjustment follows the same pattern as the skid block below.
           applyTrackMark((const unsigned char *)trxBLOTab_479D40,
                          roundHalfUpToInt(raceParticipantIngame[v1].lastFrontLeftAbsoluteXPosition_4A7E18),
                          roundHalfUpToInt(raceParticipantIngame[v1].lastFrontLeftAbsoluteYPosition_4A7E1C));
@@ -10674,11 +10674,11 @@ if ( isCircuitReversed_456AA8 )
 	  if(raceParticipantIngame[v47 ].lastKeysRead_4A7D60[raceParticipantIngame[ userRaceOrder_4A9EA8].lastKeysReadPreviousIndex_4A7DA4]==0x40u){
 		  debug=1;
 		  }
-		//Aqui habia dos escrituras. La primera indexaba raceParticipantIngame con
-		//"dword_503510 + v47 - v46", que se sale del array de 4 participantes, y encima
-		//escribia en dword_4A7D1C (bandera de choque en Y) en lugar del buffer de teclas.
-		//Ademas cada una incrementaba v46, asi que se consumian dos posiciones por vuelta
-		//y con mas de un frame por tick se perdian entradas. Queda solo la correcta.
+		//There were two writes here. The first indexed raceParticipantIngame with
+		//"dword_503510 + v47 - v46", which goes out of bounds of the array of 4 participants, and on top of that
+		//wrote to dword_4A7D1C (Y collision flag) instead of the key buffer.
+		//Additionally, each one incremented v46, so two positions were consumed per loop
+		//and with more than one frame per tick, inputs were lost. Only the correct one remains.
 		{
 			int frameSlot = dword_503510 - 1 - v46;
 			int keySlot = raceParticipantIngame[userRaceOrder_4A9EA8].lastKeysReadPreviousIndex_4A7DA4;
@@ -10773,11 +10773,11 @@ if ( isCircuitReversed_456AA8 )
           while ( v56 );
         }
        
-		//Estaba comentada desde la version 0.2 y por eso los coches se atravesaban: es la
-		//unica funcion que detecta el contacto entre coches y marca dword_4A7D18/4A7D1C,
-		//que es lo que despues revierte la posicion para separarlos. Se comento porque
-		//indexaba participantCarBpk fuera de rango (el "v5/4" y el limite de barrido en Y
-		//sin inicializar); con esos dos arreglados los indices quedan dentro del buffer.
+		//It was commented out since version 0.2 and that's why the cars were clipping through each other: it is the
+		//only function that detects contact between cars and sets dword_4A7D18/4A7D1C,
+		//which is what then reverses the position to separate them. It was commented out because
+		//it was indexing participantCarBpk out of range (the "v5/4" and the Y scan limit
+		//uninitialized); with those two fixed the indices stay within the buffer.
 		recalculateRaceCarWithOrientation();
         currentDriverSelectedIndex_503518 = 0;
         if ( v50 > 0 )
@@ -11019,11 +11019,11 @@ LABEL_195:
       if ( v50 > 0 )
       {
 
-		  //el original recorria los participantes con un puntero que empezaba en el
-		  //participante 0 y avanzaba 864 bytes; el indice tiene que empezar en 0 y subir.
-		  //Antes empezaba en v50 (==numberOfParticipants) y bajaba hasta 1: leia y escribia
-		  //raceParticipantIngame[4] (fuera del array) y nunca tocaba al participante 0,
-		  //que por eso se quedaba clavado contra las paredes.
+		  //the original walked the participants with a pointer that started at
+		  //participant 0 and advanced 864 bytes; the index has to start at 0 and increase.
+		  //Before it started at v50 (==numberOfParticipants) and went down to 1: read and wrote
+		  //raceParticipantIngame[4] (outside the array) and never touched participant 0,
+		  //which is why that car stayed stuck against the walls.
 		  v58 = 0;
         v59 = v50;
         do
@@ -11033,14 +11033,14 @@ LABEL_195:
           //v60 = *(_DWORD *)(v58 + 4);
           if ( raceParticipantIngame[v58].dword_4A7E98 > 0 )
             raceParticipantIngame[v58].dword_4A7E98 = raceParticipantIngame[v58].dword_4A7E98 - 1;
-		  //aqui el original decrementaba *(v58 - 24) == 4A7E7C, un campo que todavia no
-		  //esta en RaceParticipantIngame. La linea que habia aqui se autoasignaba
-		  //backLeftAbsoluteYPosition_4A7E34 (no hacia nada) asi que se elimina.
+		  //here the original decremented *(v58 - 24) == 4A7E7C, a field that is not yet
+		  //in RaceParticipantIngame. The line that was here assigned
+		  //backLeftAbsoluteYPosition_4A7E34 to itself (a no-op), so it is removed.
 		  if ( raceParticipantIngame[v58].dword_4A7D14==1)//; *(_DWORD *)(v58 - 384) == 1 )   //dword_4A7D14
             raceParticipantIngame[v58].dword_4A7E94 += 2;
           if ( raceParticipantIngame[v58].dword_4A7D18==1)// *(_DWORD *)(v58 - 380) == 1 )  //dword_4A7D18
           {
-             raceParticipantIngame[v58].absolutePositionX_4A7DB4 = raceParticipantIngame[v58].dword_4A7E50 ;//*(_DWORD *)(v58 - 224) = *(_DWORD *)(v58 - 68); // -224 es absolutePositionX_4A7DB4  -68 es dword_4A7E50
+             raceParticipantIngame[v58].absolutePositionX_4A7DB4 = raceParticipantIngame[v58].dword_4A7E50 ;//*(_DWORD *)(v58 - 224) = *(_DWORD *)(v58 - 68); // -224 is absolutePositionX_4A7DB4  -68 is dword_4A7E50
             raceParticipantIngame[v58].dword_4A7E98 += 2;
           }
           if (raceParticipantIngame[v58].dword_4A7D1C ==1)// *(_DWORD *)(v58 - 376) == 1 ) ////dword_4A7D1c
@@ -11945,11 +11945,11 @@ int   sub_418B00(float a1, float a2, float a3)
   v16 = 0;
   //FIXED
  // v4 = &unk_45FF44;
-  //el original arranca en &DAT_0045ff44 (0x45FF44 = palette1[193]); su primera
-  //escritura es puVar1[-1] = 0x45FF40 = palette1[192] (palette1[0] = 0x45FC40,
-  //ver copyPalette1toPalette y sub_424240(64,...), 6ccecf5). index+3 debe dar 192
-  //en la primera vuelta, asi que arranca en 189, no en 144 (144 = 192-48, el
-  //mismo error de base que 6ccecf5 corrigio en sub_424240).
+  //the original starts at &DAT_0045ff44 (0x45FF44 = palette1[193]); its first
+  //write is puVar1[-1] = 0x45FF40 = palette1[192] (palette1[0] = 0x45FC40,
+  //see copyPalette1toPalette and sub_424240(64,...), 6ccecf5). index+3 must give 192
+  //on the first loop, so it starts at 189, not at 144 (144 = 192-48, the
+  //same base error that 6ccecf5 fixed in sub_424240).
   index = 189;
   v18 = 0.1 * a1;
   v19 = 0.1 * a2;
@@ -12758,8 +12758,8 @@ signed int   hasInsuficientMoneyToBuy(int a1)
   char *v6; // edi@6
   char v7; // al@7
   signed int result; // eax@8
-  //Eran dos malloc que se perdian en las dos salidas de la funcion; como buffers locales
-  //no hay fuga y ademas DstBuf pasa a ser escribible (ver abajo).
+  //They were two mallocs that were lost at the two exits of the function; as local buffers
+  //there is no leak and additionally DstBuf becomes writable (see below).
   char DstBuf[100];
   char money[32];
   char v10; // [sp+17h] [bp-21h]@4
@@ -12805,12 +12805,12 @@ signed int   hasInsuficientMoneyToBuy(int a1)
     do
       v7 = (v6++)[1];
     while ( v7 );*/
-    //Aqui estaba el fallo al intentar comprar algo sin dinero suficiente: DstBuf se
-    //reasignaba a un literal de cadena (memoria de solo lectura) y despues se le hacian
-    //dos strcat encima. Eso escribe fuera del literal y sobre una pagina no escribible;
-    //el resultado era corrupcion de pila y el juego se cerraba.
-    //el original: "honey. [You are $" (0x443428) + digitos + " [short." (0x44341c);
-    //el "[" no se dibuja, es un escape de fuente (writeTextInScreen, v13=2)
+    //Here was the bug when trying to buy something without enough money: DstBuf was
+    //reassigned to a string literal (read-only memory) and then two
+    //strcats were done on it. This writes past the literal and over a non-writable page;
+    //the result was stack corruption and the game would crash.
+    //the original: "honey. [You are $" (0x443428) + digits + " [short." (0x44341c);
+    //the "[" is not drawn, it's a font escape character (writeTextInScreen, v13=2)
     strcpy(DstBuf, "honey. [You are $");
     _itoa(a1 - drivers[driverId].money, money, 10);
     strcat(DstBuf, money);
@@ -12952,10 +12952,10 @@ signed int autoLoadSave()
         }
         while ( v6 < strlen(v21) );
       }
-      //el bloque que el original guarda/carga en 0x460840 es exactamente drivers[20]
-      //(Driver, 108 bytes cada uno, sin relleno: mismo offset por campo que el original,
-      //ver drivers.h); byte_460840 es un array separado en el port que nadie mantiene
-      //sincronizado con drivers[], asi que el quicksave no persistia el estado real
+      //the block that the original saves/loads at 0x460840 is exactly drivers[20]
+      //(Driver, 108 bytes each, no padding: same offset per field as the original,
+      //see drivers.h); byte_460840 is a separate array in the port that no one keeps
+      //synchronized with drivers[], so the quicksave didn't persist the actual state
       memcpy((char *)Str + 19, drivers, 0x870u);
       v8 = 1;
       while ( 1 )

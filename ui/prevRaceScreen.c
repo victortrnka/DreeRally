@@ -208,9 +208,9 @@ LABEL_11:
   while (participantsRace[0] < 4u || participantsRace[2] < 4u );
   //while (HIBYTE(word_461EB4) < 4u || (unsigned __int8)byte_461EB6 < 4u);
   //v29 = 0;
-  //Sorteo de posiciones de parrilla. El original marcaba las ocupadas en *(&v28 + n),
-  //un array de 5 bytes en la pila que aqui no se inicializa nunca: con el relleno 0xCC
-  //del build Debug todas las posiciones figuran ocupadas y el bucle interno no termina.
+  //Grid position draw. The original marked the occupied ones at *(&v28 + n),
+  //a 5-byte array on the stack which is never initialized here: with the fill value 0xCC
+  //in the Debug build all positions appear occupied and the inner loop doesn't terminate.
   {
     char positionTaken[5] = { 0, 0, 0, 0, 0 };
     for ( indexRaceParticipant = 0; indexRaceParticipant < 4; ++indexRaceParticipant )
@@ -226,8 +226,8 @@ LABEL_11:
     }
   }
   //while (v17 < (signed int)&unk_4A7BF0);
-  //v26/v27 estaban sin inicializar. postRaceMain solo usa argc; el resto de las llamadas
-  //ya pasan cadenas vacias, asi que se hace lo mismo aqui.
+  //v26/v27 were uninitialized. postRaceMain only uses argc; the rest of the calls
+  //already pass empty strings, so the same is done here.
   postRaceMain(1, (const char **)"", (const char **)"");
   //result = 0;
   result = getMaxDriverPoints(driverId);
@@ -1240,8 +1240,8 @@ LABEL_160:
 	raceParticipant[3].g = *((BYTE *)v112 + 31);
 	raceParticipant[3].b = *((BYTE *)v112 + 32);
   }
-  //dword_45F04C/50/54 son enteros sueltos en este puerto; indexarlos con 24*indice leia
-  //fuera de rango. La tabla real es configuration.circuitRecords[circuito + 18*tipoDeCoche].
+  //dword_45F04C/50/54 are separate integers in this port; indexing them with 24*index read
+  //out of range. The actual table is configuration.circuitRecords[circuit + 18*carType].
   v123 = (unsigned __int8)circuitsToSelect_46126C[selectedRace_462CE8] + 18 * drivers[v121].carType;
   circuitRecordMinutes_50A160 = configuration.circuitRecords[v123].min;
   v124 = configuration.circuitRecords[v123].sec;

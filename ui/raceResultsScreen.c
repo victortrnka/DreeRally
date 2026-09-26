@@ -673,7 +673,7 @@ unsigned int drawStadistics()
   char *v88; // edx@69
   int v90; // edi@69
   int v91; // esi@69
-  int recordIndex; // indice en configuration.circuitRecords (circuito + 18 * tipoDeCoche)
+  int recordIndex; // index in configuration.circuitRecords (circuit + 18 * carType)
   int v97; // ebx@73
   char v104; // bl@76
   int v106; // edx@78
@@ -940,9 +940,9 @@ unsigned int drawStadistics()
     drawTextWithFont(v86, (int)&letterSpacing_4458B0, v173, 246926);
     v87 = 27 * driverId;
     v88 = &circuitsToSelect_46126C[selectedRace_462CE8];
-    //El original indexaba la tabla de records con &dword_45F04C + 24*indice, pero aqui
-    //dword_45F04C/50/54 son enteros sueltos: eso escribia miles de bytes fuera. La tabla
-    //real es configuration.circuitRecords[circuito + 18*tipoDeCoche] (18*6 entradas de 24 bytes).
+    //The original indexed the records table with &dword_45F04C + 24*index, but here
+    //dword_45F04C/50/54 are separate integers: that wrote thousands of bytes out of bounds. The
+    //real one is configuration.circuitRecords[circuit + 18*carType] (18*6 entries of 24 bytes).
     recordIndex = (unsigned __int8)circuitsToSelect_46126C[selectedRace_462CE8] + 18 * drivers[driverId].carType;
     v90 = currentRaceBestLapSeconds_45EB48;
     v91 = currentRaceBestLapMinutes_463CAC;
@@ -952,8 +952,8 @@ unsigned int drawStadistics()
                                                                   + 60 * configuration.circuitRecords[recordIndex].min)
       && currentRaceBestLapMinutes_463CAC + currentRaceBestLapSeconds_45EB48 + currentRaceBestLapMilliseconds_461FEC )
     {
-      //v95 estaba sin inicializar (el TODO habia comentado su asignacion) y se usaba como
-      //puntero de destino: ahi se cerraba el juego al terminar la carrera.
+      //v95 was uninitialized (the TODO had commented out its assignment) and was used as
+      //a destination pointer: that's where the game would close when finishing the race.
       strcpy(configuration.circuitRecords[recordIndex].name, drivers[driverId].name);
       _strupr(configuration.circuitRecords[recordIndex].name);
       v87 = 27 * driverId;
@@ -978,7 +978,7 @@ unsigned int drawStadistics()
     }
     else
     {
-      //mismo caso que arriba con v103 sin inicializar
+      //same case as above with v103 uninitialized
       v104 = 0;
       strcpy(configuration.circuitRecords[recordIndex].name, drivers[driverId].name);
       _strupr(configuration.circuitRecords[recordIndex].name);
@@ -1381,12 +1381,12 @@ int   sub_424240(int a1, float a2, float a3, float a4)
   v19 = 0.1 * a2;
   v17 = 0;
   
-  //v5 = 12 * a1 + 4586564; //0x45FC44; la primera escritura era *(v5 - 4), o sea
-  //0x45FC40 + 12*a1. palette1[0] tambien es 0x45FC40 (copyPalette1toPalette,
-  //0x422740, arranca en dword_45FC44 pero lee/escribe primero *(puntero-4)),
-  //asi que el indice es simplemente 3*a1 (a1=64 -> 192, igual que el primer
-  //bloque de sub_418B00, que tambien apunta a 0x45FF40). El -1 que habia
-  //antes escribia una entrada mas atras de la cuenta.
+  //v5 = 12 * a1 + 4586564; //0x45FC44; the first write was *(v5 - 4), that is
+  //0x45FC40 + 12*a1. palette1[0] is also 0x45FC40 (copyPalette1toPalette,
+  //0x422740, starts at dword_45FC44 but first reads/writes *(pointer-4)),
+  //so the index is simply 3*a1 (a1=64 -> 192, same as the first
+  //block of sub_418B00, which also points to 0x45FF40). The -1 used
+  //before wrote one entry too early.
   v5 = 3 * a1;
  
   v20 = 0.1 * a3;
@@ -1421,7 +1421,7 @@ int   sub_424240(int a1, float a2, float a3, float a4)
   } while (v4 < 8);*/
   v10 = 0;
   v18 = 0;
-  //v11 = 12 * (a1 + 8) + 4586564;//0x45FC44; mismo calculo que arriba: 3*(a1+8)
+  //v11 = 12 * (a1 + 8) + 4586564;//0x45FC44; same calculation as above: 3*(a1+8)
   v11 = 3 * (a1 + 8);
   do
   {
