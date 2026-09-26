@@ -5367,6 +5367,9 @@ int *initRaceValues_409F90()
 	raceParticipantIngame[indexRaceParticipant].dword_4A7EAC =0;
     raceParticipantIngame[indexRaceParticipant].dword_4A7EB0 =0;
 	raceParticipantIngame[indexRaceParticipant].dword_4A7EB4 =0;
+	dword_4A7EAC[216 * indexRaceParticipant] = 0;
+	dword_4A7EB0[216 * indexRaceParticipant] = 0;
+	dword_4A7EB4[216 * indexRaceParticipant] = 0;
 	raceParticipantIngame[indexRaceParticipant].dword_4A7EE4[0] =0;
 	raceParticipantIngame[indexRaceParticipant].dword_4A7EE4[1] =0;
 	raceParticipantIngame[indexRaceParticipant].dword_4A7EE4[2] =0;
@@ -5400,7 +5403,8 @@ int *initRaceValues_409F90()
 	raceParticipantIngame[indexRaceParticipant].dword_4A7F20[14] =0;
 
 	raceParticipantIngame[indexRaceParticipant].dword_4A7EB8 =0;
-	
+	drawFlames_4A7EB8[216 * indexRaceParticipant] = 0;
+
 	raceParticipantIngame[indexRaceParticipant].spriteBurnOffset_4A7EDC =0;
 	raceParticipantIngame[indexRaceParticipant].dword_4A7EE0 =0;
 	raceParticipantIngame[indexRaceParticipant].mushroomPendingTime_4A8050 =0;
