@@ -3995,8 +3995,8 @@ char drawRacepopupEffect_406100()
           v6 = dword_464F18 + 64;
 		  racePopupMemory[v0].unk_479EE0 = v4;
 		  racePopupMemory[v0].unk_479EE4 = 12845056;
-          racePopupMemory[v0].unk_479EE8 = colorToPaletteEntry(v5, (signed int)&unk_460000);
-          racePopupMemory[v0].unk_479EEC = colorToPaletteEntry((v6 << 16) - racePopupMemory[v0].unk_479EE4, (signed int)&unk_460000);
+          racePopupMemory[v0].unk_479EE8 = colorToPaletteEntry(v5, 0x460000);
+          racePopupMemory[v0].unk_479EEC = colorToPaletteEntry((v6 << 16) - racePopupMemory[v0].unk_479EE4, 0x460000);
           dword_481E08 += 4;
           v7 = dword_464F18 + 4;
           v8 = dword_464F18 == 72;
