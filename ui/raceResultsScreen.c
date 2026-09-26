@@ -373,8 +373,8 @@ int   postRaceMain(int argc, const char **argv, const char **envp)
     }
     while ( !eventDetected() );
   }
-  //sub_423C90(0, 19); //modiffica una variable de adversary pero no se que hace
-  //recalcRank(20);  //QUITADO porque solo hace multiplayer
+  sub_423C90(0, 19);
+  recalcRank(20);
   drawStadistics();
   writeDriverList(20);
   refreshAllScreen();

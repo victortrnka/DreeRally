@@ -1518,8 +1518,8 @@ LABEL_219:
         v48 = drivers[ driverId].points + 10;
       }
       *v47 = v48;
-      //sub_423C90(0, 19);  //modiffica una variable de adversary pero no se que hace
-     // recalcRank(20); //QUITADO porque solo hace multiplayer
+      sub_423C90(0, 19);
+      recalcRank(20);
       goto LABEL_219;
     }
     drivers[driverId].money += 1000;
