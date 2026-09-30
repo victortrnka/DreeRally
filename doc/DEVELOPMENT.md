@@ -218,6 +218,42 @@ cleaning up yet, and `ALLOWLIST`, with a reason, for an array whose true
 original layout is not understood (see `doc/KNOWN-ISSUES.md`). Tests:
 `python3 tools/test_verify_tables.py`.
 
+## Hooking the original dr.exe
+
+`winedbg` does not work in this container (see "Environment pitfalls" in
+`doc/FINDINGS.md`), so the original's own runtime state is instead observed
+with `tools/orighook/`: an in-process hook DLL loaded into a **patched COPY**
+of `dr.exe`, never the Steam install.
+
+- `tools/orighook/patch_exe.py` copies `dr.exe`, checks its sha256 against
+  the known Steam build before touching anything, and appends a 16-byte
+  stub into `.text`'s existing zero slack (no file growth needed for this
+  build): `push <hook DLL name>; call dword ptr [0x44100C]` (the resolved
+  `LoadLibraryA` IAT slot -- already valid by the time this runs, since
+  Windows resolves every import before calling a PE's entry point) `; jmp
+  <original AddressOfEntryPoint>`. It then points `AddressOfEntryPoint` at
+  the stub and extends `.text`'s `VirtualSize` so the loader maps it.
+- `tools/orighook/hook_template.c` is the DLL: one example hook (an
+  ordinary 5-byte-`jmp`-plus-trampoline x86 inline detour) on
+  `calculateNextRaces` (original `0x4240B0`), which logs each call to
+  `orighook.log` in the current directory and otherwise runs the original
+  function unchanged. The file's own comment explains how to point it at a
+  different or additional function.
+- `make orighook` builds the DLL with the same clang-cl/lld/xwin toolchain
+  as the main game; `make docker-test ORIGHOOK=1 SCENARIO=orighook-race`
+  builds it, patches a copy of `dr.exe` into `run-docker-orighook/` (never
+  `run/`), and runs it through the headless Docker runner. `orighook.log`
+  lands in `run-docker-orighook/` afterwards.
+
+```sh
+make docker-test ORIGHOOK=1 SCENARIO=orighook-race SECS=60
+cat run-docker-orighook/orighook.log
+```
+
+Proven working: the log shows the hook installing and firing
+(`calculateNextRaces (0x4240B0) call #1`) while the original game runs to a
+live race, `STATUS=alive`, `0 Unhandled`.
+
 ## Common translation bugs
 
 Two patterns turned up repeatedly while porting Hex-Rays output;

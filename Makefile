@@ -133,6 +133,7 @@ SECS      ?= 12
 OUT_SHOTS ?= build/docker-out
 SCENARIO  ?=
 ORIG      ?= 0
+ORIGHOOK  ?= 0
 AUDIO     ?= 0
 
 ifneq ($(SCENARIO),)
@@ -140,7 +141,29 @@ SCENARIO_FILE := tools/docker/scenarios/$(SCENARIO).keys
 KEYS := $(shell sed -e 's/\#.*//' $(SCENARIO_FILE) 2>/dev/null | tr '\n' ' ' | tr -s ' ')
 endif
 
-RUN_DIR := run-docker$(if $(filter 1,$(ORIG)),-orig)
+RUN_DIR := run-docker$(if $(filter 1,$(ORIG)),-orig)$(if $(filter 1,$(ORIGHOOK)),-orighook)
+
+# --- orighook: a hook DLL for the ORIGINAL dr.exe (see tools/orighook/) ---
+ORIGHOOK_OUT ?= build/orighook
+
+.PHONY: orighook
+orighook: $(ORIGHOOK_OUT)/orighook.dll
+
+$(ORIGHOOK_OUT)/orighook.obj: tools/orighook/hook_template.c Makefile
+	@mkdir -p $(@D)
+	$(CC) --target=i686-pc-windows-msvc /nologo /c /Od /MT $(DEFINES) $(WARNINGS) \
+	  /imsvc $(XWIN)/crt/include /imsvc $(XWIN)/sdk/include/ucrt \
+	  /imsvc $(XWIN)/sdk/include/um /imsvc $(XWIN)/sdk/include/shared \
+	  /Fo$@ $<
+
+$(ORIGHOOK_OUT)/orighook.dll: $(ORIGHOOK_OUT)/orighook.obj
+	$(LD) /nologo /machine:x86 /dll /subsystem:windows \
+	  $(LIBPATHS) /out:$@ $< kernel32.lib user32.lib
+
+$(ORIGHOOK_OUT)/dreerally.exe: $(ORIGHOOK_OUT)/orighook.dll
+	@test -d "$(DR_DATA)" || { echo "Death Rally data not found: DR_DATA=$(DR_DATA)"; exit 1; }
+	@test -f "$(DR_DATA)/dr.exe" || { echo "original dr.exe not found under DR_DATA=$(DR_DATA)"; exit 1; }
+	python3 tools/orighook/patch_exe.py "$(DR_DATA)/dr.exe" $@ orighook.dll
 
 docker-test: $(OUT)/dreerally.exe $(OUT)/keys.exe
 	@test -d "$(DR_DATA)" || { echo "Death Rally data not found: DR_DATA=$(DR_DATA)"; exit 1; }
@@ -148,7 +171,12 @@ docker-test: $(OUT)/dreerally.exe $(OUT)/keys.exe
 	@rm -rf $(RUN_DIR)
 	@mkdir -p $(RUN_DIR)
 	@for f in $(RUNTIME_FILES); do cp -p "$(DR_DATA)/$$f" $(RUN_DIR)/ || exit 1; done
-	@if [ "$(ORIG)" = "1" ]; then \
+	@if [ "$(ORIGHOOK)" = "1" ]; then \
+	  $(MAKE) --no-print-directory $(ORIGHOOK_OUT)/dreerally.exe || exit 1; \
+	  cp -p $(ORIGHOOK_OUT)/dreerally.exe $(RUN_DIR)/dreerally.exe || exit 1; \
+	  cp -p $(ORIGHOOK_OUT)/orighook.dll $(RUN_DIR)/orighook.dll || exit 1; \
+	  test -f "$(DR_DATA)/msvcr71.dll" && { cp -p "$(DR_DATA)/msvcr71.dll" $(RUN_DIR)/ || exit 1; } || true; \
+	elif [ "$(ORIG)" = "1" ]; then \
 	  test -f "$(DR_DATA)/dr.exe" || { echo "original dr.exe not found under DR_DATA=$(DR_DATA)"; exit 1; }; \
 	  cp -p "$(DR_DATA)/dr.exe" $(RUN_DIR)/dreerally.exe || exit 1; \
 	  test -f "$(DR_DATA)/msvcr71.dll" && { cp -p "$(DR_DATA)/msvcr71.dll" $(RUN_DIR)/ || exit 1; } || true; \
@@ -162,3 +190,4 @@ docker-test: $(OUT)/dreerally.exe $(OUT)/keys.exe
 	  AUDIO="$(AUDIO)" \
 	  NAME="dreerally-docker-test-$$$$" \
 	  tools/docker/run.sh
+	@test "$(ORIGHOOK)" != "1" || { echo "--- orighook.log ---"; cat "$(RUN_DIR)/orighook.log" 2>/dev/null || echo "(no orighook.log -- the hook DLL did not run)"; }

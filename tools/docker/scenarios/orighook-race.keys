@@ -1,0 +1,26 @@
+# orighook-race: reaches a running race in the ORIGINAL dr.exe, for
+#   make docker-test ORIGHOOK=1 SCENARIO=orighook-race SECS=60
+#
+# Same key path as results-orig.keys (the original needs three Enters to
+# skip its two extra publisher splash screens, see that file), but stops
+# right after the race starts instead of also waiting out the race and its
+# results screen -- this scenario exists only to prove the hook DLL loads
+# and fires (see tools/orighook/), not to test the race itself.
+enter w3000
+enter w3000
+enter w3500
+shot:menu
+enter w1500
+enter w1500
+t w200
+e w200
+s w200
+t w200
+enter w1200
+shot:licence
+enter w1500
+enter w3000
+enter w2500
+enter w20000
+enter w2000
+shot:race
