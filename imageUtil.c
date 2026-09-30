@@ -102,7 +102,7 @@ unsigned int   drawInGamePrices(const char *text, int position)
       if ( v7 == 36 ) //es el char $
       {
         drawImageWithPosition2((int)fsma3fBpk, height, width, v8);
-        v6 += (unsigned __int8)letterSpacing_4458B0[0];//97
+        v6 += (unsigned __int8)letterSpacing_4458B0[102]; // original 0x41A3D2: 0x445916, the price font's '$'
       }
       else
       {
@@ -273,7 +273,7 @@ int   getBoxTextOffset(const char *a1)
     {
       v5 = a1[v3];
       if ( v5 == 36 )//es el $
-        v6 = (unsigned __int8)letterSpacing_4458B0[97];
+        v6 = (unsigned __int8)letterSpacing_4458B0[102]; // original 0x41FAD1: 0x445916, the price font's '$'
       else
         v6 = (unsigned __int8)letterSpacing_4458B0[55+(unsigned __int8)v5];
       v2 += v6;
