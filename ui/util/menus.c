@@ -5,8 +5,16 @@
 
 #include <stdio.h>
 
-char * menu0[] = { "Start Racing", "Multiplayer Race", "Configure","See Hall Of Fame","Credits","Exit To OS" };
-char * menu1[] = { "Start A New Game", "End Current Game", "See Current Statistics","Load Game","Save Game","Previous Menu" };
+// Original 0x446368/0x44652a: one mutable buffer per slot that
+// startRacingMenu()/loadGame() overwrite in place ("Start Racing" <->
+// "Continue Racing", "Start A New Game" <-> "Enter The Shop") when a game
+// is in progress. Position 0 of these two menus must read from them
+// instead of a fixed literal, or the swap never reaches the screen.
+extern char menuaStartRacing[13];
+extern char menuaStartANewGam_0[17];
+
+char * menu0[] = { menuaStartRacing, "Multiplayer Race", "Configure","See Hall Of Fame","Credits","Exit To OS" };
+char * menu1[] = { menuaStartANewGam_0, "End Current Game", "See Current Statistics","Load Game","Save Game","Previous Menu" };
 
 char * menu3[] = { "Music Volume", "Effect Volume", "Define Keyboard","Define Gamepad/Joystick","Gamepad/Joystick Disabled","Previous Menu" };
 
