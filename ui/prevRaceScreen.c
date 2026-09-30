@@ -1120,7 +1120,7 @@ LABEL_112:
       }
       while ( v105 );*/
 	  strcpy(raceParticipant[iRacePArticipant].name, drivers[v103].name);
-      //strupr((char *)v102);
+      _strupr(raceParticipant[iRacePArticipant].name);
       v106 = raceIdParticipants[v101];
 	  raceParticipant[iRacePArticipant].damage = drivers[v106].damage;
 	  raceParticipant[iRacePArticipant].engine = drivers[v106].engine;
