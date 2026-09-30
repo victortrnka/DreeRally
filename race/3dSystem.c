@@ -396,23 +396,22 @@ void recalculatePolygonsInScreeenPosition_40D6B0()
             //   sce2Texture[id3dObject].dword_4B4D04 = *((_DWORD *)v3 - 1) - raceEffectiveHalfWidth_445014 - circuitImageOffsetX_456ABC;
 
             sce2Texture[id3dObject].dword_4B4D08 = sce2Texture[id3dObject].unk_4B4D00 - raceEffectiveHalfHeight_44501C - circuitImageOffsetY_456AC0;
-            v5 = strcmp(raceFilePrefix_45EA50, "TR0");
-            strcpy(raceFilePrefix_45EA50, "TR0");
+            v5 = raceFilePrefix_45EA50[2] == '0';
             sce2Texture[id3dObject].dword_4B4F64 = 0;//+153
-           // if ( !v5 )
-           // {
-            if (sce2Texture[id3dObject].dword_4B4D04 << 8 > (raceEffectiveHalfWidth_445014 << 8) + sce2Texture[id3dObject].dword_4B46AC[1])// *((_DWORD *)v3 - 404) )
-                sce2Texture[id3dObject].dword_4B4F64 = 1;
-            if (sce2Texture[id3dObject].dword_4B4D04 << 8 < sce2Texture[id3dObject].dword_4B46AC[0] - (raceEffectiveHalfWidth_445014 << 8))//*((_DWORD *)v3 - 405
-                sce2Texture[id3dObject].dword_4B4F64 = 1;
-            if (sce2Texture[id3dObject].dword_4B4D08 << 8 > (raceEffectiveHalfHeight_44501C << 8) + sce2Texture[id3dObject].dword_4B46AC[3])//*((_DWORD *)v3 - 402) )
-                sce2Texture[id3dObject].dword_4B4F64 = 1;
-            if (sce2Texture[id3dObject].dword_4B4D08 << 8 < sce2Texture[id3dObject].dword_4B46AC[2] - (raceEffectiveHalfHeight_44501C << 8))//*((_DWORD *)v3 - 403)
-                sce2Texture[id3dObject].dword_4B4F64 = 1;
-            if (sce2Texture[id3dObject].dword_4B4F64 == 0) {
-                sce2Texture[id3dObject].dword_4B4F64 = 0;
+            if ( !v5 )
+            {
+                if (sce2Texture[id3dObject].dword_4B4D04 << 8 > (raceEffectiveHalfWidth_445014 << 8) + sce2Texture[id3dObject].dword_4B46AC[1])// *((_DWORD *)v3 - 404) )
+                    sce2Texture[id3dObject].dword_4B4F64 = 1;
+                if (sce2Texture[id3dObject].dword_4B4D04 << 8 < sce2Texture[id3dObject].dword_4B46AC[0] - (raceEffectiveHalfWidth_445014 << 8))//*((_DWORD *)v3 - 405
+                    sce2Texture[id3dObject].dword_4B4F64 = 1;
+                if (sce2Texture[id3dObject].dword_4B4D08 << 8 > (raceEffectiveHalfHeight_44501C << 8) + sce2Texture[id3dObject].dword_4B46AC[3])//*((_DWORD *)v3 - 402) )
+                    sce2Texture[id3dObject].dword_4B4F64 = 1;
+                if (sce2Texture[id3dObject].dword_4B4D08 << 8 < sce2Texture[id3dObject].dword_4B46AC[2] - (raceEffectiveHalfHeight_44501C << 8))//*((_DWORD *)v3 - 403)
+                    sce2Texture[id3dObject].dword_4B4F64 = 1;
+                if (sce2Texture[id3dObject].dword_4B4F64 == 0) {
+                    sce2Texture[id3dObject].dword_4B4F64 = 0;
+                }
             }
-            //}
           //v3 = (char *)v3 + 3152;
             id3dObject++;
             --v6;
