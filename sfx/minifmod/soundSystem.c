@@ -1745,7 +1745,7 @@ unsigned __int64   sub_43EBD0(int channelId, signed int a2)
   //para carreracptr->period = result*0.75;
   	//cptr->freq = result*0.75; //esto esta tuneadisimo
 	 cptr->period = result;
-	 cptr->freq = result*0.62; //BUGFIX
+	 cptr->freq = result;
 //  *((_DWORD *)v2 + 3) = result; //unsigned char	notectrl;	
   return result;
 }
