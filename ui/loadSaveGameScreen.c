@@ -83,6 +83,8 @@ signed int loadGame()
     ++v0;
   }
   while ( v1 < (signed int)&unk_446C32[8 * 50] );
+  // 0x42F3AF: the original overwrites slot 7's name with "Quicksave Slot"
+  strcpy(&unk_446C32[7 * 50], "Quicksave Slot");
 
     
 
@@ -230,6 +232,7 @@ __int16 savegameWithName()
     ++v0;
   }
   while ( v1 < (signed int)&unk_446C32[8 * 50] );
+  strcpy(&unk_446C32[7 * 50], "Quicksave Slot");
   
   while ( 1 )
   {
@@ -329,6 +332,7 @@ __int16 savegameWithName()
     drawMenu(START_NEW_GAME_MENU, 0);
     drawMenu(5, 0);
     confirmationPopup("Game Saved.");
+    strcpy(&unk_446C32[7 * 50], "Quicksave Slot");
    
   }
   return v5;
