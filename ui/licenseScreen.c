@@ -359,7 +359,7 @@ LABEL_74:
   if ( v36 != v34 + 1 )
   {
     do
-      v35 += (unsigned __int8)byte_445892[(unsigned __int8)v34[v37++]];
+      v35 += (unsigned __int8)letterSpacing_4458B0[(unsigned __int8)v34[v37++] - 30];
     while ( v37 < strlen(v34) );
     dword_45FA78 = v35;
   }

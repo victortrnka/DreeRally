@@ -176,7 +176,7 @@ int drawCarRightSide()
     if (v24 != &Str[1])
     {
         do
-            v25 += (unsigned __int8)byte_445892[(unsigned __int8)Str[v26++]];
+            v25 += (unsigned __int8)letterSpacing_4458B0[(unsigned __int8)Str[v26++] - 30];
         while (v26 < strlen(Str));
     }
     drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, Str, 193903 - v25);

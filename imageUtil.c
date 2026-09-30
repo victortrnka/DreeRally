@@ -11,6 +11,11 @@ const int DEFAULT_BIGLETTER_SPACING_OFFSET = -23;
 
  void *choo2Bpk; // idb
 
+ // dr.exe 0x445848..0x445967 holds four font descriptors back to back, each
+ // { width, height, advance per glyph }: big 0x445848, small 0x4458B0, price
+ // digits 0x445914, medium 0x445928. Text is measured with base[(uchar)c - 30]
+ // (0x445892 + c is the small font's advance), and some readers run on into
+ // the next descriptor, so each array copies dr.exe from its own address on.
  char  unk_445928[] = {9,0xc,
 					  9,9,9,9,9,9,9,9,9,9, 
 					  9,9,9,9,9,9,9,9,9,9, 
@@ -20,13 +25,7 @@ const int DEFAULT_BIGLETTER_SPACING_OFFSET = -23;
 					  9,9,9,9,9,9,9,9,9,9, 
 					  9,9 };
 
- char byte_445892[] = { '\x12','\x8','\x0E','\x13','\x10','\x16','\x12','\x12','\x10','\x12',
-	                    '\x12','\x11','\x10','\x12','\x13','\x1A','\x12','\x13','\x10','\x0B',
-						'\x6','\x0B','\x0F','\x14'}; // weak
-//char byte_445892[] = { '\x12','\x8','\x0E','\x13','\x10','\x16','\x12','\x12','\x10','\x12','\x12','\x11','\x10','\x12','\x13','\x1A','\x12','\x13','\x10','\x0B','\x6','\x0B','\x0F','\x14','\x0','\x0','\x0','\x0','\x0','\x0' }; // weak
-
  //char byte_4458B0[] = { '\x10', '\x10', '\x0A', '\x5', '\x8', '\x0B', '\x0B', '\x0D', '\x0B', '\x5', '\x6', '\x6', '\x9', '\x0B', '\x5', '\x0B', '\x4', '\x0A', '\x0B', '\x5', '\x9', '\x0A', '\x0A', '\x0A', '\x0A', '\x0A', '\x0A', '\x0A', '\x4', '\x5', '\x9', '\x0B', '\x8', '\x8', '\x0C', '\x0B', '\x0B', '\x0A', '\x0B', '\x0A', '\x0A', '\x0C', '\x0B', '\x5', '\x9', '\x0B', '\x0A', '\x0E', '\x0B', '\x0B', '\x0A', '\x0B', '\x0B', '\x0A', '\x0A', '\x0B', '\x0C', '\x0F', '\x0B', '\x0B', '\x0A', '\x7', '\x0A', '\x6', '\x0A', '\x0A', '\x5', '\x0B', '\x0A', '\x9', '\x0A', '\x9', '\x9', '\x0A', '\x0A', '\x5', '\x8', '\x0A', '\x9', '\x0C', '\x0A', '\x0A', '\x9', '\x0A', '\x0A', '\x9', '\x9', '\x0A', '\x0A', '\x0E', '\x0A', '\x0A', '\x9', '\x7', '\x4', '\x7', '\x9', '\x0B', '\x10', '\x0D', '\x0E', '\x0D', '\x9', '\x0D', '\x0D', '\x0D', '\x0D', '\x0D', '\x0C', '\x0D', '\x0D', '\x0', '\x0', '\x0', '\x0', '\x0', '\x0', '\x0', '\x9', '\x0C', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9', '\x9' };
-//ver porque byte_445892
  char letterSpacing_4458B0[] = { // restored byte-exact from dr.exe (make verify-tables)
 	'\x10', '\x10', '\xA', '\x5', '\x8', '\xB', '\xB', '\xD', '\xB', '\x5',
 	'\x6', '\x6', '\x9', '\xB', '\x5', '\xB', '\x4', '\xA', '\xB', '\x5',
@@ -181,16 +180,8 @@ LABEL_12:
             drawImageWithPosition((int)((char *)v9 + v2 * v4 * (v8 - 32)), v2, v4, (int)((char *)screenBuffer + v6));
           }
           v7 = text;
-		  
-          if (text[v3] == 'z') {
-              v6 += 10;
-          }
-          else {
-              v6 += (unsigned __int8)byte_445892[text[v3]];
-          }
-         
-		  //cambiado para que se vea algo mejor pero lo comentado es lo que habia
-		 // v6 += (unsigned __int8)letterSpacing_4458B0[45+text[v3]];
+          // original 0x41A4E5: [0x445892 + (uchar)c], the small font's advance
+          v6 += (unsigned __int8)letterSpacing_4458B0[(unsigned __int8)text[v3] - 30];
           goto LABEL_17;
         }
         v13 = 1;
@@ -255,7 +246,7 @@ int   sub_41FA50(const char *a1)
   if ( v1 != a1 + 1 )
   {
     do
-      v2 += (unsigned __int8)byte_445892[a1[v3++]];
+      v2 += (unsigned __int8)letterSpacing_4458B0[(unsigned __int8)a1[v3++] - 30];
     while ( v3 < strlen(a1) );
   }
   return (96 - v2) / 2;
@@ -607,20 +598,8 @@ unsigned int   drawTextWithFont(int font, int a2, const char *text, int screenPo
 		  }
         drawImageWithPosition(font + width * height * ((unsigned __int8)v9 - 32), width, height, (int)((char *)screenBuffer + screenPositionOffset));
 		height = v10;
-		//aqui era -24 pero se ve mal!
-		if(*(BYTE *)a2== *(BYTE *)bigLetterSpacing_445848){
-			
-			screenPositionOffset += *(BYTE *)(text[v6] + a2 - 30);
-		}else{
-			
-            if (text[v6] == 'Z') {
-                screenPositionOffset += *(BYTE*)(text[v6] + a2 - 30);
-            }
-            else {
-                screenPositionOffset += *(BYTE*)(text[v6] + a2 - 24);
-            }
-		}
-		
+		// original 0x41A337: a2[(uchar)c - 30] for every font, no per-font or per-char offset
+		screenPositionOffset += *(BYTE *)((unsigned __int8)text[v6] + a2 - 30);
       }
       ++v6;
       result = strlen(text);
