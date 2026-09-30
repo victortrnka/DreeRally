@@ -803,7 +803,7 @@ void   previewRaceScreen(signed int participants)
         copyImageToBuffer((int)textureTemp, (int)tsahpeBpk_45EB5C);
         drawImageWithPosition((int)tsahpeBpk_45EB5C, 360, 274, (int)((char *)screenBuffer + 64264));
         //raceFilePrefix_45EA50[0] = 3166804; //TR0
-		strcat(raceFilePrefix_45EA50, "TR0");
+		strcpy(raceFilePrefix_45EA50, "TR0");
         numberOfLaps = getModIntEntry("RACE_ADVERSARY_LAPS", 9);
 		raceParticipant[0].isCircuitReversed_4A7AA8 = 0;
 LABEL_44:
