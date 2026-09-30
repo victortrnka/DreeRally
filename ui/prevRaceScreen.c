@@ -30,9 +30,6 @@ char aFryTheRulesThe[59] = "fry the rules, there's only one way to do it, play t
 int multiplayerWaitCounter_456BE8 = 0; // weak
 int dword_4A7AC4; // weak
 int dword_4A7A6C; // weak
-char prevSreenaStartANewGame[17] = "Start A New Game"; // weak
-char prevScreenaStartANewGam_0[17] = "Start A New Game"; // weak
-char prevScreenaStartRacing[13] = "Start Racing"; // weak
 int dword_45E0A8; // weak
 char *tShape[] = { "TSHAPE01" ,"TSHAPE02" ,"TSHAPE03","TSHAPE04" ,"TSHAPE05" ,"TSHAPE06","TSHAPE07" ,"TSHAPE08" ,"TSHAPE09","TSHAPE10" ,"TSHAPE11" ,"TSHAPE12","TSHAPE13" ,"TSHAPE14" ,"TSHAPE15","TSHAPE16" ,"TSHAPE17" ,"TSHAPE18","TSHAPE19" };
 
@@ -134,15 +131,15 @@ int indexRaceParticipant = 0;
     result = dword_456BD8;
     if ( dword_456BD8 == 1 )
     {
-      *(_DWORD *)prevScreenaStartANewGam_0 = *(_DWORD *)"Start A New Game";
-      *(_DWORD *)&prevScreenaStartANewGam_0[4] = *(_DWORD *)"t A New Game";
-      *(_DWORD *)&prevScreenaStartANewGam_0[8] = *(_DWORD *)"New Game";
-      *(_DWORD *)&prevScreenaStartANewGam_0[12] = *(_DWORD *)"Game";
-      prevScreenaStartANewGam_0[16] = prevSreenaStartANewGame[16];
-      *(_DWORD *)prevScreenaStartRacing = 1918989395;
-      *(_DWORD *)&prevScreenaStartRacing[4] = 1632772212;
-      *(_DWORD *)&prevScreenaStartRacing[8] = 1735289187;
-      prevScreenaStartRacing[12] = 0;
+      *(_DWORD *)menuaStartANewGam_0 = *(_DWORD *)"Start A New Game";
+      *(_DWORD *)&menuaStartANewGam_0[4] = *(_DWORD *)"t A New Game";
+      *(_DWORD *)&menuaStartANewGam_0[8] = *(_DWORD *)"New Game";
+      *(_DWORD *)&menuaStartANewGam_0[12] = *(_DWORD *)"Game";
+      menuaStartANewGam_0[16] = menuaStartANewGame[16];
+      *(_DWORD *)menuaStartRacing = 1918989395;
+      *(_DWORD *)&menuaStartRacing[4] = 1632772212;
+      *(_DWORD *)&menuaStartRacing[8] = 1735289187;
+      menuaStartRacing[12] = 0;
 	  menuActive_4457F0[10] = 0;
 	  menuActive_4457F0[11] = 0;
 	  menuActive_4457F0[13] = 0;

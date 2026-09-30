@@ -35,10 +35,6 @@ _UNKNOWN unk_45FDC4; // weak
 
 _UNKNOWN unk_44E208; // weak
 
-char shopScreenaStartRacing[13] = "Start Racing"; // weak
-char shopScreenaStartANewGame[17] = "Start A New Game"; // weak
-char shopScreenaStartANewGam_0[17] = "Start A New Game"; // weak
-
 char aAroundButSheLl[33] = "around, but she'll get you there"; // weak
 char aOnHerOwnSweetT[33] = "- on her own sweet time, is all."; // weak
 char aVagabondBought[17] = "[Vagabond bought"; // weak
@@ -1785,15 +1781,15 @@ int sub_4291D0()
 {
   int result; // eax@1
 
-  *(_DWORD *)shopScreenaStartANewGam_0 = *(_DWORD *)"Start A New Game";
-  *(_DWORD *)&shopScreenaStartANewGam_0[4] = *(_DWORD *)"t A New Game";
-  *(_DWORD *)&shopScreenaStartANewGam_0[8] = *(_DWORD *)"New Game";
-  *(_DWORD *)&shopScreenaStartANewGam_0[12] = *(_DWORD *)"Game";
-  shopScreenaStartANewGam_0[16] = shopScreenaStartANewGame[16];
-  *(_DWORD *)shopScreenaStartRacing = 1918989395;
-  *(_DWORD *)&shopScreenaStartRacing[4] = 1632772212;
-  *(_DWORD *)&shopScreenaStartRacing[8] = 1735289187;
-  shopScreenaStartRacing[12] = 0;
+  *(_DWORD *)menuaStartANewGam_0 = *(_DWORD *)"Start A New Game";
+  *(_DWORD *)&menuaStartANewGam_0[4] = *(_DWORD *)"t A New Game";
+  *(_DWORD *)&menuaStartANewGam_0[8] = *(_DWORD *)"New Game";
+  *(_DWORD *)&menuaStartANewGam_0[12] = *(_DWORD *)"Game";
+  menuaStartANewGam_0[16] = menuaStartANewGame[16];
+  *(_DWORD *)menuaStartRacing = 1918989395;
+  *(_DWORD *)&menuaStartRacing[4] = 1632772212;
+  *(_DWORD *)&menuaStartRacing[8] = 1735289187;
+  menuaStartRacing[12] = 0;
   menuActive_4457F0[10] = 0;
   menuActive_4457F0[11] = 0;
   menuActive_4457F0[13] = 0;
