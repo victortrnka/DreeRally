@@ -1332,7 +1332,7 @@ LABEL_534:
   dword_456BD8 = v128;
   v129 = 0;
   v130 = 2;
-  v131 = (int)dword_4608F0;//bucle puntos piloto
+  v131 = (int)&drivers[1].points;//bucle puntos piloto
   do
   {
     if ( *(_DWORD *)(v131 - 108) > v129 )
@@ -1438,7 +1438,7 @@ LABEL_534:
   userLasRacePriceIncome_456BDC = 0;
   v246 = 0;
   v141 = 2;
-  v142 = (int)dword_4608F0; //bucle puntos de polotos
+  v142 = (int)&drivers[1].points; //bucle puntos de polotos
   do
   {
     if ( *(_DWORD *)(v142 - 108) > v140 )
