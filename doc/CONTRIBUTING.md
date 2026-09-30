@@ -24,6 +24,13 @@ artifacts (`sub_*`, `dword_*`, `*(_DWORD *)(a1 + 12)`).
 * Identifiers and comments are in English. Translate Spanish comments when you
   touch them.
 
+## Comments
+
+A fix that looks surprising in the code gets a one-line comment: the
+original address and why. Examples: a reproduced or deliberately fixed
+original bug, a magic constant, an odd-looking cast, removed "tuning".
+Everything else lives in the commit message.
+
 ## Commits
 
 * Prefix the subject with `refactor:`, `fix:`, `build:` or `docs:`.
