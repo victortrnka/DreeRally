@@ -107,7 +107,7 @@ unsigned int   drawInGamePrices(const char *text, int position)
       else
       {
         drawImageWithPosition2((int)((char *)fsma3fBpk + height * width * ((unsigned __int8)v7 - 47)), height, width, v8);
-        v6 += (unsigned __int8)letterSpacing_4458B0[55+text[v4]];//55+text[v4]
+        v6 += (unsigned __int8)letterSpacing_4458B0[55+(unsigned __int8)text[v4]];
       }
       ++v4;
       result = strlen(text);
@@ -302,7 +302,7 @@ int   getBoxTextSize(const char *a1)
   if ( v1 != a1 + 1 )
   {
     do
-      result += (unsigned __int8)letterSpacing_4458B0[90+a1[v3++]];
+      result += (unsigned __int8)letterSpacing_4458B0[90+(unsigned __int8)a1[v3++]];
 	//result += (unsigned __int8)byte_44590A[a1[v3++]];
     while ( v3 < strlen(a1) );
   }
@@ -327,7 +327,7 @@ int   getNameOffsetPositionRight(const char *a1)
   if ( v1 != a1 + 1 )
   {
     do
-      v2 += (unsigned __int8)letterSpacing_4458B0[90+a1[v3++]];
+      v2 += (unsigned __int8)letterSpacing_4458B0[90+(unsigned __int8)a1[v3++]];
 	//v2 += (unsigned __int8)byte_44590A[a1[v3++]];
 
 	
