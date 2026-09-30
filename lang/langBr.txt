@@ -2,34 +2,34 @@
 Start Racing=Começar Corrida
 Multiplayer Race=Corrida Multiplayer
 Configure=Configuração
-See hall of fame=Ver Hall da Fama
+See Hall Of Fame=Ver Hall da Fama
 Credits=Créditos
-Exit to os=Sair para o Windows
+Exit To OS=Sair para o Windows
 yes=sim
 no=não
 Are you sure?=¿Tem certeza?
 
-Start a new game=Começar um novo jogo
-End current Game=Finalizar jogo atual
-See current Stadistics=Ver estatísticas
-Load game=Carregar jogo
-save game=Salvar partida
-Previous menu=Voltar
+Start A New Game=Começar um novo jogo
+End Current Game=Finalizar jogo atual
+See Current Statistics=Ver estatísticas
+Load Game=Carregar jogo
+Save Game=Salvar partida
+Previous Menu=Voltar
 
-Music volume=Volume da música
-Effect volume=Volume dos efeitos
-define Keyboard=Configuração do telcado
+Music Volume=Volume da música
+Effect Volume=Volume dos efeitos
+Define Keyboard=Configuração do telcado
 Define Gamepad/Joystick=Configuração de gamepad/joystick
 Gamepad/Joystick Disabled=gamepad/joystick Desativados
 
-Empty slot=Slot vazio
-Quicksave slot=Save rápido
+Empty Slot=Slot vazio
+Quicksave Slot=Save rápido
 
 Accelerate=Acelerar
 Brake=Frear
 Steer Left=Virar para esquerda
-Steer right=Viara para direita
-Turbo boost=Turbo Boost
+Steer Right=Viara para direita
+Turbo Boost=Turbo Boost
 Machine Gun=Metralhadora
 Drop Mine=Jogar Mina
 Horn=Buzina

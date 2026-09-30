@@ -2,34 +2,34 @@
 Start Racing=Nuova Partita
 Multiplayer Race=Multigiocatore
 Configure=Configurazione
-See hall of fame=Record
+See Hall Of Fame=Record
 Credits=Crediti
-Exit to os=Torna a Windows
+Exit To OS=Torna a Windows
 yes=si
 no=no
 Are you sure?=Sei sicuro?
 
-Start a new game=Nuova Partita
-End current Game=Chiudi Partita
-See current Stadistics=Classifica
-Load game=Carica Partita
-save game=Salva Partita
-Previous menu=Indietro
+Start A New Game=Nuova Partita
+End Current Game=Chiudi Partita
+See Current Statistics=Classifica
+Load Game=Carica Partita
+Save Game=Salva Partita
+Previous Menu=Indietro
 
-Music volume=Volume Musica
-Effect volume=Volume Effetti
-define Keyboard=Configura Tastiera
+Music Volume=Volume Musica
+Effect Volume=Volume Effetti
+Define Keyboard=Configura Tastiera
 Define Gamepad/Joystick=Configura gamepad/joystick
 Gamepad/Joystick Disabled=gamepad/joystick Disattivato
 
-Empty slot=Slot Vuoto
-Quicksave slot=Salvataggio Rapido
+Empty Slot=Slot Vuoto
+Quicksave Slot=Salvataggio Rapido
 
 Accelerate=Accelera
 Brake=Frena
 Steer Left=Sinistra
-Steer right=Destra
-Turbo boost=Turbo
+Steer Right=Destra
+Turbo Boost=Turbo
 Machine Gun=Armi
 Drop Mine=Usa Mina
 Horn=Clacson
