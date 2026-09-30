@@ -13,7 +13,7 @@ int (  *FSOUND_File_SeekCallback_456CA8)(_DWORD) = NULL; // weak
 int (  *FSOUND_File_TellCallback_456CAC)(_DWORD) = NULL; // weak
 
 int debug2=1;
-char streamId_4444F8[] = "Extended Module:"; // weak
+char streamId_4444F8[] = "Extended Module: "; // weak
 char byte_456C35 = '\0'; // weak
 
 FMUSIC_MODULE * FMUSIC_PlayingSong_456C30 = NULL; // weak
