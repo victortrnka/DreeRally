@@ -597,6 +597,8 @@ int sabotageScreen()
   unsigned __int8 v49; // [sp+2Fh] [bp-31h]@29
   int maxDriverPoints;
 
+  // racePositions, not dword_45EB50: the port had two Hex-Rays names for
+  // this one original global; dword_45EB50 is never written (5908f4b).
   v0 = racePositions[selectedRace_462CE8][2];
   v1 = racePositions[selectedRace_462CE8][0];
   v2 = racePositions[selectedRace_462CE8][3];

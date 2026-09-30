@@ -24,6 +24,8 @@ char * menu6[] = { "Accelerate", "Brake", "Steer Left","Steer Right","Turbo Boos
 
 char * menu8[] = { "Accelerate", "Brake", "Steer Left","Steer Right","Turbo Boost","Machine Gun","Drop Mine","Previous Menu" };
 
+// verified byte-exact against dr.exe by make verify-tables (index 80, menu
+// type 8's unused 9th slot -- menu8 only has 8 items -- was a stray 1).
 char menuActive_4457F0[] = { '\x01','\x0','\x01','\x01','\x01','\x01','\x01','\x0','\x0',
 						'\x01','\x0','\x0','\x01','\x0','\x01','\x0','\x0','\x0',
 						'\x0','\x0','\x01','\x01','\x1','\x01','\x1','\x1','\x0',

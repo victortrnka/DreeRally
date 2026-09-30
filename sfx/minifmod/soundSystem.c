@@ -1566,6 +1566,9 @@ double temp;
 	finalvol *= (double)(signed int)mod->globalvolume;	
 	// Any half arsed compiler will convert this into 1 constant at compile time.
 	finalvol *= (double)(255.0f / (64.0f * 64.0f * 65536.0f * 64.0f)) * 0.5f;
+	// original 0x43E9AC: stores this truncated result directly, no further
+	// shift. A removed ">>5" here used to quarter the effects mix volume
+	// (1b27b39) -- do not reintroduce it as "tuning".
 	volume = (int)finalvol;
 /*    v6 = (unsigned __int64)((double)(*(_DWORD *)(a1 + 16) + *(_DWORD *)(a1 + 24))
                           * (double)*(signed int *)(a1 + 52)
@@ -1745,6 +1748,10 @@ unsigned __int64   sub_43EBD0(int channelId, signed int a2)
   //para carreracptr->period = result*0.75;
   	//cptr->freq = result*0.75; //esto esta tuneadisimo
 	 cptr->period = result;
+	 // original 0x43EBD0: period and freq get the identical truncated
+	 // result, 0x5c bytes apart, no scaling between them. A removed
+	 // "*0.62" here used to rescale freq and made effects play ~3.27x
+	 // too fast (f035a05) -- do not reintroduce it as "tuning".
 	 cptr->freq = result;
 //  *((_DWORD *)v2 + 3) = result; //unsigned char	notectrl;	
   return result;

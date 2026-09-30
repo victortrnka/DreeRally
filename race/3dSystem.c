@@ -396,6 +396,9 @@ void recalculatePolygonsInScreeenPosition_40D6B0()
             //   sce2Texture[id3dObject].dword_4B4D04 = *((_DWORD *)v3 - 1) - raceEffectiveHalfWidth_445014 - circuitImageOffsetX_456ABC;
 
             sce2Texture[id3dObject].dword_4B4D08 = sce2Texture[id3dObject].unk_4B4D00 - raceEffectiveHalfHeight_44501C - circuitImageOffsetY_456AC0;
+            // original 0x40D709: a read-only check (cmp byte ptr
+            // [0x45ea52], 0x30), never a write -- the port used to
+            // strcpy "TR0" into the prefix here every frame (03ae1c0).
             v5 = raceFilePrefix_45EA50[2] == '0';
             sce2Texture[id3dObject].dword_4B4F64 = 0;//+153
             if ( !v5 )

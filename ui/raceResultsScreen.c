@@ -337,6 +337,9 @@ int   postRaceMain(int argc, const char **argv, const char **envp)
   }
   while ( v3 < 65500 );
   dword_456B60 = 0;
+  // original 0x42B290: this call is NOT in dr.exe. It drains a key left
+  // over from the race so the wait below doesn't exit on iteration 1 --
+  // a deliberate fix of an original bug (postRaceMain).
   eventDetected();
   do
   {

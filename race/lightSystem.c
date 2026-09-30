@@ -169,6 +169,9 @@ int   iluminateTriangle_43D530(int pos1x, int pos1y, int pos2x, int pos2y, int p
                         for (i = v11 << 9; ; i = v11 << 9)
                         {
                             v34 = dword_464F14 + i + v32++ + 96;
+                            // original 0x43D6FF: movzx, not movsx -- a plain
+                            // BYTE* read here sign-extends, so a ground pixel
+                            // >= 0x80 indexes 256 bytes before the table (506d3e4).
                             *(BYTE*)v34 = *(BYTE*)(*(unsigned __int8*)v34 + a7);
                             if (v32 >= v31)
                                 break;
@@ -219,6 +222,7 @@ int   iluminateTriangle_43D530(int pos1x, int pos1y, int pos2x, int pos2y, int p
                     for (j = v11 << 9; ; j = v11 << 9)
                     {
                         v27 = dword_464F14 + j + v24++ + 96;
+                        // original 0x43D82F: same movzx fix as above (506d3e4).
                         *(BYTE*)v27 = *(BYTE*)(*(unsigned __int8*)v27 + a7);
                         if (v24 >= v25)
                             break;

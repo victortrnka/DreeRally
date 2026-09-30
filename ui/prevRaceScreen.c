@@ -1120,6 +1120,8 @@ LABEL_112:
       }
       while ( v105 );*/
 	  strcpy(raceParticipant[iRacePArticipant].name, drivers[v103].name);
+      // original 0x4321B0: the original uppercases the name here too, so the
+      // HUD shows it in caps; the port had dropped this call (3de827c).
       _strupr(raceParticipant[iRacePArticipant].name);
       v106 = raceIdParticipants[v101];
 	  raceParticipant[iRacePArticipant].damage = drivers[v106].damage;
@@ -1332,7 +1334,9 @@ LABEL_534:
   dword_456BD8 = v128;
   v129 = 0;
   v130 = 2;
-  v131 = (int)&drivers[1].points;//bucle puntos piloto
+  // &drivers[1].points, not dword_4608F0: same original global,
+  // dword_4608F0 is never written (8b08dca).
+  v131 = (int)&drivers[1].points;
   do
   {
     if ( *(_DWORD *)(v131 - 108) > v129 )
@@ -1438,7 +1442,9 @@ LABEL_534:
   userLasRacePriceIncome_456BDC = 0;
   v246 = 0;
   v141 = 2;
-  v142 = (int)&drivers[1].points; //bucle puntos de polotos
+  // &drivers[1].points, not dword_4608F0: same original global,
+  // dword_4608F0 is never written (8b08dca).
+  v142 = (int)&drivers[1].points;
   do
   {
     if ( *(_DWORD *)(v142 - 108) > v140 )

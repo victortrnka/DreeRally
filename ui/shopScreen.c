@@ -266,7 +266,9 @@ void enterShop()
           loadMenuSoundEffect(1u, 24, 0, configuration.effectsVolume, dword_445190);
           v93 = 0;
           v94 = 2;
-          v95 = (int)&drivers[1].points;///bucle de puntos de puloto
+          // &drivers[1].points, not dword_4608F0: same original global,
+          // dword_4608F0 is never written (8b08dca).
+          v95 = (int)&drivers[1].points;
           do
           {
               if (*(_DWORD*)(v95 - 108) > v93)
@@ -804,7 +806,9 @@ LABEL_154:
             loadMenuSoundEffect(1u, 24, 0, configuration.effectsVolume, dword_445190);
             v93 = 0;
             v94 = 2;
-            v95 = (int)&drivers[1].points;///bucle de puntos de puloto
+            // &drivers[1].points, not dword_4608F0: same original global,
+            // dword_4608F0 is never written (8b08dca).
+            v95 = (int)&drivers[1].points;
             do
             {
               if ( *(_DWORD *)(v95 - 108) > v93 )
