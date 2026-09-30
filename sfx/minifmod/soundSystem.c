@@ -2008,7 +2008,7 @@ char   FMUSIC_LoadXM_43EF60(FMUSIC_MODULE *mod, FSOUND_FILE_HANDLE *fp)
       return 0;
     ++v2;
   }
-  while ( v2 < 16 );
+  while ( v2 < 17 );
   mod->Update			     = &FMUSIC_UpdateXM_43EF50;//  *(_DWORD *)(effectStruct + 344) = sub_43EF50;
   mod->defaultglobalvolume = 64;//*(BYTE *)(effectStruct + 296) = 64;
  
