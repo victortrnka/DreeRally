@@ -4456,8 +4456,7 @@ int keyMenuInRace_407330()
  
   // original 0x407330: 0x491820 is textureTemp (0x481E20) + 0xFA00, not a buffer of its own
   memcpy((char *)textureTemp + 0xFA00, (const void *)screenPtr, 0xFA00u);
- // memcpy(&circuitPalette_4B4020, loadCircuitPalette, 0x300u);
- // loadCircuitPalette();
+  memcpy(&circuitPalette_4B4020, circuitPalette_4A9BA0, 0x300u);
   dword_456AF8 = 0;
   setCircuitPaletteBis_4B4020();
   v9 = 63;
