@@ -366,7 +366,7 @@ int   getBigTextMidSize(const char *a1)
     do
 	//no es menu active es bigspacing
       v2 += (unsigned __int8)bigLetterSpacing_445848[DEFAULT_BIGLETTER_SPACING_OFFSET+ a1[v3++]];
-	  //v2 += (unsigned __int8)menuActive_4457F0[587ï¿½+ a1[v3++]];
+	  //v2 += (unsigned __int8)menuActive_4457F0[587ç+ a1[v3++]];
     while ( v3 < strlen(a1) );
   }
   return v2 / 2;
