@@ -264,5 +264,59 @@ class VerifyTest(unittest.TestCase):
         self.assertEqual(rc, 0)
 
 
+class StrideTest(unittest.TestCase):
+    """The original's menu layout is one int table, a row of 7 ints per menu
+    type (stride 0x1C); the port keeps each column as its own array indexed
+    by menu type. These columns used to be allowlisted as "wrong stride",
+    which hid three hand-typed typos in the popup-height column (the Define
+    Keyboard popup was 74 px too tall). A strided column must be compared at
+    addr + stride * i, so that a one-element typo in it is still caught."""
+
+    # 3 rows x 2 ints, row-major like the original: column 1 is {20, 21, 22}.
+    TABLE = struct.pack("<6i", 10, 20, 11, 21, 12, 22)
+
+    def _run(self, text, strides):
+        old = dict(vt.STRIDE)
+        vt.STRIDE.clear()
+        vt.STRIDE.update(strides)
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                src = Path(tmp) / "x.c"
+                src.write_text(text)
+                exe = Path(tmp) / "dr.exe"
+                make_pe(exe, 0x45000, self.TABLE)
+                return vt.verify([src], vt.OriginalImage(exe), {})
+        finally:
+            vt.STRIDE.clear()
+            vt.STRIDE.update(old)
+
+    def test_correct_column_matches_at_its_stride(self):
+        text = "int col_445004[] = { 20, 21, 22 };\n"
+        scanned, mismatches, skipped, allow = self._run(text, {"col_445004": 8})
+        self.assertEqual(scanned, 1)
+        self.assertEqual(mismatches, [])
+
+    def test_one_element_typo_in_a_strided_column_is_caught(self):
+        text = "int col_445004[] = { 20, 21, 23 };\n"  # last element should be 22
+        scanned, mismatches, skipped, allow = self._run(text, {"col_445004": 8})
+        self.assertEqual(len(mismatches), 1)
+        arr, rel, idx, ours, orig = mismatches[0]
+        self.assertEqual((idx, ours, orig), (2, 23, 22))
+        self.assertEqual(arr.orig_addr(idx), 0x445004 + 2 * 8)
+
+    def test_without_its_stride_a_correct_column_reads_the_wrong_row(self):
+        # Why the map is needed at all: read contiguously, the column is
+        # compared against its neighbours in the same row.
+        text = "int col_445004[] = { 20, 21, 22 };\n"
+        scanned, mismatches, skipped, allow = self._run(text, {})
+        self.assertEqual(len(mismatches), 2)
+
+    def test_menu_layout_columns_are_strided_not_allowlisted(self):
+        for name in ("dword_4456F0", "dword_4456F4", "dword_4456F8", "dword_4456FC",
+                     "dword_445700", "dword_445704", "dword_445708"):
+            self.assertEqual(vt.STRIDE.get(name), 0x1C, name)
+            self.assertNotIn(name, vt.ALLOWLIST)
+
+
 if __name__ == "__main__":
     unittest.main()

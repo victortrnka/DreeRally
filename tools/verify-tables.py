@@ -78,18 +78,22 @@ TYPE_INFO = {
 RENAME_MAP = {
     # "arrayName_wrongSuffix": 0x_real_address,
 }
+# Arrays that are one column of a larger original table: element i is at
+# addr + STRIDE[name] * i instead of addr + element_size * i. The original's
+# menu layout (ui/menu.c) is one 9x7 int table at 0x4456F0, a row of 7 ints
+# (stride 0x1C) per menu type; the port keeps each column as its own 9-int
+# array indexed by menu type, so it must be compared column-wise.
+MENU_LAYOUT_ROW = 0x1C
+STRIDE = {
+    "dword_4456F0": MENU_LAYOUT_ROW,
+    "dword_4456F4": MENU_LAYOUT_ROW,
+    "dword_4456F8": MENU_LAYOUT_ROW,
+    "dword_4456FC": MENU_LAYOUT_ROW,
+    "dword_445700": MENU_LAYOUT_ROW,
+    "dword_445704": MENU_LAYOUT_ROW,
+    "dword_445708": MENU_LAYOUT_ROW,
+}
 ALLOWLIST = {
-    # ui/menu.c: confirmed to be 7 interleaved columns of one 9x7 table at
-    # 0x4456F0 (row stride 0x1C), declared instead as 7 separate contiguous
-    # arrays -- only column 0 (each array's own index 0) reads correctly.
-    # See doc/KNOWN-ISSUES.md ("menu layout tables use the wrong stride").
-    "dword_4456F0": "wrong stride, not wrong data -- see doc/KNOWN-ISSUES.md",
-    "dword_4456F4": "wrong stride, not wrong data -- see doc/KNOWN-ISSUES.md",
-    "dword_4456F8": "wrong stride, not wrong data -- see doc/KNOWN-ISSUES.md",
-    "dword_4456FC": "wrong stride, not wrong data -- see doc/KNOWN-ISSUES.md",
-    "dword_445700": "wrong stride, not wrong data -- see doc/KNOWN-ISSUES.md",
-    "dword_445704": "wrong stride, not wrong data -- see doc/KNOWN-ISSUES.md",
-    "dword_445708": "wrong stride, not wrong data -- see doc/KNOWN-ISSUES.md",
     # ui/util/popup.c: each address falls inside an already-restored
     # neighbouring table's own 4800-byte span (e.g. byte_447478 is 0x50
     # bytes into aNotTooShabbyDr's row 0), so comparing it at face value
@@ -314,7 +318,7 @@ def mask_comments(text):
 
 
 class TableArray:
-    def __init__(self, name, addr, path, line, elem_size, read_fmt, disp_fmt, values):
+    def __init__(self, name, addr, path, line, elem_size, read_fmt, disp_fmt, values, stride=None):
         self.name = name
         self.addr = addr
         self.path = path
@@ -323,6 +327,10 @@ class TableArray:
         self.read_fmt = read_fmt
         self.disp_fmt = disp_fmt
         self.values = values  # list of int/float, already element-typed
+        self.stride = stride or elem_size  # bytes between elements in dr.exe
+
+    def orig_addr(self, i):
+        return self.addr + i * self.stride
 
 
 def find_arrays(path, text):
@@ -359,7 +367,8 @@ def find_arrays(path, text):
             values.extend([0.0 if is_float else 0] * (dims_total - len(values)))
 
         addr = RENAME_MAP.get(name, int(addr_text, 16))
-        yield TableArray(name, addr, path, line, elem_size, read_fmt, disp_fmt, values)
+        yield TableArray(name, addr, path, line, elem_size, read_fmt, disp_fmt, values,
+                         STRIDE.get(name))
 
 
 # --- PE reading ----------------------------------------------------------
@@ -453,7 +462,7 @@ def verify(files, image, allowlist):
                 skipped_outside.append((arr, rel))
                 continue
             for i, our_val in enumerate(arr.values):
-                addr = arr.addr + i * arr.elem_size
+                addr = arr.orig_addr(i)
                 raw = image.read(addr, arr.elem_size)
                 if raw is None:
                     break
@@ -495,7 +504,7 @@ def main(argv):
 
     for arr, rel, idx, ours, orig in mismatches:
         print("MISMATCH %s[%d] (%s:%d, original 0x%X): ours=%r original=%r" % (
-            arr.name, idx, rel, arr.line, arr.addr + idx * arr.elem_size, ours, orig))
+            arr.name, idx, rel, arr.line, arr.orig_addr(idx), ours, orig))
     for arr, reason in skipped_allowlisted:
         print("allowlisted: %s (%s)" % (arr.name, reason), file=sys.stderr)
     for arr, rel in skipped_outside:
