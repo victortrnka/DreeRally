@@ -22,7 +22,7 @@ char unk_446C32[8 * 50]; // 0x446C32..0x446DC2: the 8 Load/Save slot texts
 BYTE unk_4455B0[] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
 
 void *Str; // idb
-int dword_443D18 = 1953525061; // weak
+char dword_443D18[11] = "Empty Slot"; // weak
 //----- (0042F2E0) --------------------------------------------------------
 signed int loadGame()
 {
@@ -55,10 +55,10 @@ signed int loadGame()
   v1 = (int)&unk_446C32;
   do
   {
-    *(_DWORD *)v1 = 1953525061; //Empty slot
-    *(_DWORD *)(v1 + 4) = 1817387129;
-    *(_WORD *)(v1 + 8) = 29807;
-    *(BYTE *)(v1 + 10) = 0;
+    *(_DWORD *)v1 = *(_DWORD *)dword_443D18;
+    *(_DWORD *)(v1 + 4) = *(_DWORD *)&dword_443D18[4];
+    *(_WORD *)(v1 + 8) = *(_WORD *)&dword_443D18[8];
+    *(BYTE *)(v1 + 10) = dword_443D18[10];
     menuActive_4457F0[45+v0] = 1;
     strcpy(Filename, "DR.SG");
     SDL_itoa(v0, DstBuf, 10);
@@ -210,10 +210,10 @@ __int16 savegameWithName()
   v1 = (int)&unk_446C32;
   do
   {
-    *(_DWORD *)v1 = 1953525061; //EMPTY slot
-    *(_DWORD *)(v1 + 4) = 1817387129;
-    *(_WORD *)(v1 + 8) = 29807;
-    *(BYTE *)(v1 + 10) = 0;
+    *(_DWORD *)v1 = *(_DWORD *)dword_443D18;
+    *(_DWORD *)(v1 + 4) = *(_DWORD *)&dword_443D18[4];
+    *(_WORD *)(v1 + 8) = *(_WORD *)&dword_443D18[8];
+    *(BYTE *)(v1 + 10) = dword_443D18[10];
 	menuActive_4457F0[45+v0] = 1;
     strcpy(Filename, "DR.SG");
     SDL_itoa(v0, DstBuf, 10);
@@ -247,7 +247,7 @@ __int16 savegameWithName()
       drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, "Enter the name of save game?", 180610);
       refreshAllScreen();
       v7 = (char *)&unk_446C32 + 50 * v6;
-      if ( !memcmp((char *)&unk_446C32 + 50 * v6, &dword_443D18, 0xBu) )
+      if ( !memcmp((char *)&unk_446C32 + 50 * v6, dword_443D18, 0xBu) )
       {
         v27[0] = 0;
       }
