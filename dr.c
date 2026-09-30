@@ -1042,13 +1042,8 @@ int dword_481E50; // weak
 int dword_481E54; // weak
 int dword_481E58; // weak*/
 _UNKNOWN unk_481F20; // weak
-_UNKNOWN unk_488020; // weak
-_UNKNOWN unk_48E420; // weak
-_UNKNOWN unk_48E620; // weak
 _UNKNOWN unk_48E720; // weak
-_UNKNOWN unk_48E760; // weak
 _UNKNOWN unk_491820; // weak
-_UNKNOWN unk_491920; // weak
 
 
 void *dword_4A6854; // idb
@@ -1368,8 +1363,7 @@ _UNKNOWN unk_4ADB40; // weak
 
 int dword_4B3144; // weak
 int dword_4B3160[256]; // weak
-_UNKNOWN unk_4B3404; // weak
-float flt_4B3400[768]; // 0x4B3400: sub_404C30's per-entry intro palette (r, g, b)
+float flt_4B3400[768]; // 0x4B3400: sub_404C30/sub_4055A0's per-entry palette (r, g, b)
 void *burn1aBpk; // idb
 void *obstacleBpk; // idb
 
@@ -1441,7 +1435,6 @@ int participantRaceOrderUserFirst_508D44[4]; // weak
 
 int dword_508D6D; // weak
 BYTE unk_509E60[768]; // 0x509E60: sub_404C30's copy of circuitPalette_4A9BA0
-_UNKNOWN unk_509E61; // weak
 int circuitRecordMinutes_50A160; // weak
 int totalRaceTime_50A164; // weak
 
@@ -3509,7 +3502,7 @@ int sub_4055A0()
   double v189; // [sp+38h] [bp-8h]@33
   int v190; // [sp+38h] [bp-8h]@39
 
-  v0 = &unk_4B3404;
+  v0 = &flt_4B3400[1];
   v1 = &circuitPalette_4A9BA0[1];//cambiado FIX
   //v1 = (signed int)byte_4A9BA1;
   if ( leftMenuInRaceWidth_456AA0 == 64 )
@@ -3605,7 +3598,8 @@ int sub_4055A0()
       *((float *)v0 - 3) = (double)v62 * 0.011111111;
       *((float *)v0 - 2) = (double)v63 * 0.011111111;
     }
-    while ( v1 < (signed int)((char *)&joystick_y_axis_default_4A9EA0 + 1) );
+    while ( v1 < (signed int)&circuitPalette_4A9BA0[1] + 768 );
+    // original 0x4055A0: 0x481F20..0x491920 are textureTemp (0x481E20) + 0x100..0xFB00, not separate buffers
     v64 = dword_464F14;
     v65 = (signed int)textureTemp;
     v66 = dword_464F14 + 160;
@@ -3617,8 +3611,8 @@ int sub_4055A0()
       v66 += 512;
       memcpy(v67, v68, 0x100u);
     }
-    while ( v65 < (signed int)&unk_48E620 );
-    v69 = (signed int)&unk_48E720;
+    while ( v65 < (signed int)textureTemp + 0xC800 );
+    v69 = (signed int)textureTemp + 0xC900;
     v70 = v64 + 96;
     do
     {
@@ -3628,32 +3622,32 @@ int sub_4055A0()
       v70 += 512;
       memcpy(v71, v72, 0x40u);
     }
-    while ( v69 < (signed int)&unk_491920 );
-    v73 = &unk_481F20;
-    v74 = (signed int)&unk_48E420;
+    while ( v69 < (signed int)textureTemp + 0xFB00 );
+    v73 = (char *)textureTemp + 0x100;
+    v74 = (signed int)textureTemp + 0xC600;
     do
     {
-      memcpy(&unk_48E620, (const void *)(v74 + 256), 0x100u);
+      memcpy((char *)textureTemp + 0xC800, (const void *)(v74 + 256), 0x100u);
       memcpy((void *)(v74 + 256), (char *)v73 - 256, 0x100u);
-      memcpy((char *)v73 - 256, &unk_48E620, 0x100u);
-      memcpy(&unk_48E620, (const void *)v74, 0x100u);
+      memcpy((char *)v73 - 256, (char *)textureTemp + 0xC800, 0x100u);
+      memcpy((char *)textureTemp + 0xC800, (const void *)v74, 0x100u);
       memcpy((void *)v74, v73, 0x100u);
-      memcpy(v73, &unk_48E620, 0x100u);
-      memcpy(&unk_48E620, (const void *)(v74 - 256), 0x100u);
+      memcpy(v73, (char *)textureTemp + 0xC800, 0x100u);
+      memcpy((char *)textureTemp + 0xC800, (const void *)(v74 - 256), 0x100u);
       memcpy((void *)(v74 - 256), (char *)v73 + 256, 0x100u);
-      memcpy((char *)v73 + 256, &unk_48E620, 0x100u);
-      memcpy(&unk_48E620, (const void *)(v74 - 512), 0x100u);
+      memcpy((char *)v73 + 256, (char *)textureTemp + 0xC800, 0x100u);
+      memcpy((char *)textureTemp + 0xC800, (const void *)(v74 - 512), 0x100u);
       memcpy((void *)(v74 - 512), (char *)v73 + 512, 0x100u);
-      memcpy((char *)v73 + 512, &unk_48E620, 0x100u);
+      memcpy((char *)v73 + 512, (char *)textureTemp + 0xC800, 0x100u);
       v75 = (char *)v73 + 768;
-      memcpy(&unk_48E620, (const void *)(v74 - 768), 0x100u);
+      memcpy((char *)textureTemp + 0xC800, (const void *)(v74 - 768), 0x100u);
       memcpy((void *)(v74 - 768), (char *)v73 + 768, 0x100u);
       v74 -= 1280;
       v73 = (char *)v73 + 1280;
-      memcpy(v75, &unk_48E620, 0x100u);
+      memcpy(v75, (char *)textureTemp + 0xC800, 0x100u);
     }
-    while ( v74 > (signed int)&unk_488020 );
-    memset(&unk_48E620, 0, 0x100u);
+    while ( v74 > (signed int)textureTemp + 0x6200 );
+    memset((char *)textureTemp + 0xC800, 0, 0x100u);
     dword_4A9EAC = 0;
     dword_44509C = 1063675494;
     dword_4450A0 = 1119092736;
@@ -3661,7 +3655,7 @@ int sub_4055A0()
     while ( 1 )
     {
       v76 = 0;
-      v77 = (signed int)&unk_4B3404;
+      v77 = (signed int)&flt_4B3400[1];
       do
       {
         setPaletteAndGetValue(
@@ -3672,7 +3666,7 @@ int sub_4055A0()
         v77 += 12;
         ++v76;
       }
-      while ( v77 < (signed int)&obstacleBpk );
+      while ( v77 < (signed int)&flt_4B3400[1] + 0xC00 );
       setMusicVolume(728 * (unsigned __int64)*(float *)&dword_4450A0);
       v78 = *(float *)&dword_4450A0 * 0.01745329251994444;
       dword_50A170 = screenPtr + 64;
@@ -3684,7 +3678,7 @@ int sub_4055A0()
       do
       {
         v81 = (unsigned __int64)(*(float *)&dword_4450A0 * 0.7142857142857143);
-        v82 = (char *)&unk_48E760 + v80 - v81;
+        v82 = (char *)textureTemp + 0xC940 + v80 - v81;
         v83 = (void *)(dword_50A170 + v79 - 64);
         memcpy(v83, v82, 4 * ((unsigned int)v81 >> 2));
         v80 += 64;
@@ -3842,7 +3836,7 @@ int sub_4055A0()
       *((float *)v0 - 3) = (double)v153 * 0.0066666668;
       *((float *)v0 - 2) = (double)v154 * 0.0066666668;
     }
-    while ( v1 < (signed int)((char *)&joystick_y_axis_default_4A9EA0 + 1) );
+    while ( v1 < (signed int)&circuitPalette_4A9BA0[1] + 768 );
     v155 = (signed int)textureTemp;
     v156 = dword_464F14 + 96;
     do
@@ -3853,7 +3847,7 @@ int sub_4055A0()
       v156 += 512;
       memcpy(v157, v158, 0x140u);
     }
-    while ( v155 < (signed int)&unk_491820 );
+    while ( v155 < (signed int)textureTemp + 0xFA00 );
     v159 = 0;
     v180 = 0;
     do
@@ -3871,7 +3865,7 @@ int sub_4055A0()
       dword_4A9EAC = 0;
       dword_503510 = 0;
       waitWithRefresh();
-      v162 = (signed int)&unk_4B3404;
+      v162 = (signed int)&flt_4B3400[1];
       v189 = 150.0 - v181;
       do
       {
@@ -3883,7 +3877,7 @@ int sub_4055A0()
         v162 += 12;
         ++v161;
       }
-      while ( v162 < (signed int)&obstacleBpk );
+      while ( v162 < (signed int)&flt_4B3400[1] + 0xC00 );
       setMusicVolume(436 * (unsigned __int64)v189);
       v179 = screenPtr;
       v163 = 4 * (599 - ((unsigned __int64)v181 - 8));
@@ -11453,7 +11447,7 @@ LABEL_460:
   }
   while ( !dword_464F68 );
   dword_456C28 = 0;
-  //sub_4055A0(); //hace la transicion d emenu despues de terminar la carrera
+  sub_4055A0();
   memset((void *)screenPtr, 0, 0xFA00u);
   v101 = numberOfParticipants_508D24;
   currentDriverSelectedIndex_503518 = 0;
