@@ -1043,7 +1043,6 @@ int dword_481E54; // weak
 int dword_481E58; // weak*/
 _UNKNOWN unk_481F20; // weak
 _UNKNOWN unk_48E720; // weak
-_UNKNOWN unk_491820; // weak
 
 
 void *dword_4A6854; // idb
@@ -4455,11 +4454,8 @@ int keyMenuInRace_407330()
  
   v8 = (char *)&unk_479E40 + 15 * (unsigned __int8)configuration.defaultMineGamepad;*/
  
-  //unk_491820= malloc ( 0xFA00u);
-
-  //esto guarda la ultima imagen para ponerla mas tarde despues del menu
-  //memcpy(&unk_491820, (const void *)screenPtr, 0xFA00u);
-  //esto estab acon puntero pero se cargaba otras cosas
+  // original 0x407330: 0x491820 is textureTemp (0x481E20) + 0xFA00, not a buffer of its own
+  memcpy((char *)textureTemp + 0xFA00, (const void *)screenPtr, 0xFA00u);
  // memcpy(&circuitPalette_4B4020, loadCircuitPalette, 0x300u);
  // loadCircuitPalette();
   dword_456AF8 = 0;
@@ -4623,7 +4619,7 @@ int keyMenuInRace_407330()
     --v112;
   }
   while ( v112 );
-  memcpy((void *)screenPtr, &unk_491820, 0xFA00u);
+  memcpy((void *)screenPtr, (char *)textureTemp + 0xFA00, 0xFA00u);
   memcpy(&circuitPalette_4B4020, circuitPalette_4A9BA0, 0x300u);
   dword_456AF8 = 0;
   setCircuitPaletteBis_4B4020();
