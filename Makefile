@@ -45,7 +45,7 @@ else
 $(error PROFILE must be debug or equiv)
 endif
 
-.PHONY: all clean setup-run run check-equiv stats docker-test
+.PHONY: all clean setup-run run check-equiv stats docker-test verify-tables
 
 BASE ?= HEAD
 
@@ -91,6 +91,9 @@ check-equiv:
 
 stats:
 	@python3 tools/stats.py
+
+verify-tables:
+	@python3 tools/verify-tables.py --dr-data "$(DR_DATA)"
 
 # --- Headless Docker test runner ---------------------------------------
 # keys.exe: a small standalone console tool, not part of the game itself, so

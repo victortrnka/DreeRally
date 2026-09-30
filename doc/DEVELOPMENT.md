@@ -20,6 +20,7 @@ CrossOver. Everything below runs on Apple Silicon.
 | `make setup-run` | Creates the `DreeRally` bottle and copies the game files into `run/` |
 | `make run ARGS="-window"` | Copies the build into `run/` and starts it in the bottle |
 | `make check-equiv [BASE=rev]` | Machine-code equivalence against `BASE` (default `HEAD`) |
+| `make verify-tables` | Compare hand-typed data tables against the original `dr.exe` |
 | `make stats` | Remaining Hex-Rays names per file (cleanup progress) |
 | `make clean` | Removes `build/` |
 
@@ -194,6 +195,28 @@ Things to know:
   it moves the highlighted item to the last one ("Exit to OS"), not back to a
   previous menu — none of the built-in scenarios rely on it to reach the main
   menu.
+
+## Verifying data tables
+
+`make verify-tables` scans the game sources for initialised arrays whose
+name still ends in an original address (`_XXXXXX`, six hex digits, the
+Hex-Rays convention -- see `doc/CONTRIBUTING.md`), reads the original
+`dr.exe` from `DR_DATA`, and compares every element byte-for-byte. It
+exits non-zero and prints the array, index and both values on any
+mismatch. These arrays were hand-typed from Hex-Rays output or Ghidra
+dumps at some point, and nothing else checks them against the original
+ever again; `check-equiv` cannot catch a wrong data value, only a code
+change. See `doc/FINDINGS.md`'s "hand-typed data tables" bug class.
+
+A genuine port typo found this way gets its own `fix:` commit, byte-exact
+against `dr.exe`. An array whose name suffix is provably not its real
+address is better renamed to the correct address (a `refactor:` commit,
+`EQUIVALENT`) than added to the tool's exception lists. `tools/verify-tables.py`
+has two small, explicit exception lists for what renaming cannot fix: `RENAME_MAP`
+for a suffix that is definitely wrong but the correct name is not worth
+cleaning up yet, and `ALLOWLIST`, with a reason, for an array whose true
+original layout is not understood (see `doc/KNOWN-ISSUES.md`). Tests:
+`python3 tools/test_verify_tables.py`.
 
 ## Common translation bugs
 
