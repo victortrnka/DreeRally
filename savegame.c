@@ -58,29 +58,27 @@ int  decryptEntireSavegame(int a1, char *Filename)
 		*((BYTE *)Str + v5++) += v7;
 	} while ((signed int)v5 < 2179);
 	result = 0;
-	/*do
+	do
 	{
 		*(BYTE *)(result + a1) = *((BYTE *)Str + result + 4);
 		++result;
-	} while (result < 15);*/
+	} while (result < 15);
 	return result;
 }
 
 char* getSaveGameName(int savegame) {
 	char Filename[20];
-	char *saveNumber = (char *) malloc(1);
-//	FILE * fp;
-	char *saveGameName= (char *) malloc(20);
-	
+	char saveNumber[8];
+	char *saveGameName = (char *) malloc(20);
+	memset(saveGameName, 0, 20);
+
 	strcpy(Filename, "DR.SG");
 	SDL_itoa(savegame, saveNumber, 10);
 	strcat(Filename, saveNumber);
 	if ((signed int)fileExists(Filename) > 0) {
-		
-		decryptEntireSavegame(0, Filename);
 
-		memcpy(saveGameName, ((unsigned char *)Str + 4), 16);
-		
+		decryptEntireSavegame((int)saveGameName, Filename);
+
 		return saveGameName;
 	}
 	else {
