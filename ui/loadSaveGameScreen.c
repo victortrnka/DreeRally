@@ -23,11 +23,6 @@ BYTE unk_4455B0[] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 
 void *Str; // idb
 int dword_443D18 = 1953525061; // weak
-// Original 0x446368/0x44652a: the same single buffer ui/menu.c's
-// startRacingMenu() mutates (not a separate copy - loadGame() and
-// startRacingMenu() write the identical two addresses in the original).
-extern char menuaStartANewGam_0[17];
-extern char menuaStartRacing[13];
 //----- (0042F2E0) --------------------------------------------------------
 signed int loadGame()
 {

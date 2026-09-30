@@ -35,3 +35,7 @@ typedef enum
 
 extern char menuActive_4457F0[];
 char* getMenuText(int menu, int position);
+// Original 0x446368/0x44652A: two 50-byte slots of the original's menu
+// text table (stride 50), rewritten in place when a game starts or ends.
+extern char menuaStartANewGam_0[50];
+extern char menuaStartRacing[50];

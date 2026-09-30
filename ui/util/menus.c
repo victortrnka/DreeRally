@@ -10,9 +10,6 @@
 // "Continue Racing", "Start A New Game" <-> "Enter The Shop") when a game
 // is in progress. Position 0 of these two menus must read from them
 // instead of a fixed literal, or the swap never reaches the screen.
-extern char menuaStartRacing[13];
-extern char menuaStartANewGam_0[17];
-
 char * menu0[] = { menuaStartRacing, "Multiplayer Race", "Configure","See Hall Of Fame","Credits","Exit To OS" };
 char * menu1[] = { menuaStartANewGam_0, "End Current Game", "See Current Statistics","Load Game","Save Game","Previous Menu" };
 

@@ -575,8 +575,8 @@ int dword_4470EA = 1735289196; // weak
 int dword_445188 = 163840; // weak
 char byte_45FC10[256]; // weak
 char menuaStartANewGame[17] = "Start A New Game"; // weak
-char menuaStartANewGam_0[17] = "Start A New Game"; // weak
-char menuaStartRacing[13] = "Start Racing"; // weak
+char menuaStartANewGam_0[50] = "Start A New Game"; // 0x44652A, 50-byte menu text slot
+char menuaStartRacing[50] = "Start Racing"; // 0x446368, holds "Continue Racing" too
 //----- (0042E0B0) --------------------------------------------------------
 signed int   readEventInMenu(int menuType)
 {
