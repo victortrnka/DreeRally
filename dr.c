@@ -1041,8 +1041,6 @@ int dword_481E4C; // weak
 int dword_481E50; // weak
 int dword_481E54; // weak
 int dword_481E58; // weak*/
-_UNKNOWN unk_481F20; // weak
-_UNKNOWN unk_48E720; // weak
 
 
 void *dword_4A6854; // idb
@@ -3267,7 +3265,8 @@ int sub_405430()
   dword_481BE8 = 0;
   do
   {
-    v2 = (char *)&unk_481F20 + 256 * v1;
+    // original 0x405430: 0x481F20/0x48E720 are textureTemp (0x481E20) + 0x100/0xC900
+    v2 = (char *)textureTemp + 0x100 + 256 * v1;
     v3 = (const void *)((v1++ << 9) + v0 + 160);
     memcpy(v2, v3, 0x100u);
     dword_481BE8 = v1;
@@ -3293,7 +3292,7 @@ int sub_405430()
     }
     dword_4A7A24 = (signed int)(dword_503514 * v8) >> 16;
     sub_43B030(dword_50A170, ((signed int)(dword_503514 * v8) >> 17) - 10);
-    sub_43B370(dword_50A170 + (dword_4A7A24 >> 1), (int)((char *)&unk_48E720 - dword_464F20), 255 - dword_4A7A24);
+    sub_43B370(dword_50A170 + (dword_4A7A24 >> 1), (int)((char *)textureTemp + 0xC900 - dword_464F20), 255 - dword_4A7A24);
     sub_43B050(dword_50A170, (dword_4A7A24 >> 1) - dword_4A7A24 + 255);
     dword_50A170 += 320;
     result = dword_4A7CD0 - dword_481E00;
