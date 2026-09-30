@@ -16,7 +16,6 @@ int   getBigTextMidSize(const char *a1);
 unsigned int   drawInGamePrices(const char *a1, int a2);
 int   writeTextInScreen(const char *a1, int a2);
 
-extern const int DEFAULT_BIGLETTER_SPACING_OFFSET;
 extern char letterSpacing_4458B0[];
 extern char bigLetterSpacing_445848[];
 extern  char  unk_445928[] ;

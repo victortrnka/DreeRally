@@ -7,8 +7,6 @@
 #include "dr.h"
 #include <string.h>
 
-const int DEFAULT_BIGLETTER_SPACING_OFFSET = -23;
-
  void *choo2Bpk; // idb
 
  // dr.exe 0x445848..0x445967 holds four font descriptors back to back, each
@@ -222,7 +220,7 @@ int   getBoxBigTextOffset(const char *a1)
 
 	
       //result += (unsigned __int8)menuActive_4457F0[58+a1[v3++]];
-	result += (unsigned __int8)bigLetterSpacing_445848[DEFAULT_BIGLETTER_SPACING_OFFSET+a1[v3++]];
+	result += (unsigned __int8)bigLetterSpacing_445848[(unsigned __int8)a1[v3++] - 30];
     while ( v3 < strlen(a1) );
   }
   return result;
@@ -356,7 +354,7 @@ int   getBigTextMidSize(const char *a1)
   {
     do
 	//no es menu active es bigspacing
-      v2 += (unsigned __int8)bigLetterSpacing_445848[DEFAULT_BIGLETTER_SPACING_OFFSET+ a1[v3++]];
+      v2 += (unsigned __int8)bigLetterSpacing_445848[(unsigned __int8)a1[v3++] - 30];
 	  //v2 += (unsigned __int8)menuActive_4457F0[587ç+ a1[v3++]];
     while ( v3 < strlen(a1) );
   }

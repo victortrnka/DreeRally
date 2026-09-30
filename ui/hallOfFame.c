@@ -635,7 +635,7 @@ int   drawRecordByCircuit(int a1)
   v11 = 0;
   v12 = 0;
     do
-	v11 += (unsigned __int8)bigLetterSpacing_445848[DEFAULT_BIGLETTER_SPACING_OFFSET + (unsigned __int8)Str[v12++]];
+	v11 += (unsigned __int8)bigLetterSpacing_445848[(unsigned __int8)Str[v12++] - 30];
     while ( v12 < strlen(Str) );
   //}
 	//escribe el circuito
