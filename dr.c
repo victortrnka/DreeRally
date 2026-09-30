@@ -1369,6 +1369,7 @@ _UNKNOWN unk_4ADB40; // weak
 int dword_4B3144; // weak
 int dword_4B3160[256]; // weak
 _UNKNOWN unk_4B3404; // weak
+float flt_4B3400[768]; // 0x4B3400: sub_404C30's per-entry intro palette (r, g, b)
 void *burn1aBpk; // idb
 void *obstacleBpk; // idb
 
@@ -1439,7 +1440,7 @@ int participantRaceOrderUserFirst_508D44[4]; // weak
 //int dword_508D50; // weak
 
 int dword_508D6D; // weak
-_UNKNOWN unk_509E60; // weak
+BYTE unk_509E60[768]; // 0x509E60: sub_404C30's copy of circuitPalette_4A9BA0
 _UNKNOWN unk_509E61; // weak
 int circuitRecordMinutes_50A160; // weak
 int totalRaceTime_50A164; // weak
@@ -2985,8 +2986,8 @@ int sub_404C30()
   do
   {
     v2 = 0;
-    v3 = &unk_4B3404;
-    v4 = (signed int)&unk_509E61;
+    v3 = &flt_4B3400[1];
+    v4 = (signed int)&unk_509E60[1];
     do
     {
       if ( v2 < v1 + 15
@@ -3015,11 +3016,12 @@ int sub_404C30()
       ++v2;
       v3 = (char *)v3 + 12;
     }
-    while ( v4 < (signed int)((char *)&circuitRecordMinutes_50A160 + 1) );
+    while ( v4 < (signed int)&unk_509E60[1] + 768 );
     v0 += 8;
   }
   while ( v0 < 256 );
   memset((void *)screenPtr, 0, 0xFA00u);
+  // original 0x404C30: 0x48E620/0x48E720/0x48E760/0x491920 are textureTemp (0x481E20) + 0xC800/0xC900/0xC940/0xFB00
   v9 = dword_464F14;
   v10 = (signed int)textureTemp;
   v11 = dword_464F14 + 160;
@@ -3031,8 +3033,8 @@ int sub_404C30()
     v11 += 512;
     memcpy(v12, v13, 0x100u);
   }
-  while ( v10 < (signed int)&unk_48E620 );
-  v14 = (signed int)&unk_48E720;
+  while ( v10 < (signed int)textureTemp + 0xC800 );
+  v14 = (signed int)textureTemp + 0xC900;
   v15 = v9 + 96;
   do
   {
@@ -3042,15 +3044,15 @@ int sub_404C30()
     v15 += 512;
     memcpy(v16, v17, 0x40u);
   }
-  while ( v14 < (signed int)&unk_491920 );
-  memset(&unk_48E620, 0, 0x100u);
+  while ( v14 < (signed int)textureTemp + 0xFB00 );
+  memset((char *)textureTemp + 0xC800, 0, 0x100u);
   dword_4A9EAC = 0;
   dword_44509C = 1063675494;
   dword_4450A0 = 1065353216;
   while ( 1 )
   {
     v18 = 0;
-    v19 = (signed int)&unk_4B3404;
+    v19 = (signed int)&flt_4B3400[1];
     do
     {
       setPaletteAndGetValue(
@@ -3061,7 +3063,7 @@ int sub_404C30()
       v19 += 12;
       ++v18;
     }
-    while ( v19 < (signed int)&obstacleBpk );
+    while ( v19 < (signed int)&flt_4B3400[1] + 0xC00 );
     v20 = 728 * (unsigned __int64)*(float *)&dword_4450A0;
     if ( v20 > 0xFFFF )
       v20 = 0xFFFF;
@@ -3076,7 +3078,7 @@ int sub_404C30()
     do
     {
       v24 = (unsigned __int64)(*(float *)&dword_4450A0 * 0.7142857142857143);
-      v25 = (char *)&unk_48E760 + v23 - v24;
+      v25 = (char *)textureTemp + 0xC940 + v23 - v24;
       v26 = screenPtr + v22;
       memcpy((void *)(screenPtr + v22), v25, 4 * ((unsigned int)v24 >> 2));
       v23 += 64;
@@ -3141,7 +3143,7 @@ int sub_404C30()
   do
   {
     v55 = 0;
-    v34 = (signed int)&unk_509E61;
+    v34 = (signed int)&unk_509E60[1];
     v64 = (double)v62;
     do
     {
@@ -3163,7 +3165,7 @@ int sub_404C30()
       v34 += 3;
       v55 = v38 + 1;
     }
-    while ( v34 < (signed int)((char *)&circuitRecordMinutes_50A160 + 1) );
+    while ( v34 < (signed int)&unk_509E60[1] + 768 );
     waitWithRefresh();
     v41 = __OFSUB__(v62 + 50, 256);
     v39 = v62 == 206;
@@ -3177,7 +3179,7 @@ int sub_404C30()
   do
   {
     v56 = 0;
-    v43 = (signed int)&unk_509E61;
+    v43 = (signed int)&unk_509E60[1];
     v65 = (double)v59;
     do
     {
@@ -3195,7 +3197,7 @@ int sub_404C30()
       v43 += 3;
       ++v56;
     }
-    while ( v43 < (signed int)((char *)&circuitRecordMinutes_50A160 + 1) );
+    while ( v43 < (signed int)&unk_509E60[1] + 768 );
     waitWithRefresh();
     v42 += 10;
     v59 -= 10;
@@ -3215,7 +3217,7 @@ int sub_404C30()
     v48 = userRaceOrder_4A9EA8;
     v49 = 0;
     v57 = 0;
-    v50 = (signed int)&unk_509E61;
+    v50 = (signed int)&unk_509E60[1];
     do
     {
       if ( v49 < 10 * v48 + 15 || v49 > 10 * v48 + 24 )
@@ -3236,7 +3238,7 @@ int sub_404C30()
       v50 += 3;
       v57 = v49;
     }
-    while ( v50 < (signed int)((char *)&circuitRecordMinutes_50A160 + 1) );
+    while ( v50 < (signed int)&unk_509E60[1] + 768 );
     waitWithRefresh();
     v39 = v63 == 8;
     v40 = v63 - 8 < 0;
@@ -4646,158 +4648,6 @@ int keyMenuInRace_407330()
     result = 0;
     memset((void *)screenPtr, 0, 0xFA00u);
   }
-  return result;
-}
-
-//----- (00407330) --------------------------------------------------------
-int refreshPaleteCheat()
-{
-  char *v0; // eax@1
-  char *v1; // eax@1
-  char *v2; // eax@1
-  char *v3; // eax@1
-  char *v4; // eax@1
-  char *v5; // eax@1
-  char *v6; // eax@1
-  char *v7; // eax@1
-  char *v8; // eax@1
-  signed int v9; // esi@1
-  char *v10; // eax@3
-  char v11; // dl@4
-  unsigned int v12; // eax@5
-  char *v13; // esi@5
-  void *v14; // edi@5
-  char v15; // cl@6
-  int v16; // ST38_4@7
-  char *v17; // eax@7
-  char v18; // dl@8
-  unsigned int v19; // eax@9
-  void *v20; // edi@9
-  char v21; // cl@10
-  char *v22; // eax@11
-  char v23; // dl@12
-  unsigned int v24; // eax@13
-  void *v25; // edi@13
-  char v26; // cl@14
-  int v27; // edx@15
-  char *v28; // eax@15
-  char v29; // dl@16
-  unsigned int v30; // eax@17
-  char *v31; // esi@17
-  void *v32; // edi@17
-  char v33; // cl@18
-  int v34; // ST38_4@19
-  char *v35; // eax@19
-  char v36; // dl@20
-  unsigned int v37; // eax@21
-  void *v38; // edi@21
-  char v39; // cl@22
-  char *v40; // eax@23
-  char v41; // dl@24
-  unsigned int v42; // eax@25
-  void *v43; // edi@25
-  char v44; // cl@26
-  int v45; // edx@27
-  char *v46; // eax@27
-  char v47; // dl@28
-  unsigned int v48; // eax@29
-  char *v49; // esi@29
-  void *v50; // edi@29
-  char v51; // cl@30
-  int v52; // ST38_4@31
-  char *v53; // eax@31
-  char v54; // dl@32
-  unsigned int v55; // eax@33
-  void *v56; // edi@33
-  char v57; // cl@34
-  char *v58; // eax@35
-  char v59; // dl@36
-  unsigned int v60; // eax@37
-  char *v61; // esi@37
-  void *v62; // edi@37
-  char v63; // cl@38
-  int v64; // ST38_4@39
-  char *v65; // eax@39
-  char v66; // dl@40
-  unsigned int v67; // eax@41
-  void *v68; // edi@41
-  char v69; // cl@42
-  char *v70; // eax@43
-  char v71; // dl@44
-  unsigned int v72; // eax@45
-  void *v73; // edi@45
-  char v74; // cl@46
-  int v75; // edx@47
-  char *v76; // eax@47
-  char v77; // dl@48
-  unsigned int v78; // eax@49
-  char *v79; // esi@49
-  void *v80; // edi@49
-  char v81; // cl@50
-  int v82; // ST38_4@51
-  char *v83; // eax@51
-  char v84; // dl@52
-  unsigned int v85; // eax@53
-  void *v86; // edi@53
-  char v87; // cl@54
-  char *v88; // eax@55
-  char v89; // dl@56
-  unsigned int v90; // eax@57
-  void *v91; // edi@57
-  char v92; // cl@58
-  int v93; // edx@59
-  char *v94; // eax@59
-  char v95; // dl@60
-  unsigned int v96; // eax@61
-  char *v97; // esi@61
-  void *v98; // edi@61
-  char v99; // cl@62
-  int v100; // ST38_4@63
-  signed int v101; // esi@63
-  int v102; // esi@65
-  signed int v103; // eax@66
-  int v104; // ecx@67
-  int v105; // edx@67
-  signed int v106; // esi@69
-  signed int v107; // esi@71
-  int v108; // esi@73
-  signed int v109; // eax@74
-  int v110; // ecx@75
-  int v111; // edx@75
-  signed int v112; // esi@77
-  signed int v113; // esi@79
-  int result; // eax@81
-  char v115; // [sp+Bh] [bp-3Dh]@5
-  int v116; // [sp+Ch] [bp-3Ch]@3
-  int v117; // [sp+10h] [bp-38h]@3
-  int v118; // [sp+14h] [bp-34h]@3
-  int v119; // [sp+18h] [bp-30h]@3
-  char v120; // [sp+1Ch] [bp-2Ch]@3
-
- 
-  dword_456AF8 = 0;
-  setCircuitPaletteBis_4B4020();
-  v112 = 63;
-  do
-  {
-    waitWithRefresh();
-    setCircuitPaletteTransitionToBlack_4B4020();
-    --v112;
-  }
-  while ( v112 );
-  memcpy((void *)screenPtr, &unk_491820, 0xFA00u);
-  memcpy(&circuitPalette_4B4020, circuitPalette_4A9BA0, 0x300u);
-  dword_456AF8 = 0;
-  setCircuitPaletteBis_4B4020();
-  v113 = 63;
-  do
-  {
-    waitWithRefresh();
-    setCircuitPaletteTransitionToOriginal_4B4020();
-    --v113;
-  }
-  while ( v113 );
-  result = 0;
   return result;
 }
 
@@ -10610,12 +10460,12 @@ void   startRace(int a1, int numberOfParticipants)
   strcpy(v111, raceFilePrefix_45EA50);
   strcat(v111, "-MUS.CMF");
   loadMusic(1, v111, 2, "GEN-EFE.CMF");
-  //setMusicVolume(0);
+  setMusicVolume(0);
   musicSetmusicVolume(configuration.musicVolume);
   musicSetVolume(configuration.effectsVolume);
   nullsub_1();
   musicPlayMusic();
-  //setMusicVolume(0);
+  setMusicVolume(0);
   nullsub_1();
   if ( !raceMusicEnabled_445020 )
     musicSetmusicVolume(0);
@@ -10647,8 +10497,6 @@ if ( isCircuitReversed_456AA8 )
   dword_4A6AD4 = 0;
   if ( isDemo_456B10 )
     dword_464F6C = 1;
-  
-  refreshPaleteCheat();
   
   do
   {
@@ -11571,7 +11419,7 @@ LABEL_460:
     if ( totalRacesFrame_456ACC == 1 )
     {
       dword_456C28 = 0;
-     // sub_404C30(); //cambia el vlaor de la paleta a vacio cuidado pinta la carrera y el menu lateral al principio
+      sub_404C30();
 	  //TODO fix 
 	  //firstRacePlayed_464F44=0;
       if ( !isMultiplayerGame )
