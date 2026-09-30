@@ -243,7 +243,7 @@ void loadGraphics1()
 	
 	extractFromBpa("MENU.BPA", graphicsGeneral.bgcopPal, "bgcop.pal");
 	extractFromBpa("MENU.BPA", textureTemp, "15x150.bpk");
-	//copyImageToBuffer((int)textureTemp, graphicsGeneral.t15x150Bpk);
+	copyImageToBuffer((int)textureTemp, graphicsGeneral.t15x150Bpk);
 	extractFromBpa("MENU.BPA", textureTemp, "f-big3a.bpk");
 	copyImageToBuffer((int)textureTemp,graphicsGeneral.fbig3aBpk);
 	extractFromBpa("MENU.BPA", textureTemp, "f-sma3a.bpk");
