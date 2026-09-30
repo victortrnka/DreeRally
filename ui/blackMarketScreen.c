@@ -745,9 +745,9 @@ void drawBlackMarketContinue()
   writeTextInScreen(blackMarketMessages.continueMessage.line2, 110250);
   writeTextInScreen((const char *)&unk_454BE8, 120490);
   writeTextInScreen(blackMarketMessages.continueMessage.line3, 130730);
-  drawMenuAnimation(432, 269, continueAnimCurrentFrame_4611D0, (int)contaniBpk, continueAnimFramesSize_4611D0);
+  drawMenuAnimation(432, 269, continueAnimCurrentFrame_4611D0, (int)contaniBpk, continueAnimFramesSize_4462A8);
 }
-// 4462A8: using guessed type int continueAnimFramesSize_4611D0[];
+// 4462A8: using guessed type int continueAnimFramesSize_4462A8[];
 // 4611D0: using guessed type int continueAnimCurrentFrame_4611D0;
 
 //----- (00423410) --------------------------------------------------------
@@ -1204,7 +1204,7 @@ void enterBlackMarketScreen()
     {
       v5 = 0;
       for ( i = 0; i < continueAnimCurrentFrame_4611D0; ++i )
-        v5 += continueAnimFramesSize_4611D0[i];
+        v5 += continueAnimFramesSize_4462A8[i];
       copyImageToBuffer((int)((char *)contaniBpk + v5), (int)dword_461EA4);
       drawImageWithPosition2((int)dword_461EA4, 96, 64, (int)((char *)screenBuffer + 172592));	  
       drawKeyCursor(172592, (char *)screenBuffer + 172592, 0x60u, 64);
@@ -1269,7 +1269,7 @@ void enterBlackMarketScreen()
     {
       v22 = 0;
       for ( j = 0; j < continueAnimCurrentFrame_4611D0; ++j )
-        v22 += continueAnimFramesSize_4611D0[j];
+        v22 += continueAnimFramesSize_4462A8[j];
       copyImageToBuffer((int)((char *)contaniBpk + v22), (int)dword_461EA4);
       drawImageWithPosition2((int)dword_461EA4, 96, 64, (int)((char *)screenBuffer + 172592));
       drawKeyCursor(172592, (char *)screenBuffer + 172592, 0x60u, 64);
@@ -1373,7 +1373,7 @@ void enterBlackMarketScreen()
       case CONTINUE:
         v36 = 0;
         for ( k = 0; k < continueAnimCurrentFrame_4611D0; ++k )
-          v36 += continueAnimFramesSize_4611D0[k];
+          v36 += continueAnimFramesSize_4462A8[k];
         copyImageToBuffer((int)((char *)contaniBpk + v36), (int)dword_461EA4);
         drawImageWithPosition2((int)dword_461EA4, 96, 64, (int)((char *)screenBuffer + 172592));
         drawKeyCursor(172592, (char *)screenBuffer + 172592, 0x60u, 64);
@@ -1539,7 +1539,7 @@ void enterBlackMarketScreen()
           goto LABEL_124;
         v47 = 0;
         for ( l = 0; l < continueAnimCurrentFrame_4611D0; ++l )
-          v47 += continueAnimFramesSize_4611D0[l];
+          v47 += continueAnimFramesSize_4462A8[l];
         copyImageToBuffer((int)((char *)contaniBpk + v47), (int)dword_461EA4);
         drawImageWithPosition2((int)dword_461EA4, 96, 64, (int)((char *)screenBuffer + 172592));
         drawKeyCursor(172592, (char *)screenBuffer + 172592, 0x60u, 64);

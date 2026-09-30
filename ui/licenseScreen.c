@@ -134,7 +134,7 @@ int   licenseScreen(int useWeapons_mal)
   drawInGamePrices(price, v11 + 165599);
   v12 = 0;
   for ( j = 0; j < carAnimCurrentFrame_45FBA0; ++j )
-    v12 += carAnimFrameSize_45FBA0[j];
+    v12 += carAnimFrameSize_445968[j];
   copyImageToBuffer((int)((char *)kuplaBpk + v12), (int)dword_461EA4);
   drawImageWithPosition2((int)dword_461EA4, 96, 64, (int)((char *)screenBuffer + 123359));
   drawKeyCursor(123359, (char *)screenBuffer + 123359, 0x60u, 64);
@@ -177,7 +177,7 @@ int   licenseScreen(int useWeapons_mal)
   snprintf(price, sizeof(price), "$%d", cars[0].cost);
   v24 = getBoxTextOffset(price);
   drawInGamePrices(price, v24 + 165599);
-  drawMenuAnimation(479, 192, carAnimCurrentFrame_45FBA0, (int)kuplaBpk, (int)carAnimFrameSize_45FBA0);
+  drawMenuAnimation(479, 192, carAnimCurrentFrame_45FBA0, (int)kuplaBpk, (int)carAnimFrameSize_445968);
   drawKeyCursor(123359, (char *)screenBuffer + 123359, 0x60u, 64);
   carAnimCurrentFrame_45FBA0 = (carAnimCurrentFrame_45FBA0 + 1) % 64;
   drawImageWithPosition((int)slidcop2Bpk, 294, 16, (int)((char *)screenBuffer + 163370));

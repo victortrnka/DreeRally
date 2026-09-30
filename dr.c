@@ -14289,8 +14289,8 @@ int   sub_42C7F0(int a1, int a2, int a3, int a4, int a5, int a6)
 	   
 		//carAnimCurrentFrame_45FBA0 = 0;
 		//TODO he quitado la animacion del coche!!!!
-     drawMenuAnimation(a5 + 416, a6 + 80, carAnimCurrentFrame_45FBA0, getCarBpkById(0), (int)&carAnimFrameSize_45FBA0);
-	 //drawMenuAnimation(a5 + 416, a6 + 80, carAnimCurrentFrame_45FBA0, (int)kuplaBpk, (int)carAnimFrameSize_45FBA0);
+     drawMenuAnimation(a5 + 416, a6 + 80, carAnimCurrentFrame_45FBA0, getCarBpkById(0), (int)&carAnimFrameSize_445968);
+	 //drawMenuAnimation(a5 + 416, a6 + 80, carAnimCurrentFrame_45FBA0, (int)kuplaBpk, (int)carAnimFrameSize_445968);
       drawKeyCursor(640 * a6 + a5 + 51616, (char *)screenBuffer + 640 * a6 + a5 + 51616, 0x60u, 64);
       result = carAnimCurrentFrame_45FBA0 + 1;
       v8 = __OFSUB__(carAnimCurrentFrame_45FBA0 + 1, 63);
@@ -14303,7 +14303,7 @@ int   sub_42C7F0(int a1, int a2, int a3, int a4, int a5, int a6)
   }
   return result;
 }
-// 445968: using guessed type int carAnimFrameSize_45FBA0[];
+// 445968: using guessed type int carAnimFrameSize_445968[];
 // 456BD0: using guessed type int dword_456BD0;
 // 456BD4: using guessed type int dword_456BD4;
 // 45FBA0: using guessed type int carAnimCurrentFrame_45FBA0;
@@ -14326,7 +14326,7 @@ int sub_42D780()
 
   refreshAndCheckConnection_42A570();
   refreshAndCheckConnection_42A570();
-  drawMenuAnimation(16, 141, carAnimCurrentFrame_45FBA0, getCarBpkById(actualCarSelected), (int)&carAnimFrameSize_45FBA0[64 * actualCarSelected]);
+  drawMenuAnimation(16, 141, carAnimCurrentFrame_45FBA0, getCarBpkById(actualCarSelected), (int)&carAnimFrameSize_445968[64 * actualCarSelected]);
   v2 = __OFSUB__(carAnimCurrentFrame_45FBA0 + 1, 63);
   v0 = carAnimCurrentFrame_45FBA0 == 62;
   v1 = carAnimCurrentFrame_45FBA0++ - 62 < 0;
@@ -14334,7 +14334,7 @@ int sub_42D780()
     carAnimCurrentFrame_45FBA0 = 0;
   refreshAndCheckConnection_42A570();
   refreshAndCheckConnection_42A570();
-  drawMenuAnimation(16, 141, carAnimCurrentFrame_45FBA0, getCarBpkById(actualCarSelected), (int)&carAnimFrameSize_45FBA0[64 * actualCarSelected]);
+  drawMenuAnimation(16, 141, carAnimCurrentFrame_45FBA0, getCarBpkById(actualCarSelected), (int)&carAnimFrameSize_445968[64 * actualCarSelected]);
   v2 = __OFSUB__(carAnimCurrentFrame_45FBA0 + 1, 63);
   v0 = carAnimCurrentFrame_45FBA0 == 62;
   v1 = carAnimCurrentFrame_45FBA0++ - 62 < 0;
@@ -14342,7 +14342,7 @@ int sub_42D780()
     carAnimCurrentFrame_45FBA0 = 0;
   refreshAndCheckConnection_42A570();
   refreshAndCheckConnection_42A570();
-  drawMenuAnimation(16, 141, carAnimCurrentFrame_45FBA0, getCarBpkById(actualCarSelected), (int)&carAnimFrameSize_45FBA0[64 * actualCarSelected]);
+  drawMenuAnimation(16, 141, carAnimCurrentFrame_45FBA0, getCarBpkById(actualCarSelected), (int)&carAnimFrameSize_445968[64 * actualCarSelected]);
   v2 = __OFSUB__(carAnimCurrentFrame_45FBA0 + 1, 63);
   v0 = carAnimCurrentFrame_45FBA0 == 62;
   v1 = carAnimCurrentFrame_45FBA0++ - 62 < 0;
@@ -14350,7 +14350,7 @@ int sub_42D780()
     carAnimCurrentFrame_45FBA0 = 0;
   refreshAndCheckConnection_42A570();
   refreshAndCheckConnection_42A570();
-  drawMenuAnimation(16, 141, carAnimCurrentFrame_45FBA0, getCarBpkById(actualCarSelected), (int)&carAnimFrameSize_45FBA0[64 * actualCarSelected]);
+  drawMenuAnimation(16, 141, carAnimCurrentFrame_45FBA0, getCarBpkById(actualCarSelected), (int)&carAnimFrameSize_445968[64 * actualCarSelected]);
   result = carAnimCurrentFrame_45FBA0 + 1;
   v2 = __OFSUB__(carAnimCurrentFrame_45FBA0 + 1, 63);
   v0 = carAnimCurrentFrame_45FBA0 == 62;
@@ -14359,7 +14359,7 @@ int sub_42D780()
     carAnimCurrentFrame_45FBA0 = 0;
   return result;
 }
-// 445968: using guessed type int carAnimFrameSize_45FBA0[];
+// 445968: using guessed type int carAnimFrameSize_445968[];
 // 45FBA0: using guessed type int carAnimCurrentFrame_45FBA0;
 // 45FC30: using guessed type int actualCarSelected;
 

@@ -222,7 +222,7 @@ extern int leftMenuInRaceWidth_456AA0;
 
 extern int circuitImageOffsetY_456AC0;
 extern int dword_464F14;
-extern int carAnimFrameSize_45FBA0[6*64];
+extern int carAnimFrameSize_445968[6*64];
 
 extern int palette1[768];
 extern int selectedRace_462CE8; // weak;

@@ -437,7 +437,7 @@ void enterShop()
         updateCursor(0);//this is a menuType we dont have now
         refreshAndCheckConnection_42A570();
         refreshAndCheckConnection_42A570();
-        drawMenuAnimation(16, 141, carAnimCurrentFrame_45FBA0, getCarBpkById(actualCarSelected), (int)&carAnimFrameSize_45FBA0[64 * actualCarSelected]);
+        drawMenuAnimation(16, 141, carAnimCurrentFrame_45FBA0, getCarBpkById(actualCarSelected), (int)&carAnimFrameSize_445968[64 * actualCarSelected]);
         drawKeyCursor(90256, (char *)screenBuffer + 90256, 0x60u, 64);
 		carAnimCurrentFrame_45FBA0 = carAnimCurrentFrame_45FBA0 % 64;
         v50 = 0;
@@ -632,7 +632,7 @@ void enterShop()
                 141,
                 carAnimCurrentFrame_45FBA0,
 				  getCarBpkById(actualCarSelected),
-                (int)&carAnimFrameSize_45FBA0[64 * actualCarSelected]);
+                (int)&carAnimFrameSize_445968[64 * actualCarSelected]);
               drawKeyCursor(90256, (char *)screenBuffer + 90256, 0x60u, 64);
 			  carAnimCurrentFrame_45FBA0 = carAnimCurrentFrame_45FBA0 % 64;
             }
@@ -1094,7 +1094,7 @@ LABEL_44:
             v16 = drivers[v15].money;
             if ( v16 + v58 >= 1000 && v16 >= getReapirCostByCarType() && drivers[v15].damage <= 95 )
             {
-              drawMenuAnimation(432, 269, continueAnimCurrentFrame_4611D0, (int)contaniBpk, (int)continueAnimFramesSize_4611D0);
+              drawMenuAnimation(432, 269, continueAnimCurrentFrame_4611D0, (int)contaniBpk, (int)continueAnimFramesSize_4462A8);
               drawKeyCursor(172592, (char *)screenBuffer + 172592, 0x60u, 64);
 			  continueAnimCurrentFrame_4611D0 = (continueAnimCurrentFrame_4611D0 + 1) % 23;
             }
@@ -1388,7 +1388,7 @@ LABEL_166:
     switch ( menuOptionSelected_463DF0 )
     {
       case BUY_CAR:
-        drawMenuAnimation(16, 141, carAnimCurrentFrame_45FBA0, getCarBpkById(actualCarSelected), (int)&carAnimFrameSize_45FBA0[64 * actualCarSelected]);
+        drawMenuAnimation(16, 141, carAnimCurrentFrame_45FBA0, getCarBpkById(actualCarSelected), (int)&carAnimFrameSize_445968[64 * actualCarSelected]);
         drawKeyCursor(90256, (char *)screenBuffer + 90256, 0x60u, 64);
 		carAnimCurrentFrame_45FBA0 = (carAnimCurrentFrame_45FBA0 + 1) % 64; 
         if ( framesToWaitAfterBuy_456B70 == 1 )
@@ -1467,7 +1467,7 @@ LABEL_166:
 		repairAnimCurrentFrame_45EEAC = (repairAnimCurrentFrame_45EEAC + 1) % 23; ///aqui va 23 p\F2prque son 23 frames
         break;
       case CONTINUE:
-        drawMenuAnimation(432, 269, continueAnimCurrentFrame_4611D0, (int)contaniBpk, (int)continueAnimFramesSize_4611D0);
+        drawMenuAnimation(432, 269, continueAnimCurrentFrame_4611D0, (int)contaniBpk, (int)continueAnimFramesSize_4462A8);
         drawKeyCursor(172592, (char *)screenBuffer + 172592, 0x60u, 64);
 		continueAnimCurrentFrame_4611D0 = (continueAnimCurrentFrame_4611D0 + 1) % 23; ///aqui va 23 p\F2prque son 23 frames
         
@@ -1701,7 +1701,7 @@ int showCarBought()
 
   drawImageWithPosition2((int)carbas2Bpk, 96, 96, (int)((char *)screenBuffer + 80016));
   drawImageWithPosition2((int)((char *)carnameBpk + 1536 * actualCarSelected), 96, 16, (int)((char *)screenBuffer + 80016));
-  drawMenuAnimation(16, 141, carAnimCurrentFrame_45FBA0, getCarBpkById(actualCarSelected), (int)&carAnimFrameSize_45FBA0[64 * actualCarSelected]);
+  drawMenuAnimation(16, 141, carAnimCurrentFrame_45FBA0, getCarBpkById(actualCarSelected), (int)&carAnimFrameSize_445968[64 * actualCarSelected]);
   _itoa(cars[actualCarSelected].cost, &DstBuf, 10);
   strcpy(v5, "$");
   strcat(v5, DstBuf);
@@ -1718,7 +1718,7 @@ int showCarBought()
   drawImageWithPosition((int)arrows1dBpk, 16, 64, (int)((char *)screenBuffer + 90240));
   return drawImageWithPosition((int)((char *)arrows1dBpk + 1024), 16, 64, (int)((char *)screenBuffer + 90352));
 }
-// 445968: using guessed type int carAnimFrameSize_45FBA0[];
+// 445968: using guessed type int carAnimFrameSize_445968[];
 // 45FBA0: using guessed type int carAnimCurrentFrame_45FBA0;
 // 45FC30: using guessed type int actualCarSelected;
 // 46085C: using guessed type int dword_46085C[];

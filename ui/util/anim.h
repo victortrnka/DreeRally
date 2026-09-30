@@ -54,11 +54,11 @@ int reloadTireAnimation2();
 int reloadArmourAnimation2();
 int reloadRepairAnimation();
 
-extern int carAnimFrameSize_45FBA0[6*64];
+extern int carAnimFrameSize_445968[6*64];
 extern int engineAnimFrameSize_445F68[];
 extern int tireAnimFrameSize_4460E8[];
 extern int armourAnimFrameSize_4461A8[];
-extern int continueAnimFramesSize_4611D0[];
+extern int continueAnimFramesSize_4462A8[];
 extern int repairAnimFrameSize_446308[];
 
 extern int repairAnimCurrentFrame_45EEAC; // weak
