@@ -906,14 +906,14 @@ void  underGroundMenuEnter(void *this)
   int v9; // eax@32
   int v10; // edx@36
   int v11; // edx@44
-//  int v12; // edx@53
-//  int *v13; // eax@53
-//  signed int v14; // edi@53
+  int v12; // edx@53
+  int *v13; // eax@53
+  signed int v14; // edi@53
   void *v15; // [sp+0h] [bp-4h]@1
 
   v15 = this;
   //v1 = driverId;
-  //v2 = 0;
+  v2 = 0;
   v3 = 5 - drivers[driverId].carType;
   if ( !drivers[driverId].carType)
     v3 = 4;
@@ -1080,8 +1080,8 @@ LABEL_48:
         else
         {
 		  //este calculo es para sacar que tienes el que mas puntos
-          /*v12 = 0;
-          v13 = dword_460884;
+          v12 = 0;
+          v13 = &drivers[0].points;
           v14 = 20;
           do
           {
@@ -1091,8 +1091,8 @@ LABEL_48:
             v13 += 27;
             --v14;
           }
-          while ( v14 );*/
-          if (drivers[driverId].rank > 1 )
+          while ( v14 );
+          if (drivers[driverId].points <= v2 )
             selectRaceScreen();
           else
             adversaryPreviewScreen((const char **)(108 * driverId));
@@ -1177,7 +1177,13 @@ void enterBlackMarketScreen()
  
   initBlackMarketMessages();
   if (getModIntEntry("FEATURE_SKIP_BLACK_MARKET_SCREEN", 0) == 1) {
-      if (drivers[driverId].rank > 1)
+      int maxOtherPoints = 0;
+      int i;
+      for (i = 0; i < 20; ++i) {
+          if (drivers[i].points > maxOtherPoints && i != driverId)
+              maxOtherPoints = drivers[i].points;
+      }
+      if (drivers[driverId].points <= maxOtherPoints)
           selectRaceScreen();
       else
           adversaryPreviewScreen((const char**)(108 * driverId));
