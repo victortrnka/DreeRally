@@ -8,7 +8,6 @@
 #include "util.h"
 
 void *Str; // idb
-int savegames_unk_446DC2 =10;
 
 //----- (0043AF70) --------------------------------------------------------
 char  decryptByteSavegame(int a1, char a2)
