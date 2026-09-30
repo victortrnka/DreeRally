@@ -70,7 +70,7 @@
 
 	#ifndef _WINDOWS_TYPES
 		#ifndef __WIN32__
-			typedef int8 BYTE;
+			typedef uint8 BYTE;     // unsigned, as windows.h and Hex-Rays define it
 			typedef int16 WORD;
 			typedef int32 DWORD;
 			typedef int32 LONG;
