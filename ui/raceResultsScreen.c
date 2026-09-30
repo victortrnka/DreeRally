@@ -337,6 +337,7 @@ int   postRaceMain(int argc, const char **argv, const char **envp)
   }
   while ( v3 < 65500 );
   dword_456B60 = 0;
+  eventDetected();
   do
   {
     refreshAndCheckConnection_42A570();
