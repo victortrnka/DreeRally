@@ -722,7 +722,7 @@ unsigned int drawStadistics()
   memset(DstBuf, 0, 20);
   memset(tmp, 0, 15);
 
-  strcat(DstBuf, ":  ");
+  strcat(DstBuf, ": ");
   SDL_itoa(drivers[driverId].rank, tmp, 10);
   strcat(DstBuf, tmp);
   strcat(DstBuf, ".");
@@ -741,8 +741,8 @@ unsigned int drawStadistics()
 
   memset(DstBuf, 0, 20);
   memset(tmp, 0, 15);
-  strcpy(DstBuf, ":  ");
-  
+  strcpy(DstBuf, ": ");
+
   SDL_itoa(drivers[driverId].racesWon, tmp, 10);
   strcat(DstBuf, tmp);
   
@@ -763,8 +763,8 @@ unsigned int drawStadistics()
 
   memset(DstBuf, 0, 20);
   memset(tmp, 0, 15);
-  strcpy(DstBuf, ":  ");
-  
+  strcpy(DstBuf, ": ");
+
   SDL_itoa(drivers[driverId].totalRaces, tmp, 10);
   strcat(DstBuf, tmp);
 
@@ -800,8 +800,8 @@ unsigned int drawStadistics()
   drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, DstBuf, 103566);
   memset(DstBuf, 0, 20);
   memset(tmp, 0, 15);
-  strcpy(DstBuf, ":  $");
- 
+  strcpy(DstBuf, ": $");
+
   SDL_itoa(drivers[driverId].totalIncome, tmp, 10);
   strcat(DstBuf, tmp);
 
@@ -819,8 +819,8 @@ unsigned int drawStadistics()
   drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, DstBuf, 118286);
   memset(DstBuf, 0, 20);
   memset(tmp, 0, 15);
-  strcpy(DstBuf, ":  $");
-  
+  strcpy(DstBuf, ": $");
+
   SDL_itoa(drivers[driverId].money, tmp, 10);
   strcat(DstBuf, tmp);
   
