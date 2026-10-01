@@ -44,7 +44,8 @@ In this version you can add a few parameters when you launch dreerally:
 
 - -nosound: run with no music 
 - -noeffect: run with no sound effects 
-- -gl: run with opengl render. 
+- -nogl: use the software renderer instead of OpenGL.
+- -window: start in a window instead of fullscreen (Alt+Enter toggles).
 - -smooth
 - -lang=lang(locale): run with a specific locale
 - -mod={modName: run with a specific mod.

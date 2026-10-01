@@ -28,14 +28,12 @@ If the game data lives elsewhere, pass `DR_DATA="/path/to/Death Rally"` to
 `make setup-run` (quote it: the path contains spaces). `run/` holds its own `dr.cfg` and saves, separate from the
 original game's.
 
-Command-line flags: `-gl` turns OpenGL off (`checkArgs` in `config.c` clears
-`mainArgs.configGL`, which defaults to on). `-window` has **no effect**:
-`checkArgs` matches the string but the caller (`sub_43ACE0` in `dr.c`) discards
-its return value, and the only reader of `mainArgs.configWindow`
-(`inicializeScreen`) guards a `v1 = 0` that already ran unconditionally just
-above it — the game always starts windowed regardless of this flag. Both
-`make run ARGS="-window"` and `ARGS="-window -gl"` work under CrossOver; the
-flag only picks the GL or non-GL rendering path, and both look the same.
+Command-line flags are the original's (see its readme): the game starts
+fullscreen, `-window` starts it in a window (Alt+Enter toggles), `-nogl`
+uses the software renderer instead of OpenGL, `-smooth` turns on bilinear
+filtering in races (F12 toggles) and `-nosound` disables music and effects.
+`-noeffect`, `-lang=` and `-mod=` are port additions. Under CrossOver use
+`make run ARGS="-window"` for a window.
 
 ## Crashes
 
@@ -146,7 +144,7 @@ container. Screenshots and a log land in `build/docker-out/` (override with
 ```sh
 make docker-test                                   # default: reach the main menu
 make docker-test SCENARIO=race SECS=90              # start a race, run for 90s
-make docker-test DOCKER_ARGS="-window -nosound -gl" KEYS="down enter" SHOTS="3:a 9:b"
+make docker-test DOCKER_ARGS="-window -nosound -nogl" KEYS="down enter" SHOTS="3:a 9:b"
 make docker-test ORIG=1 SCENARIO=results-orig       # run the original dr.exe instead
 ```
 
@@ -191,7 +189,7 @@ Things to know:
 - GL mode needs Mesa's software rasterizer (`LIBGL_ALWAYS_SOFTWARE=1`, baked
   into the image), since the container has no GPU. The *original* `dr.exe`
   needs it too and has no non-GL fallback; the port degrades gracefully via
-  `-gl` either way.
+  `-nogl` either way.
 - **Never run two `make docker-test` at the same time in one worktree.**
   Each run starts with `rm -rf` of its runtime directory (`run-docker/`,
   or the `-orig`/`-orighook` one) and writes to the same `OUT_SHOTS`, so a

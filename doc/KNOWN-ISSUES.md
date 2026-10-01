@@ -6,9 +6,6 @@ are in `doc/FINDINGS.md` and `git log`.
 
 ## Open issues
 
-1. Command-line flags: `-nosound` is a no-op (`checkArgs` sets
-   `configNoSound` to 0, its default); `-window` is ignored (the game
-   always runs windowed); `-gl` disables GL.
 2. `int debug = 1` (`dr.c`) has one live reader: `shotAction_40E180`'s
    `if(debug) v13=0;`, which forces `v13`, an x87 condition flag (`c0`)
    Hex-Rays could not translate, in a mistranslated round-half-up idiom.
@@ -95,7 +92,7 @@ are in `doc/FINDINGS.md` and `git log`.
     original (0x41A314) draws glyph `(uchar)c - 32` unconditionally. Only
     matters for non-ASCII text.
 25. Some difficulty-popup "dots" appear in CrossOver only, not in the
-    Docker runner. Probably CrossOver GL; check with `-gl`.
+    Docker runner. Probably CrossOver GL; check with `-nogl`.
 26. `multiplayer/multiplayer.c` is compiled but almost entirely commented
     out. `isMultiplayerGame` is set to 1 in one function (around line
     1319), but that function is reached only from a multiplayer-specific
@@ -226,6 +223,11 @@ original and rejected; neither is in the tree:
 
 ## Fixed since the previous pass
 
+- Command-line flags: `-window` was ignored and the game always started
+  windowed (`30d1e78 fix: start fullscreen unless -window is given`);
+  `-nosound` did nothing and GL was switched off by `-gl` instead of the
+  original's `-nogl` (`df40023 fix: honour -nosound and -nogl like the
+  original`).
 - `DEFAULT_BIGLETTER_SPACING_OFFSET` was -23 where the original uses -30:
   `eb13133 fix: measure big text like the original` (the constant is gone).
 - `sub_4284E0` read past its buffer: `f9134ef fix: give the key config

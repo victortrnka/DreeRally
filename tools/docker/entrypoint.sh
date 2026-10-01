@@ -4,7 +4,7 @@
 # input via keys.exe, then reports a clear status.
 #
 # Env vars (all optional):
-#   DR_ARGS   extra dreerally.exe args, e.g. "-window -nosound -gl"
+#   DR_ARGS   extra dreerally.exe args, e.g. "-window -nosound -nogl"
 #   DR_SHOTS  space-separated "seconds:label" pairs, e.g. "3:intro 8:menu"
 #   DR_KEYS   tokens passed to keys.exe, e.g. "down down enter", run after
 #             the last screenshot in DR_SHOTS. A "shot:<label>" token splits
