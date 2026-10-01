@@ -32,7 +32,7 @@ typedef struct Sce3DObject{
 	int dword_4B46BC[100]; // weak  924 tamaño numberTriangles_4B4324 puntero t1
 	int dword_4B484C[100]; // weak  //+1324 tamaño numberTriangles_4B4324  puntero t2
 	int dword_4B49DC[100]; // weak  1724 tamaño numberTriangles_4B4324 puntero t3
-	char polygonColour_4B4B6C[400]; // color
+	unsigned char polygonColour_4B4B6C[400]; // color; an int per triangle in the original, 0x80 and up pick a shading
 	int unk_4B4CFC;  //posicion donde pintar el poligoo
 	int unk_4B4D00; // weak posicion donde pintar el poligono
 	int dword_4B4D04; // weak  //3152* 100 vueltas  parece ancho donde empezar a pintar respecto de donde estas, por eso se recalcula
