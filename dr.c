@@ -3881,8 +3881,9 @@ int sub_4055A0()
       v163 = 4 * (599 - ((unsigned __int64)v181 - 8));
       v164 = 2 * *(_DWORD *)((char *)dword_4A6854 + v163);
       v165 = 2 * *(_DWORD *)((char *)dword_46F204 + v163);
-      v166 = 2 * *(_DWORD *)((char *)dword_4A6854 + v163) >> 1;
-      v167 = 2 * *(_DWORD *)((char *)dword_46F204 + v163) >> 1;
+      // original 0x405F88: sar of the signed doubled value; shifting the _DWORD read made sin < 0 huge
+      v166 = v164 >> 1;
+      v167 = v165 >> 1;
       v184 = v166;
       v168 = v166;
       v187 = v167;
