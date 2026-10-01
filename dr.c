@@ -15020,7 +15020,8 @@ LABEL_20:
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       glClear(GL_COLOR_BUFFER_BIT);
-      if ( *(_DWORD *)screenSurface < 0 )
+      // original 0x43B8CA: signed test of flags, whose sign bit is SDL_FULLSCREEN
+      if ( (int)screenSurface->flags < 0 )
       {
         glBegin(GL_QUADS);
         v10 = glTexCoord2f;
@@ -15272,7 +15273,7 @@ LABEL_68:
         }
         else if (event.key.keysym.sym == SDLK_RETURN &&  event.key.keysym.mod & 0x300 )
         {
-          if ( *(_DWORD *)screenSurface >= 0 )
+          if ( (int)screenSurface->flags >= 0 ) // original 0x43BCEA: not SDL_FULLSCREEN
             SetVideoMode(1);
           else
             SetVideoMode(0);
