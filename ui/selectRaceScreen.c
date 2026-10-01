@@ -211,7 +211,7 @@ int calculateNextRaces()
   lastCircuitsSelected_456780[0] = (unsigned __int8)circuitsToSelect_46126C[0];
   do
   {
-    circuitsToSelect_46126C[1] = circuitOrder_45673C[rand() % 6];
+    circuitsToSelect_46126C[1] = circuitOrder_45673C[2 + rand() % 6];
 	//circuitsToSelect_46126C[1] = byte_45673E[rand() % 6];
 	//byte_46126D = byte_45673E[rand() % 6];
     v8 = rand() & 0x80000001;
@@ -232,7 +232,7 @@ int calculateNextRaces()
   lastCircuitsSelected_456780[1] = (unsigned __int8)v9;
   do
   {
-    circuitsToSelect_46126C[2] = circuitOrder_45673C[rand() % 4];
+    circuitsToSelect_46126C[2] = circuitOrder_45673C[5 + rand() % 4];
 	//byte_46126E = byte_456741[rand() % 4];
     result = rand() % 2;
     v5 = result == 0;
