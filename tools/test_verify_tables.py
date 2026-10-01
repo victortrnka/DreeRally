@@ -178,6 +178,25 @@ class FindArraysTest(unittest.TestCase):
         a = list(vt.find_arrays(Path("x.c"), text))[0]
         self.assertEqual(a.values, [1, 2, 3, 4])
 
+    def test_string_rows_of_a_2d_char_array_are_padded_to_the_row(self):
+        # C pads each row: the original's menu text table is 9 rows of 50
+        # bytes per menu, each holding one short string. Flattened without
+        # padding, every row after the first would be compared at the wrong
+        # address.
+        text = 'char foo_401000[3][4] = { "AB", "C" };\n'
+        a = list(vt.find_arrays(Path("x.c"), text))[0]
+        self.assertEqual(a.values, [65, 66, 0, 0, 67, 0, 0, 0, 0, 0, 0, 0])
+
+    def test_short_brace_rows_are_padded_too(self):
+        text = "int foo_401000[2][3] = { {1}, {2, 3} };\n"
+        a = list(vt.find_arrays(Path("x.c"), text))[0]
+        self.assertEqual(a.values, [1, 0, 0, 2, 3, 0])
+
+    def test_brace_elision_stays_flat(self):
+        text = "int foo_401000[2][2] = { 1, 2, 3, 4 };\n"
+        a = list(vt.find_arrays(Path("x.c"), text))[0]
+        self.assertEqual(a.values, [1, 2, 3, 4])
+
     def test_rename_map_redirects_the_address(self):
         # Mirrors the real continueAnimFramesSize_4611D0 case before it was
         # fixed by renaming: the suffix is not the array's real address.
@@ -238,6 +257,15 @@ class VerifyTest(unittest.TestCase):
         scanned, mismatches, skipped, allow = self._run(text, 0x45000, data)
         self.assertEqual(mismatches, [])
         self.assertEqual(len(skipped), 1)
+
+    def test_typo_in_a_later_string_row_is_caught_at_its_address(self):
+        text = 'char foo_445000[2][4] = { "AB", "CE" };\n'  # row 1 should be "CD"
+        data = b"AB\0\0CD\0\0"
+        scanned, mismatches, skipped, allow = self._run(text, 0x45000, data)
+        self.assertEqual(len(mismatches), 1)
+        arr, rel, idx, ours, orig = mismatches[0]
+        self.assertEqual((idx, ours, orig), (5, ord("E"), ord("D")))
+        self.assertEqual(arr.orig_addr(idx), 0x445005)
 
     def test_float_array_compares_ieee754(self):
         text = "float foo_445000[] = { 1.5, -2.25 };\n"

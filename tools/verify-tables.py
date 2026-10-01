@@ -126,10 +126,12 @@ def strip_qualifiers(type_text):
 
 
 # --- initialiser lexing -------------------------------------------------
-# Only a flat, in-order list of leaf values is needed (see module docstring:
-# byte position in the array only depends on initialiser order, never on
-# brace nesting), so the lexer need not build a tree -- it only has to get
-# the leaves right, in the presence of comments and escaped characters.
+# A flat, in-order list of leaf values is all that is needed: byte position
+# in the array depends only on initialiser order, except that each row of a
+# 2D array is padded to its full length (pad_rows), for which the lexer
+# records which top-level item each leaf belongs to. It need not build a
+# tree -- it only has to get the leaves right, in the presence of comments
+# and escaped characters.
 
 ESCAPES = {"n": 10, "t": 9, "r": 13, "a": 7, "b": 8, "f": 12, "v": 11,
            "\\": 92, "'": 39, '"': 34, "?": 63}
@@ -172,7 +174,7 @@ def decode_c_chars(raw):
     return out
 
 
-def lex_initialiser(text, start):
+def lex_initialiser(text, start, item_of=None):
     """From text[start] (just after the '='), return (leaves, end_index).
 
     leaves: a list of ('num', literal_text) for a bare numeric token, or
@@ -181,20 +183,31 @@ def lex_initialiser(text, start):
     as an array initialised from one gets it in C). end_index is the index
     just past the top-level ';' that ends the declaration.
 
-    Brace nesting is tracked only to flatten a 2D initialiser (the '{','}'
-    branch below does not care about depth at all). The terminating ';' is
-    never itself inside a brace: a raw semicolon cannot legally appear in a
-    C initialiser list outside a string/char literal or a comment, and both
-    of those are consumed whole before this check ever sees their bytes.
+    The leaves come out flat, in order. If `item_of` is a list, it receives
+    one entry per leaf: the index of the top-level item the leaf belongs to
+    (a brace group or a string literal directly inside the outermost
+    braces, i.e. one row of a 2D array), or None for a bare value at that
+    level. find_arrays uses it to pad each row to its declared length, as C
+    does.
+
+    The terminating ';' is never itself inside a brace: a raw semicolon
+    cannot legally appear in a C initialiser list outside a string/char
+    literal or a comment, and both of those are consumed whole before this
+    check ever sees their bytes.
     """
     i, n = start, len(text)
     leaves = []
     buf = ""
+    depth = 0
+    item = -1      # index of the current top-level item
+    current = None  # item of a value at depth >= 2
 
     def flush():
         s = buf.strip()
         if s:
             leaves.append(("num", s))
+            if item_of is not None:
+                item_of.append(current if depth >= 2 else None)
 
     while i < n:
         c = text[i]
@@ -220,16 +233,32 @@ def lex_initialiser(text, start):
             flush()
             buf = ""
             decoded = decode_c_chars("".join(raw))
+            before = len(leaves)
             if quote == '"':
                 leaves.extend(("byte", b) for b in decoded)
                 leaves.append(("byte", 0))  # implicit NUL terminator
+                if depth == 1:
+                    item += 1  # a string row: `{ "row0", "row1" }`
+                tag = item if depth == 1 else (current if depth >= 2 else None)
             else:
                 leaves.append(("byte", decoded[0] if decoded else 0))
+                tag = current if depth >= 2 else None
+            if item_of is not None:
+                item_of.extend([tag] * (len(leaves) - before))
             i = j + 1
             continue
         if c in "{},":
             flush()
             buf = ""
+            if c == "{":
+                depth += 1
+                if depth == 2:
+                    item += 1
+                    current = item
+            elif c == "}":
+                if depth == 2:
+                    current = None
+                depth -= 1
             i += 1
             continue
         if c == ";":
@@ -277,6 +306,40 @@ def eval_dims(dims_text):
             factor *= parse_number(part, False)
         total *= factor
     return total
+
+
+def row_length(dims_text):
+    """Elements per row of a 2D array ("[9][50]" -> 50), else None. Only
+    two dimensions are handled: deeper nesting is flattened as before."""
+    dims = re.findall(r"\[([^\]]*)\]", dims_text)
+    if len(dims) != 2:
+        return None
+    return eval_dims("[%s]" % dims[1])
+
+
+def pad_rows(values, item_of, row_len):
+    """Pad each top-level item (row) of a 2D initialiser to row_len values,
+    as C does for `char t[9][50] = { "Brake", ... }`. Returns None if the
+    initialiser does not consist of rows only (a bare value at the top
+    level, i.e. brace elision) or a row is longer than row_len (misparse):
+    the caller then keeps the plain flat order."""
+    if not values or any(t is None for t in item_of):
+        return None
+    out = []
+    row = []
+    last = item_of[0]
+    for v, t in zip(values, item_of):
+        if t != last:
+            if len(row) > row_len:
+                return None
+            out.extend(row + [0] * (row_len - len(row)))
+            row = []
+            last = t
+        row.append(v)
+    if len(row) > row_len:
+        return None
+    out.extend(row + [0] * (row_len - len(row)))
+    return out
 
 
 def mask_comments(text):
@@ -348,7 +411,8 @@ def find_arrays(path, text):
         dims_total = eval_dims(m.group("dims"))
         line = text.count("\n", 0, m.start()) + 1
 
-        leaves, _end = lex_initialiser(text, m.end())
+        item_of = []
+        leaves, _end = lex_initialiser(text, m.end(), item_of)
         is_float = disp_fmt == "f"
         values = []
         for kind, val in leaves:
@@ -356,6 +420,11 @@ def find_arrays(path, text):
                 values.append(float(val) if is_float else val)
             else:
                 values.append(parse_number(val, is_float))
+        row_len = row_length(m.group("dims"))
+        if row_len:
+            padded = pad_rows(values, item_of, row_len)
+            if padded is not None:
+                values = padded
 
         if dims_total is not None:
             if dims_total < len(values):
