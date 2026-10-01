@@ -160,7 +160,7 @@ $(ORIGHOOK_OUT)/orighook.dll: $(ORIGHOOK_OUT)/orighook.obj
 	$(LD) /nologo /machine:x86 /dll /subsystem:windows \
 	  $(LIBPATHS) /out:$@ $< kernel32.lib user32.lib
 
-$(ORIGHOOK_OUT)/dreerally.exe: $(ORIGHOOK_OUT)/orighook.dll
+$(ORIGHOOK_OUT)/dreerally.exe: $(ORIGHOOK_OUT)/orighook.dll tools/orighook/patch_exe.py
 	@test -d "$(DR_DATA)" || { echo "Death Rally data not found: DR_DATA=$(DR_DATA)"; exit 1; }
 	@test -f "$(DR_DATA)/dr.exe" || { echo "original dr.exe not found under DR_DATA=$(DR_DATA)"; exit 1; }
 	python3 tools/orighook/patch_exe.py "$(DR_DATA)/dr.exe" $@ orighook.dll

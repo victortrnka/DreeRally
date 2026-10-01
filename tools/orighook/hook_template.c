@@ -2,14 +2,15 @@
  *
  * Loaded into a patched COPY of dr.exe by the stub tools/orighook/patch_exe.py
  * appends (see that file, and its docstring for why 0x44100C/0x43FA60 are
- * safe to reuse as-is). By the time DllMain runs, the OS has already
- * resolved every import and run static init for the image, so addresses in
- * the original binary can be poked directly.
+ * safe to reuse as-is). DllMain runs from that stub, i.e. before dr.exe's
+ * own entry point (0x43FA60): the image is mapped and every import is
+ * resolved, so its code and initialised data can be patched directly, but
+ * dr.exe's CRT startup and static init have NOT run yet.
  *
  * This file has ONE example hook, an ordinary x86 inline detour on
- * calculateNextRaces (original 0x4240B0, already proven reachable and
- * useful for deterministic testing: it seeds the RNG that picks the next
- * race). It logs
+ * calculateNextRaces (original 0x4240B0, which picks the next races; a
+ * srand(9) at its entry forces the same track in both builds, see
+ * doc/FINDINGS.md "Methods that worked"). It logs
  * its own call count to orighook.log and returns control to the original
  * function unchanged. To hook a different or additional function:
  *   1. get its first >=5 bytes, on an instruction boundary, with
@@ -34,7 +35,7 @@
  *      stolen bytes and returns to the original function as if nothing
  *      had happened.
  *
- * Build: `make -C tools/orighook` (see tools/orighook/Makefile), the same
+ * Build: `make orighook` (rules in the top-level Makefile), the same
  * clang-cl/lld/xwin toolchain as the main game build.
  * Run: `make docker-test ORIGHOOK=1 ...` (see the top-level Makefile).
  *

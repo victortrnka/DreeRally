@@ -17,16 +17,18 @@ the OS has already resolved every import (imports are always resolved
 before a PE's entry point is called), so the IAT slot already holds the
 real LoadLibraryA address -- this needs no import-table parsing.
 
-0x44100C (the LoadLibraryA IAT slot) is reused as-is from the earlier hook
-tool, which proved it against this exact dr.exe
-build (sha256 below). The jump-back target is instead read from the file's
-own PE header (AddressOfEntryPoint) and asserted to match the address that
-tool used (0x43FA60), rather than trusting a second hardcoded constant.
+0x44100C is KERNEL32!LoadLibraryA's slot in this exact dr.exe build's
+import address table (sha256 below; read from its import directory). The
+jump-back target is instead read from the file's own PE header
+(AddressOfEntryPoint) and asserted to match this build's known entry point
+(0x43FA60), rather than trusting a second hardcoded constant.
 
 Usage: tools/orighook/patch_exe.py SOURCE_DR_EXE OUTPUT_EXE HOOK_DLL_NAME
+OUTPUT_EXE must not be SOURCE_DR_EXE (or a link to it); that is refused.
 Python 3.9, stdlib only.
 """
 import hashlib
+import os
 import struct
 import sys
 from pathlib import Path
@@ -60,6 +62,13 @@ def find_text_section(data, table, count):
 
 def patch(src_path, out_path, dll_name):
     src_path = Path(src_path)
+    out_path = Path(out_path)
+    # The source passes the sha256 check below, so without this guard
+    # "patch_exe.py dr.exe dr.exe x.dll" would overwrite the original.
+    if out_path.exists() and os.path.samefile(src_path, out_path):
+        raise SystemExit(
+            "patch_exe: OUTPUT %s is the same file as SOURCE %s -- refusing "
+            "to overwrite the original" % (out_path, src_path))
     data = bytearray(src_path.read_bytes())
 
     sha = hashlib.sha256(data).hexdigest()
@@ -113,7 +122,6 @@ def patch(src_path, out_path, dll_name):
     struct.pack_into("<I", data, text_entry + 8, new_vsize)  # VirtualSize
     struct.pack_into("<I", data, opt + 16, stub_rva)          # AddressOfEntryPoint
 
-    out_path = Path(out_path)
     out_path.write_bytes(bytes(data))
     return stub_va, string_va
 
