@@ -43,3 +43,7 @@ extern char menuaStartRacing[50];
 // Original 0x446C32: menu 5's rows of the same table, the 8 Load/Save slot
 // texts that loadGame and savegameWithName fill.
 extern char unk_446C32[8 * 50];
+// Original 0x446DF4/0x447178: the Define Keyboard and Define Gamepad rows of
+// the same table, label plus key name (see sub_41CA40).
+extern char defineKeyboardMenu_446DF4[9][50];
+extern char defineGamepadMenu_447178[9][50];

@@ -16,7 +16,7 @@ bool   drawYesNoMenu(int a1, int a2, int a3, signed int *a4);
 int showAdjustOptions();
 signed int defineGamepadJoystickMenu();
 signed int redefineControls();
-unsigned int sub_41CA40();
+void sub_41CA40();
 char GamepadNotFoundPopup_41E3B0();
 
 signed int sub_4284E0();
