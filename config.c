@@ -32,10 +32,10 @@ int checkArgs(char* args)
 
 	if(args !=NULL){
 		if (strstr(args, "-nosound"))
-			mainArgs.configNoSound = 0;
+			mainArgs.configNoSound = 1;
 		if (strstr(args, "-noeffect"))
 			mainArgs.configNoSoundEffect = 0;
-		if (strstr(args, "-gl"))
+		if (strstr(args, "-nogl"))
 			mainArgs.configGL = 0;
 		if (strstr(args, "-smooth"))
 			mainArgs.configSmooth = 0;
