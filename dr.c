@@ -2697,7 +2697,8 @@ char *sub_404730()
         v19 = v14 + (*(_DWORD *)&result[4 * v16] << 8);
         v20 = *(_DWORD *)&result[4 * (v17 >> 10) + 1440];
         v17 += v29;
-        v21 = *(_DWORD *)&result[4 * (v19 >> 10) + 1440] >> 7;
+        // original 0x404871: sar; the sine table holds negative values
+        v21 = *(int *)&result[4 * (v19 >> 10) + 1440] >> 7;
         v22 = v20 >> 8;
         if ( v17 >= 368640 )
           v17 -= 368640;
