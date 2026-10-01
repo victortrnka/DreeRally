@@ -153,8 +153,9 @@ make docker-test ORIG=1 SCENARIO=results-orig       # run the original dr.exe in
 Variables (Makefile defaults in parentheses):
 - `DOCKER_ARGS` (`-window -nosound`) — `dreerally.exe`'s own arguments.
 - `KEYS` (empty) — tokens for `keys.exe`: named keys
-  (`up`/`down`/`left`/`right`/`enter`/`esc`/`space`/`back`, and in a race
-  `f1`/`tab`), letters `a`-`z`,
+  (`up`/`down`/`left`/`right`/`enter`/`esc`/`space`/`back`, in a race
+  `f1`/`tab`, and `f6` for a screenshot, `HS-PICnn.PCX` in the run
+  directory), letters `a`-`z`,
   `wNNN` to wait `NNN` ms, and `shot:<label>` to take a mid-sequence screenshot
   (handled by `entrypoint.sh`, which splits the sequence there). Ignored if
   `SCENARIO` is set.

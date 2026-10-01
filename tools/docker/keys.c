@@ -10,6 +10,7 @@
  *   enter, esc, space, back        - named keys
  *   f1, tab                        - in-race keys (info screen, status bar;
  *                                    tab is held 400 ms, see below)
+ *   f6                             - screenshot (menus and races)
  *   up, down, left, right          - arrow keys
  *   a-z                            - letter keys (e.g. to type a nickname)
  *   wNNN                           - wait NNN milliseconds (e.g. w1500)
@@ -73,6 +74,7 @@ int main(int argc, char **argv)
 			Sleep(400);
 			PostMessageA(h, WM_KEYUP, VK_TAB, 1 | (0x0f << 16) | (1u << 30) | (1u << 31));
 		}
+		else if (!strcmp(a, "f6")) key(h, VK_F6, 0x40, 0);
 		else if (strlen(a) == 1 && a[0] >= 'a' && a[0] <= 'z') {
 			int sc = scancodeForLetter(a[0]);
 			key(h, 'A' + (a[0] - 'a'), sc, 0);
