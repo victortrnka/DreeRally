@@ -972,8 +972,8 @@ int generateBigPowerUps()
                 do
                 {
                     v28 = (int)((char*)v25
-                        + *(int*)((char*)powerups[result].posX_501BA0)
-                        + v26 * (*(int*)((char*)powerups[result].posY_501BA4) + v27 - 8)
+                        + powerups[result].posX_501BA0
+                        + v26 * (powerups[result].posY_501BA4 + v27 - 8)
                         - 8);
                     //v29 = (int)(v42 - 16);
 
@@ -982,16 +982,16 @@ int generateBigPowerUps()
                     powerups[result].screenBackup_501BC0[v29 + 2] = *(_DWORD*)(v28 + 8);
                     powerups[result].screenBackup_501BC0[v29 + 3] = *(_DWORD*)(v28 + 12);
                     v30 = (int)((char*)v25
-                        + *(int*)((char*)powerups[result].posX_501BA0)
-                        + v26 * (*(int*)((char*)powerups[result].posY_501BA4) + v27 - 7)
+                        + powerups[result].posX_501BA0
+                        + v26 * (powerups[result].posY_501BA4 + v27 - 7)
                         - 8);
                     powerups[result].screenBackup_501BC0[v29 + 4] = *(_DWORD*)v30;
                     powerups[result].screenBackup_501BC0[v29 + 5] = *(_DWORD*)(v30 + 4);
                     powerups[result].screenBackup_501BC0[v29 + 6] = *(_DWORD*)(v30 + 8);
                     powerups[result].screenBackup_501BC0[v29 + 7] = *(_DWORD*)(v30 + 12);
                     v31 = (int)((char*)v25
-                        + *(int*)((char*)powerups[result].posX_501BA0)
-                        + v26 * (*(int*)((char*)powerups[result].posY_501BA4) + v27 - 6)
+                        + powerups[result].posX_501BA0
+                        + v26 * (powerups[result].posY_501BA4 + v27 - 6)
                         - 8);
                     // v32 = (int)(v42 + 16);
                     powerups[result].screenBackup_501BC0[v29 + 8] = *(_DWORD*)v31;
@@ -999,8 +999,8 @@ int generateBigPowerUps()
                     powerups[result].screenBackup_501BC0[v29 + 10] = *(_DWORD*)(v31 + 8);
                     powerups[result].screenBackup_501BC0[v29 + 11] = *(_DWORD*)(v31 + 12);
                     v33 = (int)((char*)v25
-                        + *(int*)((char*)powerups[result].posX_501BA0)
-                        + v26 * (*(int*)((char*)powerups[result].posY_501BA4) + v27 - 5)
+                        + powerups[result].posX_501BA0
+                        + v26 * (powerups[result].posY_501BA4 + v27 - 5)
                         - 8);
                     //v34 = (int)(v42 + 32);
                     powerups[result].screenBackup_501BC0[v29 + 12] = *(_DWORD*)v33;
@@ -1018,45 +1018,45 @@ int generateBigPowerUps()
                     v36 = 0;
                     do
                     {
-                        v37 = *((BYTE*)obstacleBpk + 16 * (16 * *(int*)((char*)powerups[result].powerUp_ID_501BA8) + v35 - 16) + v36);
+                        v37 = *((BYTE*)obstacleBpk + 16 * (16 * powerups[result].powerUp_ID_501BA8 + v35 - 16) + v36);
                         if (v37)
                         {
                             *((char*)v25
-                                + *(int*)((char*)powerups[result].posX_501BA0)
-                                + v26 * (*(int*)((char*)powerups[result].posY_501BA4) + v35 - 8)
+                                + powerups[result].posX_501BA0
+                                + v26 * (powerups[result].posY_501BA4 + v35 - 8)
                                 + v36
                                 - 8) = v37;
                             v25 = circuitMatrixHxW_5034F8;
                             v26 = circuitWidth_464F40;
                         }
-                        v38 = *((char*)obstacleBpk + 16 * (v35 + 16 * *(int*)((char*)powerups[result].powerUp_ID_501BA8)) + v36 - 255);
+                        v38 = *((char*)obstacleBpk + 16 * (v35 + 16 * powerups[result].powerUp_ID_501BA8) + v36 - 255);
                         if (v38)
                         {
                             *((char*)v25
-                                + *(int*)((char*)powerups[result].posX_501BA0)
-                                + v26 * (*(int*)((char*)powerups[result].posY_501BA4) + v35 - 8)
+                                + powerups[result].posX_501BA0
+                                + v26 * (powerups[result].posY_501BA4 + v35 - 8)
                                 + v36
                                 - 7) = v38;
                             v25 = circuitMatrixHxW_5034F8;
                             v26 = circuitWidth_464F40;
                         }
-                        v39 = *((char*)obstacleBpk + 16 * (v35 + 16 * *(int*)((char*)powerups[result].powerUp_ID_501BA8)) + v36 - 254);
+                        v39 = *((char*)obstacleBpk + 16 * (v35 + 16 * powerups[result].powerUp_ID_501BA8) + v36 - 254);
                         if (v39)
                         {
                             *((char*)v25
-                                + *(int*)((char*)powerups[result].posX_501BA0)
-                                + v26 * (*(int*)((char*)powerups[result].posY_501BA4) + v35 - 8)
+                                + powerups[result].posX_501BA0
+                                + v26 * (powerups[result].posY_501BA4 + v35 - 8)
                                 + v36
                                 - 6) = v39;
                             v25 = circuitMatrixHxW_5034F8;
                             v26 = circuitWidth_464F40;
                         }
-                        v40 = *((char*)obstacleBpk + 16 * (v35 + 16 * *(int*)((char*)powerups[result].powerUp_ID_501BA8)) + v36 - 253);
+                        v40 = *((char*)obstacleBpk + 16 * (v35 + 16 * powerups[result].powerUp_ID_501BA8) + v36 - 253);
                         if (v40)
                         {
                             *((char*)v25
-                                + *(int*)((char*)powerups[result].posX_501BA0)
-                                + v26 * (*(int*)((char*)powerups[result].posY_501BA4) + v35 - 8)
+                                + powerups[result].posX_501BA0
+                                + v26 * (powerups[result].posY_501BA4 + v35 - 8)
                                 + v36
                                 - 5) = v40;
                             v25 = circuitMatrixHxW_5034F8;
