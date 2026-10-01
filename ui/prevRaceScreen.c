@@ -3451,12 +3451,8 @@ int drawWaitMultiplayer_4261D0()
 //----- (004279C0) --------------------------------------------------------
 char sub_4279C0()
 {
-  char v0; // bl@1
   signed int v1; // edi@1
-  char v2; // al@2
-  signed int v3; // edx@2
-  signed int v4; // eax@3
-  char v5; // cl@4
+  int i;
   int v6; // edx@8
   int v7; // edx@9
   char *v8; // eax@9
@@ -3472,45 +3468,16 @@ char sub_4279C0()
   bool v18; // cf@17
   bool v19; // zf@17
 
-  v0 = unk_461EC1;
   v1 = 6;
   do
   {
-    v2 = unk_461EC3;
-    unk_461EC3 = word_461EC4;
-    unk_461EC0[0] = v0;
-    v0 = unk_461EC2;
-    unk_461EC2 = v2;
-    HIBYTE(word_461EC4) = unk_461EC6;
-    unk_461EC6 = unk_461EC7;
-    unk_461EC7 = word_461EC8;
-    HIBYTE(word_461EC8) = unk_461ECA;
-    unk_461ECA = unk_461ECB;
-    unk_461ECB = word_461ECC;
-    HIBYTE(word_461ECC) = unk_461ECE;
-    unk_461ECE = unk_461ECF;
-    unk_461ECF = word_461ED0;
-    HIBYTE(word_461ED0) = unk_461ED2;
-    unk_461ED2 = unk_461ED3;
-    v3 = (signed int)&unk_462096;
-    unk_461ED3 = word_461ED4;
-    do
-    {
-      v4 = v3;
-      do
-      {
-        v5 = *(BYTE *)v4;
-        *(BYTE *)(v4 - 150) = *(BYTE *)v4;
-        ++v4;
-      }
-      while ( v5 );
-      v3 += 150;
-    }
-    while ( v3 < (signed int)&blacktx1Bpk );
+    for ( i = 0; i < 21; ++i )
+      bottomMenuTextFont[i] = bottomMenuTextFont[i + 1];
+    for ( i = 1; i < 22; ++i )
+      strcpy(bottomMenuText[i - 1], bottomMenuText[i]);
     --v1;
   }
   while ( v1 );
-  unk_461EC1 = v0;
   do
     v6 = rand() % 19;
   while ( *((BYTE *)&dword_45F000 + v6) == 1 );
@@ -3520,31 +3487,31 @@ char sub_4279C0()
   do
   {
     v9 = *v8;
-    v8[byte_4629F6 - &aThisIsIt_Here_455150[v7]] = *v8;
+    v8[bottomMenuText[17] - &aThisIsIt_Here_455150[v7]] = *v8;
     ++v8;
   }
   while ( v9 );
   v10 = &aFastAndDeadly_455196[v7];
-  HIBYTE(word_461ED0) = 1;
+  bottomMenuTextFont[17] = 1;
   do
   {
     v11 = *v10;
-    v10[byte_462A8C - &aFastAndDeadly_455196[v7]] = *v10;
+    v10[bottomMenuText[18] - &aFastAndDeadly_455196[v7]] = *v10;
     ++v10;
   }
   while ( v11 );
   v12 = &aRumble_WannaPl_4551DC[v7];
-  unk_461ED2 = 1;
+  bottomMenuTextFont[18] = 1;
   do
   {
     v13 = *v12;
-    v12[byte_462B22 - &aRumble_WannaPl_4551DC[v7]] = *v12;
+    v12[bottomMenuText[19] - &aRumble_WannaPl_4551DC[v7]] = *v12;
     ++v12;
   }
   while ( v13 );
   v14 = &aFryTheRulesThe_455222[v7];
-  unk_461ED3 = 1;
-  v15 = byte_462BB8 - &aFryTheRulesThe_455222[v7];
+  bottomMenuTextFont[19] = 1;
+  v15 = bottomMenuText[20] - &aFryTheRulesThe_455222[v7];
   do
   {
     v16 = *v14;
@@ -3555,7 +3522,7 @@ char sub_4279C0()
   result = byte_45FB84 + 1;
   v18 = (unsigned __int8)(byte_45FB84 + 1) < 0x12u;
   v19 = byte_45FB84 == 17;
-  LOBYTE(word_461ED4) = 1;
+  bottomMenuTextFont[20] = 1;
   ++byte_45FB84;
   if ( !v18 && !v19 )
   {

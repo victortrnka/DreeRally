@@ -81,7 +81,6 @@ int dword_45F050; // idb
 char byte_462D50=2; // weak  //CHECK INTRO LO SETEA A 2
 float arrayDamageMultiplier[7] ={0.2,0.35,0.5,0.65,0.8,0.95,0.95}; 
    
-__int16 word_461ED4; // weak
 #define ADS 256;
 
 #define __thiscall   // Test compile in C mode
@@ -874,22 +873,8 @@ void *dword_461EA4; // idb
 int participantsRace[3];
 //__int16 word_461EB4; // weak
 //char byte_461EB6; // weak
-char unk_461EC0[256]; // idb
-_UNKNOWN unk_461EC1; // weak
-_UNKNOWN unk_461EC2; // weak
-_UNKNOWN unk_461EC3; // weak
-__int16 word_461EC4; // weak
-_UNKNOWN unk_461EC6; // weak
-_UNKNOWN unk_461EC7; // weak
-__int16 word_461EC8; // weak
-_UNKNOWN unk_461ECA; // weak
-_UNKNOWN unk_461ECB; // weak
-__int16 word_461ECC; // weak
-_UNKNOWN unk_461ECE; // weak
-_UNKNOWN unk_461ECF; // weak
-__int16 word_461ED0; // weak
-_UNKNOWN unk_461ED2; // weak
-_UNKNOWN unk_461ED3; // weak
+// 0x461EC0: font of each bottomMenuText row (0/1/2 = fsma3a/b/c).
+char bottomMenuTextFont[22];
 
 void *dword_461ED8; // idb
 
@@ -905,13 +890,9 @@ int currentRaceBestLapMilliseconds_461FEC; // idb
 void *bases43Bpk; // idb
 void *event2Bpk; // idb
 
-_UNKNOWN unk_462000; // weak
-_UNKNOWN unk_462096; // weak
-_UNKNOWN unk_462960; // weak
-char byte_4629F6[256]; // weak
-char byte_462A8C[256]; // weak
-char byte_462B22[256]; // weak
-char byte_462BB8[256]; // weak
+// 0x462000: the bottom message panel, 22 rows scrolled up one at a time;
+// drawBottomMenuText shows rows 16-21.
+char bottomMenuText[22][150];
 
 void *blacktx1Bpk; // idb
 int selectedRace_462CE8; // weak
@@ -12047,16 +12028,16 @@ char sub_41E8D0()
   }
   while ( v0 < 224000 );
   v3 = 0;
-  v4 = (const char *)&unk_462000;
+  v4 = bottomMenuText[0];
   v5 = 76172;
   do
   {
-    result = unk_461EC0[v3];
+    result = bottomMenuTextFont[v3];
     if ( !result )
       result = drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, v4, v5);
-    if ( unk_461EC0[v3] == 1 )
+    if ( bottomMenuTextFont[v3] == 1 )
       result = drawTextWithFont((int)graphicsGeneral.fsma3bBpk, (int)&letterSpacing_4458B0, v4, v5);
-    if ( unk_461EC0[v3] == 2 )
+    if ( bottomMenuTextFont[v3] == 2 )
       result = drawTextWithFont((int)graphicsGeneral.fsma3cBpk, (int)&letterSpacing_4458B0, v4, v5);
     v5 += 9600;
     ++v3;

@@ -924,12 +924,8 @@ LABEL_36:
 //----- (00427BC0) --------------------------------------------------------
 int sub_427BC0()
 {
-  char v0; // bl@1
   signed int v1; // edi@1
-  char v2; // al@2
-  signed int v3; // edx@2
-  signed int v4; // eax@3
-  char v5; // cl@4
+  int i;
   int v6; // eax@7
   char v7; // cl@8
   int v8; // eax@9
@@ -939,76 +935,47 @@ int sub_427BC0()
   int result; // eax@13
   char v13; // cl@14
 
-  v0 = unk_461EC1;
   v1 = 6;
   do
   {
-    v2 = unk_461EC3;
-    unk_461EC3 = word_461EC4;
-    unk_461EC0[0] = v0;
-    v0 = unk_461EC2;
-    unk_461EC2 = v2;
-    HIBYTE(word_461EC4) = unk_461EC6;
-    unk_461EC6 = unk_461EC7;
-    unk_461EC7 = word_461EC8;
-    HIBYTE(word_461EC8) = unk_461ECA;
-    unk_461ECA = unk_461ECB;
-    unk_461ECB = word_461ECC;
-    HIBYTE(word_461ECC) = unk_461ECE;
-    unk_461ECE = unk_461ECF;
-    unk_461ECF = word_461ED0;
-    HIBYTE(word_461ED0) = unk_461ED2;
-    unk_461ED2 = unk_461ED3;
-    v3 = (signed int)&unk_462096;
-    unk_461ED3 = word_461ED4;
-    do
-    {
-      v4 = v3;
-      do
-      {
-        v5 = *(BYTE *)v4;
-        *(BYTE *)(v4 - 150) = *(BYTE *)v4;
-        ++v4;
-      }
-      while ( v5 );
-      v3 += 150;
-    }
-    while ( v3 < (signed int)&blacktx1Bpk );
+    for ( i = 0; i < 21; ++i )
+      bottomMenuTextFont[i] = bottomMenuTextFont[i + 1];
+    for ( i = 1; i < 22; ++i )
+      strcpy(bottomMenuText[i - 1], bottomMenuText[i]);
     --v1;
   }
   while ( v1 );
-  unk_461EC1 = v0;
   v6 = 0;
   do
   {
     v7 = byte_456618[v6];
-    byte_4629F6[v6++] = v7;
+    bottomMenuText[17][v6++] = v7;
   }
   while ( v7 );
-  HIBYTE(word_461ED0) = 1;
+  bottomMenuTextFont[17] = 1;
   v8 = 0;
   do
   {
     v9 = byte_45665E[v8];
-    byte_462A8C[v8++] = v9;
+    bottomMenuText[18][v8++] = v9;
   }
   while ( v9 );
-  unk_461ED2 = 1;
+  bottomMenuTextFont[18] = 1;
   v10 = 0;
   do
   {
     v11 = byte_4566A4[v10];
-    byte_462B22[v10++] = v11;
+    bottomMenuText[19][v10++] = v11;
   }
   while ( v11 );
-  unk_461ED3 = 1;
+  bottomMenuTextFont[19] = 1;
   result = 0;
   do
   {
     v13 = byte_4566EA[result];
-    byte_462BB8[result++] = v13;
+    bottomMenuText[20][result++] = v13;
   }
   while ( v13 );
-  LOBYTE(word_461ED4) = 1;
+  bottomMenuTextFont[20] = 1;
   return result;
 }

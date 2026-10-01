@@ -75,27 +75,10 @@ int waitWithRefresh();
 unsigned int   writeTextInRace_402510(int a1, const char *a2);
 
 extern char byte_463E00[256]; // weak
-extern _UNKNOWN unk_462096; // weak
 
-extern __int16 word_461ED4; // weak
 extern void *volcur2Bpk; // idb
 
-extern char unk_461EC0[256]; // idb
-extern _UNKNOWN unk_461EC1; // weak
-extern _UNKNOWN unk_461EC2; // weak
-extern _UNKNOWN unk_461EC3; // weak
-extern __int16 word_461EC4; // weak
-extern _UNKNOWN unk_461EC6; // weak
-extern _UNKNOWN unk_461EC7; // weak
-extern __int16 word_461EC8; // weak
-extern _UNKNOWN unk_461ECA; // weak
-extern _UNKNOWN unk_461ECB; // weak
-extern __int16 word_461ECC; // weak
-extern _UNKNOWN unk_461ECE; // weak
-extern _UNKNOWN unk_461ECF; // weak
-extern __int16 word_461ED0; // weak
-extern _UNKNOWN unk_461ED2; // weak
-extern _UNKNOWN unk_461ED3; // weak
+extern char bottomMenuTextFont[22];
 extern int joystick_y_axis_default_4A9EA0;
 extern int joystick_y_axis_4A9EB8;
 extern int joystick_x_axis_default_4AA3E0; // weak
@@ -104,10 +87,7 @@ extern char byte_456B00;
 extern void *slidmus2Bpk; // idb
 extern char byte_456B01;
 extern char byte_44512A;
-extern char byte_4629F6[256]; // weak
-extern char byte_462A8C[256]; // weak
-extern char byte_462B22[256]; // weak
-extern char byte_462BB8[256]; // weak
+extern char bottomMenuText[22][150];
 
 extern __int16 word_45F010; // weak
 
