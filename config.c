@@ -54,7 +54,7 @@ int checkArgs(char* args)
 		}
 		result = strstr(args, "-window");
 		if (result)
-			return result;
+			mainArgs.configWindow = 0;
 	}	
 	return 1;
 }

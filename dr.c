@@ -15772,7 +15772,7 @@ int  inicializeScreen(double a1)
 char * error;
   v1 = 0;
   if ( mainArgs.configWindow )
-    v1 = 0;
+    v1 = SDL_FULLSCREEN;
   FSOUND_GetVersion();
   if ( a1 < 3.75 )
     exit(-1);
