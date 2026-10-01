@@ -9,7 +9,19 @@
 
 MainArgs mainArgs = { 0,1,1,1,1,NULL,NULL };
 
-Configuration configuration;
+// Original 0x445128-0x44512F: the gamepad default-mapping bytes are .data
+// constants, always present -- unlike the rest of Configuration they are
+// never written by loadConfig()/defaultConfig() (see config.h for each
+// field's address).
+Configuration configuration = {
+	.defaultLeftSteeringGamepad = 1,
+	.defaultRightSteeringGamepad = 2,
+	.defaultBrakeGamepad = 4,
+	.defaultAccelerateGamepad = 5,
+	.defaultTurboGamepad = 6,
+	.defaultGunGamepad = 7,
+	.defaultMineGamepad = 8,
+};
 
 int checkArgs(char* args)
 {
@@ -508,13 +520,6 @@ int defaultConfig()
 {
 	//seteados por mi
 	configuration.dword_4457CC = 0; // weak
-	configuration.defaultAccelerateGamepad = '\x05'; // weak
-	configuration.defaultBrakeGamepad = '\x04'; // weak
-	configuration.defaultLeftSteeringGamepad = '\x01'; // weak
-	configuration.defaultRightSteeringGamepad = '\x02'; // weak
-	configuration.defaultTurboGamepad = '\x06'; // weak
-	configuration.defaultGunGamepad = '\a'; // weak
-	configuration.defaultMineGamepad = '\b'; // weak
 //	signed int v0; // esi@1
 //	signed int v1; // edi@2
 //	int v2; // eax@3
