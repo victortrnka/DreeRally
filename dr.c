@@ -8629,9 +8629,7 @@ LABEL_81:
 int drawExplosion_40FE20()
 {
   int result; // eax@1
-  int v1; // esi@1
   int v2; // ebp@2
-  char *v3; // edi@2
   int v4; // edx@4
   int v5; // ebx@4
   signed int v6; // esi@9
@@ -8644,30 +8642,19 @@ int drawExplosion_40FE20()
   int v13; // ecx@25
   bool v14; // sf@25
   unsigned __int8 v15; // of@25
-  char *v16; // eax@26
+  int v16; // eax@26
   int v17; // edx@26
-  int v18; // [sp+4h] [bp-10h]@2
-  char *v19; // [sp+8h] [bp-Ch]@2
-  int v20; // [sp+Ch] [bp-8h]@1
-  int v21; // [sp+10h] [bp-4h]@2
 
   result = deployedMines_464F60;
-  v1 = 0;
-  v20 = 0;
+  v2 = 0;
   if ( deployedMines_464F60 > 0 )
   {
-//    v2 = (int)dword_481C00;
-	  v2=0;
-    //v3 = (char *)&unk_481C08;
-    //v19 = (char *)&unk_481C0C;
-    //v18 = (int)dword_481C04;
-    //v21 = (int)dword_481C00;
     do
     {
       if ( raceMines[v2].unk_481C08 != -1 )
       {
-		  v4 = leftMenuInRaceWidth_456AA0 + raceMines[v2].dword_481C00 - circuitImageOffsetX_456ABC;
-		  v5 = raceMines[v2].dword_481C04 - circuitImageOffsetY_456AC0;
+        v4 = leftMenuInRaceWidth_456AA0 + raceMines[v2].dword_481C00 - circuitImageOffsetX_456ABC;
+        v5 = raceMines[v2].dword_481C04 - circuitImageOffsetY_456AC0;
         if ( v4 >= 8 && v4 + 8 < 320 && v5 >= 8 && v5 + 8 < 200 && raceMines[v2].unk_481C08 != 5 )
         {
           v6 = 0;
@@ -8680,7 +8667,7 @@ int drawExplosion_40FE20()
               v9 = *((BYTE *)blowiBpk + 16 * (v6 + 16 * raceMines[v2].unk_481C08) + v8);
               if ( v9 )
                 *(BYTE *)(v4 + v8 + v7 + dword_464F14 - 4008) = v9;
-              v10 = *((BYTE *)blowiBpk + 16 * (v6 + 16 *raceMines[v2].unk_481C08) + v8 + 1);
+              v10 = *((BYTE *)blowiBpk + 16 * (v6 + 16 * raceMines[v2].unk_481C08) + v8 + 1);
               if ( v10 )
                 *(BYTE *)(v4 + v8 + v7 + dword_464F14 - 4007) = v10;
               v11 = *((BYTE *)blowiBpk + 16 * (v6 + 16 * raceMines[v2].unk_481C08) + v8 + 2);
@@ -8696,56 +8683,40 @@ int drawExplosion_40FE20()
             v7 += 512;
           }
           while ( v6 < 16 );
-		  v2 = 0;//raceMines[v2].dword_481C00;
-          v1 = v20;
         }
-		if ( refreshScreenWithDelay() >= raceMines[v2].unk_481C0C + 5) 
+        if ( refreshScreenWithDelay() >= raceMines[v2].unk_481C0C + 5 )
         {
           ++raceMines[v2].unk_481C08;
-		  raceMines[v2].unk_481C0C = refreshScreenWithDelay();
+          raceMines[v2].unk_481C0C = refreshScreenWithDelay();
         }
         if ( raceMines[v2].unk_481C08 > 5 )
         {
           v13 = deployedMines_464F60 - 1;
-          v15 = __OFSUB__(v1, deployedMines_464F60 - 1);
-          v14 = v1 - (deployedMines_464F60 - 1) < 0;
-          raceMines[v2].dword_481C04 = -1;
+          v15 = __OFSUB__(v2, deployedMines_464F60 - 1);
+          v14 = v2 - (deployedMines_464F60 - 1) < 0;
+          raceMines[v2].unk_481C08 = -1;
           if ( v14 ^ v15 )
           {
-            v16 = v2;// raceMines[v2].unk_481C08;//v3;
-            v17 = v13 - v1;
-			
+            v16 = v2;
+            v17 = v13 - v2;
             do
             {
-				raceMines[v2].unk_481C08 = raceMines[v2+1].unk_481C08;
-				raceMines[v2].dword_481C00 = raceMines[v2+1].dword_481C00;
-				raceMines[v2].dword_481C04 = raceMines[v2+1].dword_481C04;
-              //*(_DWORD *)v16 = *((_DWORD *)v16 + 4);
-              //*((_DWORD *)v16 - 2) = *((_DWORD *)v16 + 2);
-              //*((_DWORD *)v16 - 1) = *((_DWORD *)v16 + 3);
-              v16 += 1;
+              raceMines[v16].unk_481C08 = raceMines[v16 + 1].unk_481C08;
+              raceMines[v16].dword_481C00 = raceMines[v16 + 1].dword_481C00;
+              raceMines[v16].dword_481C04 = raceMines[v16 + 1].dword_481C04;
+              ++v16;
               --v17;
             }
             while ( v17 );
           }
-          --v1;
-          v2 -=1;// 16;
-        //  v18 -=1;// 16;
-         // v19 -=1;// 16;
-         // v3 -=1;// 16;
+          v2 -= 1;
           deployedMines_464F60 = v13;
         }
       }
-      v2 += 1;//16;
-      //v3 += 1;//16;
+      v2 += 1;
       result = deployedMines_464F60;
-      ++v1;
-      v20 = v1;
-      v21 = v2;
-      //v18 += 1;//16;
-      //v19 += 1;//16;
     }
-    while ( v1 < deployedMines_464F60 );
+    while ( v2 < deployedMines_464F60 );
   }
   return result;
 }
@@ -11121,7 +11092,7 @@ LABEL_318:
       v84 = currentDriverSelectedIndex_503518 + 1;
     }
 	drawCarInRace_40D920();
-    //TODO FIXdrawExplosion_40FE20();
+    drawExplosion_40FE20();
    if ( raceShowShadows_445030 )
       drawShadows_40D7B0();
     v85 = numberOfParticipants_508D24;
