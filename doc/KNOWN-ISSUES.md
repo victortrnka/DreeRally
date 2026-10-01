@@ -102,7 +102,10 @@ are in `doc/FINDINGS.md` and `git log`.
     entry point the single-player-only port never calls; in normal play it
     stays 0. Whoever uncomments it must translate its `byte_445892[c]`
     reads as `letterSpacing_4458B0[c - 30]` (`byte_445892` no longer
-    exists).
+    exists), and its bottom-panel stand-ins (`unk_461EC1`..,
+    `unk_462096`, `dword_462C4E`..) as `bottomMenuTextFont` and
+    `bottomMenuText` rows. The same goes for the commented-out
+    multiplayer code in `previewRaceScreen` and at the end of `mainMenu`.
 27. **Sponsor tables in `ui/util/popup.c`**: `make verify-tables` still
     allowlists `byte_447388`, `byte_4473D8`, `byte_447478` and the same
     trios at 0x448648 and 0x449908. Their layout is understood and they
@@ -113,22 +116,6 @@ are in `doc/FINDINGS.md` and `git log`.
     and 3, blank for every car in the original and in the port (checked
     once with that per-car mask: no mismatch). The tool cannot express
     the mask, hence the allowlist.
-28. **The pre-race news lines are written but never drawn.** `sub_4279C0`
-    (`ui/prevRaceScreen.c`, before a race) copies them, and `sub_427BC0`
-    (`ui/hallOfFame.c`, end of game) other lines, into `byte_4629F6`,
-    `byte_462A8C`, `byte_462B22` and `byte_462BB8`: rows 17-20 of the
-    original's message table at 0x462000 (22 rows x 150 bytes). In the
-    original, 0x41E810 draws rows 16-21 at the bottom of the menu
-    screens; the port's
-    `drawBottomMenuText` (`ui/util/bottomText.c`) draws the project's own
-    footer there instead (see "Deliberate deviations"), with the original
-    body commented out. The table itself is not real storage either: both
-    functions first scroll it up a row with `for (v3 = &unk_462096; v3 <
-    &blacktx1Bpk; v3 += 150)`, a 1-byte stand-in bounded by an unrelated
-    global (see `doc/FINDINGS.md`, "Hex-Rays 1-byte stand-ins used as
-    buffers"); in the current link map `unk_462096` lies after
-    `blacktx1Bpk`, so the loop runs once and copies a string to 150 bytes
-    before `unk_462096`.
 29. **Other 1-byte stand-ins still used as buffers**, found by scanning
     for the address of a `_UNKNOWN`/scalar global passed to a copy or
     walked with a stride:
@@ -214,9 +201,6 @@ are in `doc/FINDINGS.md` and `git log`.
   fall behind, and `refreshScreenWithDelay` (0x43C760, the same in the
   original) skips the event pump while it catches up, so the key-up is
   never seen.
-- The DreeRally branding "Windows Version 0.2" in the menu footer is the
-  project's own text, not the original's: `drawBottomMenuText` (0x41E810)
-  draws it instead of the original's six message lines (open issue 28).
 - `6ea4c17 fix: show key names in Define Keyboard/Gamepad`: the Define
   Keyboard and Define Gamepad rows are built as in the original (label,
   padding, key name), so their labels stay English when a language file
@@ -274,3 +258,10 @@ original and rejected; neither is in the tree:
   original too, 0x4027D7), failed. Emptying that directory mid-race
   reproduces the exact log; never touch a worktree's `run-docker/` while
   its container runs.
+- The bottom message panel was never drawn: `drawBottomMenuText` showed
+  the port's own "DreeRally - Windows Version 0.2" footer, the news and
+  welcome lines went into stand-ins, and the end-game lines were 1 byte
+  each: `a78a1a7 fix: give the bottom panel its real storage`, `6058ab7
+  fix: restore mainMenu's bottom panel lines`, `193d81b fix: restore the
+  end-game panel lines`, `1ba4827 fix: draw the bottom panel like the
+  original`. The branding deviation is gone with it.
