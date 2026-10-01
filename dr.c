@@ -14862,8 +14862,6 @@ int   refreshScreen(int a1)
   int v9; // ecx@6
   void (__stdcall *v10)(GLfloat, GLfloat); // esi@12
   void (__stdcall *v11)(GLfloat, GLfloat); // edi@12
-  float y =0.0; // ST20_4@12
-  float x =0.0; // ST1C_4@12
   void (__stdcall *v14)(GLfloat, GLfloat); // esi@13
   void (__stdcall *v15)(GLfloat, GLfloat); // edi@13
   char *v16; // eax@15
