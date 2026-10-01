@@ -16147,27 +16147,21 @@ int   sub_43D050(int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8,
   float v71; // [sp+5Ch] [bp-3Ch]@14
   float v72; // [sp+60h] [bp-38h]@16
   float v73; // [sp+64h] [bp-34h]@14
-  int v74; // [sp+68h] [bp-30h]@1
-  int v75; // [sp+6Ch] [bp-2Ch]@1
-  int v76; // [sp+70h] [bp-28h]@1
-  int v77; // [sp+74h] [bp-24h]@1
-  int v78; // [sp+78h] [bp-20h]@1
-  int v79; // [sp+7Ch] [bp-1Ch]@1
-  int v80; // [sp+80h] [bp-18h]@1
-  int v81; // [sp+84h] [bp-14h]@1
-  int v82; // [sp+88h] [bp-10h]@1
+  // original esp+0x60..0x80: the nine arguments as one array, x, y and
+  // colour of each vertex; the code below indexes it by vertex (0, 3, 6)
+  int tri[9];
   int v83; // [sp+8Ch] [bp-Ch]@4
 
-  v74 = a1;
-  v77 = a4;
-  v76 = a3;
-  v79 = a6;
-  v82 = a9;
+  tri[0] = a1;
+  tri[3] = a4;
+  tri[2] = a3;
+  tri[5] = a6;
+  tri[8] = a9;
   v9 = 0;
-  v75 = a2;
-  v78 = a5;
-  v80 = a7;
-  v81 = a8;
+  tri[1] = a2;
+  tri[4] = a5;
+  tri[6] = a7;
+  tri[7] = a8;
   if ( a2 >= a5 )
   {
     LOBYTE(v9) = a5 >= a8;
@@ -16188,34 +16182,34 @@ int   sub_43D050(int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8,
   {
     v12 = a2 > a8 ? 0 : 6;
   }
-  v59 = &v75 + v12;
+  v59 = &tri[1] + v12;
   result = 9 - v12 - v10;
   v55 = *v59;
-  if ( *v59 == *(&v75 + v10) )
+  if ( *v59 == *(&tri[1] + v10) )
     return result;
-  v14 = *(&v75 + v10);
-  v68 = *(&v74 + result);
-  v15 = &v75 + result;
+  v14 = *(&tri[1] + v10);
+  v68 = *(&tri[0] + result);
+  v15 = &tri[1] + result;
   v67 = v15;
   v16 = *v15;
-  v17 = &v74 + v10;
+  v17 = &tri[0] + v10;
   v18 = (double)(v16 - v14);
   v50 = v17;
   v19 = *v17;
-  v57 = *(&v74 + v12);
+  v57 = *(&tri[0] + v12);
   v20 = (double)(v68 - v19) / v18;
   v21 = v57 - v19;
-  v22 = &v76 + v83;
+  v22 = &tri[2] + v83;
   v63 = v20;
   v23 = (double)(*v59 - v14);
   v24 = (double)v21;
-  v25 = *(&v76 + result);
+  v25 = *(&tri[2] + result);
   v53 = v25;
   v26 = v25 - *v22;
-  v27 = *(&v76 + v12);
+  v27 = *(&tri[2] + v12);
   v70 = v24 / v23;
   v65 = (double)v26 / v18;
-  v45 = (double)(*(&v76 + v12) - *v22) / v23;
+  v45 = (double)(*(&tri[2] + v12) - *v22) / v23;
   if ( v16 == v14 )
   {
     v47 = (double)v68;
