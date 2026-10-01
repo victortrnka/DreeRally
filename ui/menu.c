@@ -3929,40 +3929,26 @@ signed int sub_4284E0()
   signed int result; // eax@41
   int v4; // eax@42
   char v5; // [sp+13h] [bp-39h]@1
-  char v6; // [sp+14h] [bp-38h]@1
-  char v7; // [sp+15h] [bp-37h]@1
-  char v8; // [sp+16h] [bp-36h]@1
-  char v9; // [sp+17h] [bp-35h]@1
-  char v10; // [sp+18h] [bp-34h]@1
-  char v11; // [sp+19h] [bp-33h]@1
-  char v12; // [sp+1Ah] [bp-32h]@1
-  char v13; // [sp+1Bh] [bp-31h]@1
-  char v14; // [sp+1Ch] [bp-30h]@1
-  char v15; // [sp+1Dh] [bp-2Fh]@1
-  char v16; // [sp+1Eh] [bp-2Eh]@1
-  char v17; // [sp+1Fh] [bp-2Dh]@1
-  char v18; // [sp+20h] [bp-2Ch]@1
-  char v19; // [sp+21h] [bp-2Bh]@1
-  char v20; // [sp+22h] [bp-2Ah]@1
-  char v21; // [sp+24h] [bp-28h]@42
+  char v6[15]; // [sp+14h] [bp-38h]@1
+  char v21[40]; // [sp+24h] [bp-28h]@42
 
-  v6 = 25;
-  v7 = 15;
-  v8 = 59;
-  v9 = 60;
-  v10 = 61;
-  v11 = 62;
-  v12 = 63;
-  v13 = 64;
-  v14 = 65;
-  v15 = 66;
-  v16 = 67;
-  v17 = 68;
-  v18 = 87;
-  v19 = 88;
-  v20 = 1;
+  v6[0] = 25;
+  v6[1] = 15;
+  v6[2] = 59;
+  v6[3] = 60;
+  v6[4] = 61;
+  v6[5] = 62;
+  v6[6] = 63;
+  v6[7] = 64;
+  v6[8] = 65;
+  v6[9] = 66;
+  v6[10] = 67;
+  v6[11] = 68;
+  v6[12] = 87;
+  v6[13] = 88;
+  v6[14] = 1;
   v5 = 0;
-  v0 = &v6;
+  v0 = v6;
   v1 = 15;
   do
   {
@@ -4012,9 +3998,9 @@ signed int sub_4284E0()
   {
     memcpy(dword_461ED8, screenBuffer, 0x4B000u);
     createPopup(26, 194, 595, 86, 1);
-    memcpy(&v21, "Invalid key configuration!", 0x1Bu);
-    v4 = getBigTextMidSize(&v21);
-    drawTextWithFont((int)graphicsGeneral.fbig3aBpk, (int)&bigLetterSpacing_445848, &v21, 130242 - v4);
+    memcpy(v21, "Invalid key configuration!", 0x1Bu);
+    v4 = getBigTextMidSize(v21);
+    drawTextWithFont((int)graphicsGeneral.fbig3aBpk, (int)&bigLetterSpacing_445848, v21, 130242 - v4);
     drawTextWithFont((int)graphicsGeneral.fbig3aBpk, (int)&bigLetterSpacing_445848, "Press any key to re-enter.", 150495);
     refreshAllScreen();
     loadMenuSoundEffect(1u, 29, 0, configuration.effectsVolume, dword_4451A4);
@@ -4054,7 +4040,7 @@ signed int sub_428740()
   int v3; // ecx@24
   int v4; // eax@40
   signed int result; // eax@42
-  char v6; // [sp+10h] [bp-28h]@40
+  char v6[40]; // [sp+10h] [bp-28h]@40
 
   v0 = configuration.turboGamepad;
   v1 = 0;
@@ -4121,9 +4107,9 @@ LABEL_20:
   {
     memcpy(dword_461ED8, screenBuffer, 0x4B000u);
     createPopup(26, 194, 595, 86, 1);
-    memcpy(&v6, "Invalid gamepad configuration!", 0x1Fu);
-    v4 = getBigTextMidSize(&v6);
-    drawTextWithFont((int)graphicsGeneral.fbig3aBpk, (int)&bigLetterSpacing_445848, &v6, 130242 - v4);
+    memcpy(v6, "Invalid gamepad configuration!", 0x1Fu);
+    v4 = getBigTextMidSize(v6);
+    drawTextWithFont((int)graphicsGeneral.fbig3aBpk, (int)&bigLetterSpacing_445848, v6, 130242 - v4);
     drawTextWithFont((int)graphicsGeneral.fbig3aBpk, (int)&bigLetterSpacing_445848, "Press any key to re-enter.", 150495);
     refreshAllScreen();
     loadMenuSoundEffect(1u, 29, 0, configuration.effectsVolume, dword_4451A4);
