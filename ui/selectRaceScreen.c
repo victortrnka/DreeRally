@@ -24,7 +24,7 @@
 #include "util/carRightSide.h"
 
 char byte_461F00[256]; // weak
-int lastCircuitsSelected_456780[3];
+int lastCircuitsSelected_456780[3] = { -1, -1, -1 };
 int dword_445184 = 163840; // weak
 
 //----- (0042B1B0) --------------------------------------------------------
