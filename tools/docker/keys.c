@@ -8,6 +8,8 @@
  * Usage: keys.exe TOKEN [TOKEN ...]
  * Tokens:
  *   enter, esc, space, back        - named keys
+ *   f1, tab                        - in-race keys (info screen, status bar;
+ *                                    tab is held 400 ms, see below)
  *   up, down, left, right          - arrow keys
  *   a-z                            - letter keys (e.g. to type a nickname)
  *   wNNN                           - wait NNN milliseconds (e.g. w1500)
@@ -63,6 +65,14 @@ int main(int argc, char **argv)
 		else if (!strcmp(a, "esc")) key(h, VK_ESCAPE, 0x01, 0);
 		else if (!strcmp(a, "space")) key(h, VK_SPACE, 0x39, 0);
 		else if (!strcmp(a, "back")) key(h, VK_BACK, 0x0e, 0);
+		else if (!strcmp(a, "f1")) key(h, VK_F1, 0x3b, 0);
+		else if (!strcmp(a, "tab")) {
+			/* The race loop reads the TAB state once per frame; a 60 ms tap
+			 * was missed under emulation, a 400 ms hold was not. */
+			PostMessageA(h, WM_KEYDOWN, VK_TAB, 1 | (0x0f << 16));
+			Sleep(400);
+			PostMessageA(h, WM_KEYUP, VK_TAB, 1 | (0x0f << 16) | (1u << 30) | (1u << 31));
+		}
 		else if (strlen(a) == 1 && a[0] >= 'a' && a[0] <= 'z') {
 			int sc = scancodeForLetter(a[0]);
 			key(h, 'A' + (a[0] - 'a'), sc, 0);
