@@ -148,12 +148,12 @@ char unk_445928[10];
 ShopMessages shopMessages;
 
 ShopMessages initShopMessages(){
-	shopMessages.continueMessage.title = "[Continue";
+	shopMessages.continueMessage.title = "[CONTINUE";
 	shopMessages.continueMessage.line1 = "Exit the Shop and enter the";
 	shopMessages.continueMessage.line2 = "Underground Market.";
 	shopMessages.continueMessage.line3 = "Press [Esc{ for previous menu";
 
-	shopMessages.continueMessageNoWeapons.title = "[Continue";
+	shopMessages.continueMessageNoWeapons.title = "[CONTINUE";
 	shopMessages.continueMessageNoWeapons.line1 = "Exit the Shop and enter the Race";
 	shopMessages.continueMessageNoWeapons.line2 = "Sign-Up.";
 	shopMessages.continueMessageNoWeapons.line3 = "Press [Esc{ for previous menu";
