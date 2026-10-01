@@ -600,65 +600,42 @@ void draw3dElements_4116D0()
                 switch (sce2Texture[v1].polygonColour_4B4B6C[dword_481BE8 * 4])
                 {
                 case 0x80:
-                    /*v21 = dword_4B46BC[v9];
-                    if ( 75 * dword_4B4454[v8 + dword_4B46BC[v9]] >> (54
-                                                                    * ((unsigned __int16)(100
-                                                                                        - *(_DWORD *)&dword_4B4328[2 * (v8 + dword_4B46BC[v9])]) >> 8)
-                                                                    + 8) >= 0 )
-                      v22 = 75 * dword_4B4454[v8 + v21] >> (54
-                                                          * ((unsigned __int16)(100 - *(_DWORD *)&dword_4B4328[2 * (v8 + v21)]) >> 8)
-                                                          + 8);
-                    else
-                      v22 = -(75 * dword_4B4454[v8 + v21] >> (54 * ((unsigned __int16)(100 - dword_4B4328[2 * (v8 + v21)]) >> 8)
-                                                            + 8));
-                    v47 = v22 & 7;
-                    v23 = 4 * (v8 + dword_4B484C[v9]);
-                    v24 = 100 - *(_DWORD *)&dword_4B4328[v23 / 2];
-                    v25 = 75 * dword_4B4454[v23 / 4] >> (54 * BYTE1(v24) + 8);
-                    v26 = 4 * (v8 + dword_4B484C[v9]);
-                    v27 = v25 < 0;
-                    v28 = *(_DWORD *)&dword_4B4328[v26 / 2];
-                    v29 = dword_4B4454[v26 / 4];
-                    if ( v27 )
-                      v30 = -(75 * v29 >> (54 * ((unsigned __int16)(100 - v28) >> 8) + 8));
-                    else
-                      v30 = 75 * v29 >> (54 * ((unsigned __int16)(100 - v28) >> 8) + 8);
-                    v31 = v30 & 7;
-                    v32 = dword_4B49DC[v9];
-                    v33 = 4 * (v8 + v32);
-                    v34 = 100 - *(_DWORD *)&dword_4B4328[v33 / 2];
-                    v35 = 75 * dword_4B4454[v33 / 4] >> (54 * BYTE1(v34) + 8);
-                    v36 = 4 * (v8 + v32);
-                    v37 = 54 * ((100 - *(_DWORD *)&dword_4B4328[v36 / 2]) >> 8) + 8;
-                    v27 = v35 < 0;
-                    v38 = dword_4B4454[v36 / 4];
-                    if ( v27 )
-                      v39 = -(75 * v38 >> v37);
-                    else
-                      v39 = 75 * v38 >> v37;
+                    // original 0x4118DF..0x411A84: shade each vertex 0..7 from its object
+                    // coordinates; every shift is signed (sar), and the variable count is
+                    // taken mod 32 as x86 does (spelled out: in C a count >= 32 is undefined)
+                    v21 = sce2Texture[v1].dword_4B46BC[dword_481BE8];
+                    v22 = 75 * sce2Texture[v1].dword_4B4454[v21] >> ((54 * ((100 - sce2Texture[v1].dword_4B4328[v21]) >> 8) + 8) & 31);
+                    v47 = (v22 < 0 ? -v22 : v22) & 7;
+                    v32 = sce2Texture[v1].dword_4B484C[dword_481BE8];
+                    v35 = 75 * sce2Texture[v1].dword_4B4454[v32] >> ((54 * ((100 - sce2Texture[v1].dword_4B4328[v32]) >> 8) + 8) & 31);
+                    v31 = (v35 < 0 ? -v35 : v35) & 7;
+                    v32 = sce2Texture[v1].dword_4B49DC[dword_481BE8];
+                    v39 = 75 * sce2Texture[v1].dword_4B4454[v32] >> ((54 * ((100 - sce2Texture[v1].dword_4B4328[v32]) >> 8) + 8) & 31);
+                    v39 = (v39 < 0 ? -v39 : v39) & 7;
                     sub_43D050(
-                      v18 + leftMenuInRaceWidth_456AA0,
-                      v19,
-                      v47 + 109,
-                      leftMenuInRaceWidth_456AA0 + dword_50351C,
-                      dword_4A7A4C,
-                      v31 + 109,
-                      leftMenuInRaceWidth_456AA0 + dword_4A8A80,
-                      dword_46ECE4,
-                      (v39 & 7) + 109);*/
-                    break;
-                    /*case 0x8A:
-                      sub_43D050(
                         v18 + leftMenuInRaceWidth_456AA0,
                         v19,
-                        dword_467020[75 * dword_4AA928 + dword_4B46BC[v9]] + 108,
+                        v47 + 109,
                         leftMenuInRaceWidth_456AA0 + dword_50351C,
                         dword_4A7A4C,
-                        dword_467020[75 * dword_4AA928 + dword_4B484C[v9]] + 108,
+                        v31 + 109,
                         leftMenuInRaceWidth_456AA0 + dword_4A8A80,
                         v20,
-                        dword_467020[75 * dword_4AA928 + dword_4B49DC[v9]] + 108);
-                      break;*/
+                        v39 + 109);
+                    break;
+                case 0x8A:
+                    // original 0x411A89..0x411AF6: each vertex lit from dword_467020
+                    sub_43D050(
+                        v18 + leftMenuInRaceWidth_456AA0,
+                        v19,
+                        dword_467020[75 * dword_4AA928 + sce2Texture[v1].dword_4B46BC[dword_481BE8]] + 108,
+                        leftMenuInRaceWidth_456AA0 + dword_50351C,
+                        dword_4A7A4C,
+                        dword_467020[75 * dword_4AA928 + sce2Texture[v1].dword_4B484C[dword_481BE8]] + 108,
+                        leftMenuInRaceWidth_456AA0 + dword_4A8A80,
+                        v20,
+                        dword_467020[75 * dword_4AA928 + sce2Texture[v1].dword_4B49DC[dword_481BE8]] + 108);
+                    break;
                 case 0x81:
                     iluminateTriangle_43D530(
                         v18 + leftMenuInRaceWidth_456AA0,

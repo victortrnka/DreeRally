@@ -68,6 +68,7 @@ int   sub_42C7F0(int a1, int a2, int a3, int a4, int a5, int a6);
 int   sub_43B080(int a1, int a2, int a3, int a4, int a5);
 int sub_43C4B0();
 int   sub_43C7E0(int a1, int a2, int a3, signed int a4, char a5);
+int   sub_43D050(int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9);
 int transitionToBlack();
 int transitionToCurrentImage();
 int   updateScreenPtr(int a1);
