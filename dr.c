@@ -14966,15 +14966,15 @@ SDL_Color* color;
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       }
       glClear(GL_COLOR_BUFFER_BIT);
-      if (screenSurface ==NULL )
+      // original 0x43B6FB: the same fullscreen test as the 640x480 path;
+      // -x and -y are only passed on, x and y stay (0x43B717..0x43B734)
+      if ( (int)screenSurface->flags < 0 )
       {
         glBegin(GL_QUADS);
         v10 = glTexCoord2f;
         glTexCoord2f(0.0, 0.78125);
         v11 = glVertex2f;
-        y = -y;
-        x = -x;
-        glVertex2f(x, y);
+        glVertex2f(-x, -y);
         glTexCoord2f(0.625, 0.78125);
 LABEL_20:
         v24 = -y;
