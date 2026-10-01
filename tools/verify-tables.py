@@ -7,13 +7,20 @@ after the last underscore are the original static variable's address. That
 convention silently rots the moment someone hand-types or hand-edits such a
 table: nothing checks it against the original any more. This tool does.
 
-It scans the game sources for initialised `char`/`BYTE`/`short`/`_WORD`/
-`int`/`_DWORD`/`float` arrays whose name ends in `_XXXXXX` (six hex digits),
-evaluates their C initialiser into a flat sequence of elements, and compares
-each element byte-for-byte against the original `dr.exe` at that address
-(VA -> file offset through the PE section table, read with the element's own
-size). Any mismatch is reported with the array, the index, and both values;
-the tool exits non-zero if there is at least one.
+It scans the game sources for initialised scalar arrays (`char`/`BYTE`/
+`short`/`_WORD`/`int`/`_DWORD`/`float` and the other types in TYPE_INFO)
+whose name ends in `_XXXXXX` (six hex digits), evaluates their C initialiser
+into the flat sequence of elements C stores (zero fill, brace elision, a
+string literal's NUL only when there is room for it), and compares each
+element byte-for-byte against the original `dr.exe` at that address (VA ->
+file offset through the PE section table, read with the element's own
+size). Any mismatch is reported with the array, the index, and both values.
+
+An address-suffixed array the tool cannot evaluate (unknown element type,
+a cast, macro or expression, a designated initialiser, more initialisers
+than the declared size, ...) is reported as UNPARSED with the reason: an
+array that is silently dropped is a check that silently passes. The tool
+exits non-zero if there is at least one mismatch or unparsed array.
 
 Usage: tools/verify-tables.py [--dr-data PATH] [--exe PATH] [file.c ...]
   --dr-data PATH   directory holding dr.exe (default: $DR_DATA, as in the
@@ -50,7 +57,20 @@ TYPE_INFO = {
     "_BYTE": (1, "B", "B"),
     "uint8": (1, "B", "B"),
     "int8": (1, "B", "b"),
+    "sint8": (1, "B", "b"),
+    "uchar": (1, "B", "B"),
+    "_UNKNOWN": (1, "B", "b"),  # defs.h: #define _UNKNOWN char
+    "__int8": (1, "B", "b"),
+    "signed __int8": (1, "B", "b"),
+    "unsigned __int8": (1, "B", "B"),
     "short": (2, "H", "h"),
+    "short int": (2, "H", "h"),
+    "unsigned short int": (2, "H", "H"),
+    "ushort": (2, "H", "H"),
+    "sint16": (2, "H", "h"),
+    "__int16": (2, "H", "h"),
+    "signed __int16": (2, "H", "h"),
+    "unsigned __int16": (2, "H", "H"),
     "signed short": (2, "H", "h"),
     "unsigned short": (2, "H", "H"),
     "_WORD": (2, "H", "H"),
@@ -58,10 +78,20 @@ TYPE_INFO = {
     "uint16": (2, "H", "H"),
     "int16": (2, "H", "h"),
     "int": (4, "I", "i"),
+    "signed": (4, "I", "i"),
     "signed int": (4, "I", "i"),
+    "unsigned": (4, "I", "I"),
     "unsigned int": (4, "I", "I"),
+    "uint": (4, "I", "I"),
+    "sint32": (4, "I", "i"),
+    "__int32": (4, "I", "i"),
+    "signed __int32": (4, "I", "i"),
+    "unsigned __int32": (4, "I", "I"),
     "long": (4, "I", "i"),
+    "long int": (4, "I", "i"),
     "unsigned long": (4, "I", "I"),
+    "unsigned long int": (4, "I", "I"),
+    "ulong": (4, "I", "I"),
     "_DWORD": (4, "I", "I"),
     "DWORD": (4, "I", "I"),
     "uint32": (4, "I", "I"),
@@ -94,30 +124,35 @@ STRIDE = {
     "dword_445708": MENU_LAYOUT_ROW,
 }
 ALLOWLIST = {
-    # ui/util/popup.c: each address falls inside an already-restored
-    # neighbouring table's own 4800-byte span (e.g. byte_447478 is 0x50
-    # bytes into aNotTooShabbyDr's row 0), so comparing it at face value
-    # only reports that neighbour's bytes back as "wrong". The true layout
-    # for these 9 arrays is not understood. See doc/KNOWN-ISSUES.md
-    # ("sponsor-popup stub tables in popup.c").
-    "byte_447388": "address overlaps a restored neighbour table -- see doc/KNOWN-ISSUES.md",
-    "byte_4473D8": "address overlaps a restored neighbour table -- see doc/KNOWN-ISSUES.md",
-    "byte_447478": "address overlaps a restored neighbour table -- see doc/KNOWN-ISSUES.md",
-    "byte_448648": "address overlaps a restored neighbour table -- see doc/KNOWN-ISSUES.md",
-    "byte_448698": "address overlaps a restored neighbour table -- see doc/KNOWN-ISSUES.md",
-    "byte_448738": "address overlaps a restored neighbour table -- see doc/KNOWN-ISSUES.md",
-    "byte_449908": "address overlaps a restored neighbour table -- see doc/KNOWN-ISSUES.md",
-    "byte_449958": "address overlaps a restored neighbour table -- see doc/KNOWN-ISSUES.md",
-    "byte_4499F8": "address overlaps a restored neighbour table -- see doc/KNOWN-ISSUES.md",
+    # ui/util/popup.c: lines 0, 1 and 3 of the original's three sponsor
+    # tables (0x447388, 0x448648, 0x449908; 6 cars x 10 lines x 80 bytes,
+    # car stride 800). The port keeps each line as its own 4800-byte array
+    # with car c at [800 * c], so only bytes 800*c .. 800*c+79 correspond
+    # to the original at face value; the rest holds the other lines' text
+    # there and zeros here. All 9 are blank in both (checked once with that
+    # per-car mask); the tool does not model the mask, hence the allowlist.
+    # See doc/KNOWN-ISSUES.md ("sponsor tables in popup.c").
+    "byte_447388": "one line of a de-interleaved sponsor table -- see doc/KNOWN-ISSUES.md",
+    "byte_4473D8": "one line of a de-interleaved sponsor table -- see doc/KNOWN-ISSUES.md",
+    "byte_447478": "one line of a de-interleaved sponsor table -- see doc/KNOWN-ISSUES.md",
+    "byte_448648": "one line of a de-interleaved sponsor table -- see doc/KNOWN-ISSUES.md",
+    "byte_448698": "one line of a de-interleaved sponsor table -- see doc/KNOWN-ISSUES.md",
+    "byte_448738": "one line of a de-interleaved sponsor table -- see doc/KNOWN-ISSUES.md",
+    "byte_449908": "one line of a de-interleaved sponsor table -- see doc/KNOWN-ISSUES.md",
+    "byte_449958": "one line of a de-interleaved sponsor table -- see doc/KNOWN-ISSUES.md",
+    "byte_4499F8": "one line of a de-interleaved sponsor table -- see doc/KNOWN-ISSUES.md",
 }
 
+TYPE_WORD = r"(?:unsigned|signed|const|static|short|long)"
 DECL_RE = re.compile(
-    r"(?P<type>(?:unsigned|signed|const|static)(?:\s+(?:unsigned|signed|const|static))*\s+[A-Za-z_][A-Za-z0-9_]*"
+    r"(?P<type>" + TYPE_WORD + r"(?:\s+" + TYPE_WORD + r")*\s+[A-Za-z_][A-Za-z0-9_]*"
     r"|[A-Za-z_][A-Za-z0-9_]*)"
     r"[ \t]+(?P<name>[A-Za-z_][A-Za-z0-9_]*_(?P<addr>[0-9A-Fa-f]{6}))"
     r"[ \t]*(?P<dims>(?:\[[^\]\n]*\][ \t]*)+)"
-    r"="
+    r"=(?!=)"
 )
+# `return x_445000[i] = 1;` matches DECL_RE too, but it is a statement.
+STATEMENT_KEYWORDS = {"return", "else", "case", "do", "goto", "sizeof"}
 
 
 def strip_qualifiers(type_text):
@@ -125,13 +160,17 @@ def strip_qualifiers(type_text):
     return " ".join(words)
 
 
-# --- initialiser lexing -------------------------------------------------
-# A flat, in-order list of leaf values is all that is needed: byte position
-# in the array depends only on initialiser order, except that each row of a
-# 2D array is padded to its full length (pad_rows), for which the lexer
-# records which top-level item each leaf belongs to. It need not build a
-# tree -- it only has to get the leaves right, in the presence of comments
-# and escaped characters.
+# --- initialiser parsing ------------------------------------------------
+# The initialiser is parsed into a tree (a brace group is a list) and then
+# evaluated with C's rules for arrays of scalars: zero fill of short lists,
+# brace elision, braces around a scalar, and a char array (or char row)
+# initialised from a string literal, whose NUL is stored only when there is
+# room for it. Anything else raises Unparsed with the reason: never a guess,
+# never a silent skip.
+
+class Unparsed(Exception):
+    """A declaration or initialiser this tool cannot evaluate."""
+
 
 ESCAPES = {"n": 10, "t": 9, "r": 13, "a": 7, "b": 8, "f": 12, "v": 11,
            "\\": 92, "'": 39, '"': 34, "?": 63}
@@ -174,40 +213,33 @@ def decode_c_chars(raw):
     return out
 
 
-def lex_initialiser(text, start, item_of=None):
-    """From text[start] (just after the '='), return (leaves, end_index).
+def parse_initialiser(text, start):
+    """From text[start] (just after the '='), return (init, end_index).
 
-    leaves: a list of ('num', literal_text) for a bare numeric token, or
-    ('byte', value) for one already-decoded byte from a char/string literal
-    (a string literal expands to its characters plus a trailing NUL, exactly
-    as an array initialised from one gets it in C). end_index is the index
-    just past the top-level ';' that ends the declaration.
+    init is one item: a brace group (a list of items), ('str', [byte
+    values]) for a string literal -- adjacent literals already joined, and
+    without the NUL, which evaluate() adds only where C stores it -- or
+    ('num', token_text) for anything else. A char literal is turned into
+    its value's digits inside the token, so `-'a'` still reads as one
+    number and `'a' + 1` is rejected later as an expression. end_index is
+    just past the ';' that ends the declaration.
 
-    The leaves come out flat, in order. If `item_of` is a list, it receives
-    one entry per leaf: the index of the top-level item the leaf belongs to
-    (a brace group or a string literal directly inside the outermost
-    braces, i.e. one row of a 2D array), or None for a bare value at that
-    level. find_arrays uses it to pad each row to its declared length, as C
-    does.
-
-    The terminating ';' is never itself inside a brace: a raw semicolon
-    cannot legally appear in a C initialiser list outside a string/char
-    literal or a comment, and both of those are consumed whole before this
-    check ever sees their bytes.
+    A raw ';' cannot appear inside an initialiser outside a string/char
+    literal or a comment, and both are consumed whole before that check
+    sees their bytes. Raises Unparsed for unbalanced braces and for a
+    second declarator (`int a_445000[] = {1}, b_445010[] = {2};`), which
+    would otherwise never be checked.
     """
     i, n = start, len(text)
-    leaves = []
+    stack = [[]]
     buf = ""
-    depth = 0
-    item = -1      # index of the current top-level item
-    current = None  # item of a value at depth >= 2
+    joinable = False  # last token was a string literal: a next one continues it
 
     def flush():
         s = buf.strip()
         if s:
-            leaves.append(("num", s))
-            if item_of is not None:
-                item_of.append(current if depth >= 2 else None)
+            stack[-1].append(("num", s))
+        return ""
 
     while i < n:
         c = text[i]
@@ -220,54 +252,50 @@ def lex_initialiser(text, start, item_of=None):
             i = n if j < 0 else j + 2
             continue
         if c == '"' or c == "'":
-            quote = c
             j = i + 1
             raw = []
-            while j < n and text[j] != quote:
-                if text[j] == "\\" and j + 1 < n:
-                    raw.append(text[j:j + 2])
-                    j += 2
-                else:
-                    raw.append(text[j])
-                    j += 1
-            flush()
-            buf = ""
+            while j < n and text[j] != c:
+                step = 2 if text[j] == "\\" and j + 1 < n else 1
+                raw.append(text[j:j + step])
+                j += step
             decoded = decode_c_chars("".join(raw))
-            before = len(leaves)
-            if quote == '"':
-                leaves.extend(("byte", b) for b in decoded)
-                leaves.append(("byte", 0))  # implicit NUL terminator
-                if depth == 1:
-                    item += 1  # a string row: `{ "row0", "row1" }`
-                tag = item if depth == 1 else (current if depth >= 2 else None)
-            else:
-                leaves.append(("byte", decoded[0] if decoded else 0))
-                tag = current if depth >= 2 else None
-            if item_of is not None:
-                item_of.extend([tag] * (len(leaves) - before))
             i = j + 1
+            if c == "'":
+                buf += " %d " % (decoded[0] if decoded else 0)
+                joinable = False
+            elif joinable and not buf.strip():
+                stack[-1][-1][1].extend(decoded)  # "ab" "cd" is one literal
+            else:
+                buf = flush()
+                stack[-1].append(("str", decoded))
+                joinable = True
             continue
-        if c in "{},":
-            flush()
-            buf = ""
-            if c == "{":
-                depth += 1
-                if depth == 2:
-                    item += 1
-                    current = item
-            elif c == "}":
-                if depth == 2:
-                    current = None
-                depth -= 1
+        if c in "{},;":
+            buf = flush()
+            joinable = False
             i += 1
+            if c == "{":
+                group = []
+                stack[-1].append(group)
+                stack.append(group)
+            elif c == "}":
+                if len(stack) == 1:
+                    raise Unparsed("unbalanced '}'")
+                stack.pop()
+            elif c == "," and len(stack) == 1:
+                raise Unparsed("more than one declarator in one statement")
+            elif c == ";":
+                if len(stack) != 1:
+                    raise Unparsed("';' inside braces")
+                if len(stack[0]) != 1:
+                    raise Unparsed("expected one initialiser, found %d" % len(stack[0]))
+                return stack[0][0], i
             continue
-        if c == ";":
-            flush()
-            return leaves, i + 1
         buf += c
+        if not c.isspace():
+            joinable = False
         i += 1
-    flush()
-    return leaves, i
+    raise Unparsed("no ';' after the initialiser")
 
 
 def parse_number(text, is_float):
@@ -290,56 +318,105 @@ def parse_number(text, is_float):
     return -v if neg else v
 
 
-def eval_dims(dims_text):
-    """Total element count from one or more bracketed dimensions, e.g.
-    "[6*64]" -> 384, "[3][4]" -> 12, "[]" -> None (infer from initialiser).
-    Only products of integer literals are supported (the one real case in
-    the tree, carAnimFrameSize_45FBA0[6*64], is exactly this)."""
-    dims = re.findall(r"\[([^\]]*)\]", dims_text)
-    total = 1
-    for d in dims:
+def parse_dims(dims_text):
+    """The dimensions in "[6*64]" -> [384], "[9][50]" -> [9, 50], "[]" ->
+    [None] (the first one may be empty: its size is inferred from the
+    initialiser). Only integer literals and products of them are supported
+    (carAnimFrameSize_445968[6*64] is the product case)."""
+    dims = []
+    for k, d in enumerate(re.findall(r"\[([^\]]*)\]", dims_text)):
         d = d.strip()
         if not d:
-            return None
+            if k:
+                raise Unparsed("only the first dimension may be empty")
+            dims.append(None)
+            continue
         factor = 1
         for part in d.split("*"):
-            factor *= parse_number(part, False)
-        total *= factor
-    return total
+            try:
+                factor *= parse_number(part, False)
+            except ValueError:
+                raise Unparsed("cannot evaluate dimension [%s]" % d)
+        dims.append(factor)
+    return dims
 
 
-def row_length(dims_text):
-    """Elements per row of a 2D array ("[9][50]" -> 50), else None. Only
-    two dimensions are handled: deeper nesting is flattened as before."""
-    dims = re.findall(r"\[([^\]]*)\]", dims_text)
-    if len(dims) != 2:
-        return None
-    return eval_dims("[%s]" % dims[1])
+def evaluate(init, dims, is_char, zero):
+    """The flat list of element values C stores for an array with
+    dimensions `dims` initialised from `init` (see parse_initialiser).
+    is_char: 1-byte elements, so a string literal may initialise the
+    innermost dimension; zero: the fill value (0, or 0.0 for float)."""
+    if isinstance(init, list):
+        return _fill(dims, init, 0, True, is_char, zero)[0]
+    if init[0] == "str" and is_char and len(dims) == 1:
+        return _from_string(dims[0], init[1])
+    raise Unparsed("an array initialiser must be a brace list or a string literal")
 
 
-def pad_rows(values, item_of, row_len):
-    """Pad each top-level item (row) of a 2D initialiser to row_len values,
-    as C does for `char t[9][50] = { "Brake", ... }`. Returns None if the
-    initialiser does not consist of rows only (a bare value at the top
-    level, i.e. brace elision) or a row is longer than row_len (misparse):
-    the caller then keeps the plain flat order."""
-    if not values or any(t is None for t in item_of):
-        return None
-    out = []
-    row = []
-    last = item_of[0]
-    for v, t in zip(values, item_of):
-        if t != last:
-            if len(row) > row_len:
-                return None
-            out.extend(row + [0] * (row_len - len(row)))
-            row = []
-            last = t
-        row.append(v)
-    if len(row) > row_len:
-        return None
-    out.extend(row + [0] * (row_len - len(row)))
-    return out
+def _from_string(size, chars):
+    if size is None:
+        size = len(chars) + 1
+    if len(chars) > size:
+        raise Unparsed("string literal of %d chars for %d elements" % (len(chars), size))
+    # The NUL is stored only if there is room: char x[2] = "AB" is valid C.
+    return chars + [0] * (size - len(chars))
+
+
+def _is_str(item):
+    return isinstance(item, tuple) and item[0] == "str"
+
+
+def _fill(dims, items, pos, braced, is_char, zero):
+    """Initialise one array of `dims` from items[pos:]. braced: `items` is
+    this array's own brace list, so every item must be used. Otherwise the
+    braces were elided: take only what this array needs and leave the rest
+    of the enclosing list to the caller. Returns (values, next_pos)."""
+    count, sub = dims[0], dims[1:]
+    sub_size = 1
+    for d in sub:
+        sub_size *= d
+    if is_char and not sub:  # char x[N] = { "AB" }, or a row given as "AB"
+        if braced and len(items) == 1 and _is_str(items[0]):
+            return _from_string(count, items[0][1]), 1
+        if not braced and pos < len(items) and _is_str(items[pos]):
+            return _from_string(count, items[pos][1]), pos + 1
+    values = []
+    done = 0
+    while (count is None or done < count) and pos < len(items):
+        item = items[pos]
+        if not sub:
+            if isinstance(item, list):  # braces around a scalar: { {1}, 2 }
+                if len(item) != 1 or isinstance(item[0], list):
+                    raise Unparsed("a brace group of %d items for one element" % len(item))
+                item = item[0]
+            values.append(_scalar(item, zero))
+            pos += 1
+        elif isinstance(item, list):
+            values.extend(_fill(sub, item, 0, True, is_char, zero)[0])
+            pos += 1
+        else:
+            sub_values, pos = _fill(sub, items, pos, False, is_char, zero)
+            values.extend(sub_values)
+        done += 1
+    if braced and pos < len(items):
+        raise Unparsed("more initialisers than the declared size (%d)" % count)
+    if count is None:
+        count = done
+    values.extend([zero] * (count * sub_size - len(values)))
+    return values, pos
+
+
+def _scalar(item, zero):
+    if _is_str(item):
+        raise Unparsed("string literal where a number is expected")
+    text = item[1]
+    if "=" in text:
+        raise Unparsed("designated initialiser %r" % text)
+    try:
+        return parse_number(text, isinstance(zero, float))
+    except ValueError:
+        raise Unparsed("cannot evaluate %r (casts, macros and expressions"
+                       " are not supported)" % text)
 
 
 def mask_comments(text):
@@ -396,46 +473,38 @@ class TableArray:
         return self.addr + i * self.stride
 
 
+class UnparsedArray:
+    def __init__(self, name, path, line, reason):
+        self.name = name
+        self.path = path
+        self.line = line
+        self.reason = reason
+
+
 def find_arrays(path, text):
     """Yield a TableArray for every initialised, address-suffixed array
-    declaration found in `text` (the contents of `path`)."""
+    declaration found in `text` (the contents of `path`), or an
+    UnparsedArray with the reason when its type or initialiser cannot be
+    evaluated."""
     masked = mask_comments(text)
     for m in DECL_RE.finditer(masked):
         type_text = strip_qualifiers(m.group("type"))
-        info = TYPE_INFO.get(type_text)
-        if info is None:
+        if type_text in STATEMENT_KEYWORDS:
             continue
-        elem_size, read_fmt, disp_fmt = info
         name = m.group("name")
-        addr_text = m.group("addr")
-        dims_total = eval_dims(m.group("dims"))
         line = text.count("\n", 0, m.start()) + 1
-
-        item_of = []
-        leaves, _end = lex_initialiser(text, m.end(), item_of)
-        is_float = disp_fmt == "f"
-        values = []
-        for kind, val in leaves:
-            if kind == "byte":
-                values.append(float(val) if is_float else val)
-            else:
-                values.append(parse_number(val, is_float))
-        row_len = row_length(m.group("dims"))
-        if row_len:
-            padded = pad_rows(values, item_of, row_len)
-            if padded is not None:
-                values = padded
-
-        if dims_total is not None:
-            if dims_total < len(values):
-                # More initialisers than the declared size: not valid C: the
-                # declaration was misparsed (e.g. a brace/quote edge case).
-                # Don't guess; skip this array rather than risk a false
-                # mismatch report.
-                continue
-            values.extend([0.0 if is_float else 0] * (dims_total - len(values)))
-
-        addr = RENAME_MAP.get(name, int(addr_text, 16))
+        try:
+            info = TYPE_INFO.get(type_text)
+            if info is None:
+                raise Unparsed("unknown element type %r" % type_text)
+            elem_size, read_fmt, disp_fmt = info
+            dims = parse_dims(m.group("dims"))
+            init, _end = parse_initialiser(text, m.end())
+            values = evaluate(init, dims, elem_size == 1, 0.0 if disp_fmt == "f" else 0)
+        except Unparsed as e:
+            yield UnparsedArray(name, path, line, str(e))
+            continue
+        addr = RENAME_MAP.get(name, int(m.group("addr"), 16))
         yield TableArray(name, addr, path, line, elem_size, read_fmt, disp_fmt, values,
                          STRIDE.get(name))
 
@@ -509,6 +578,7 @@ def game_sources(root):
 
 def verify(files, image, allowlist):
     mismatches = []
+    unparsed = []
     skipped_outside = []
     skipped_allowlisted = []
     scanned = 0
@@ -525,6 +595,9 @@ def verify(files, image, allowlist):
                 rel = path  # outside REPO_ROOT (e.g. a test's temp dir): show it as given
             if arr.name in allowlist:
                 skipped_allowlisted.append((arr, allowlist[arr.name]))
+                continue
+            if isinstance(arr, UnparsedArray):
+                unparsed.append((arr, rel))
                 continue
             section = image.section_of(arr.addr)
             if section is None or section[0] not in (".data", ".rdata"):
@@ -545,7 +618,7 @@ def verify(files, image, allowlist):
                 if our_bytes != raw:
                     our_disp = our_val
                     mismatches.append((arr, rel, i, our_disp, orig_val))
-    return scanned, mismatches, skipped_outside, skipped_allowlisted
+    return scanned, mismatches, unparsed, skipped_outside, skipped_allowlisted
 
 
 def main(argv):
@@ -569,19 +642,21 @@ def main(argv):
     files = [Path(f) for f in args.files] if args.files else game_sources(REPO_ROOT)
     image = OriginalImage(exe_path)
 
-    scanned, mismatches, skipped_outside, skipped_allowlisted = verify(files, image, ALLOWLIST)
+    scanned, mismatches, unparsed, skipped_outside, skipped_allowlisted = verify(files, image, ALLOWLIST)
 
     for arr, rel, idx, ours, orig in mismatches:
         print("MISMATCH %s[%d] (%s:%d, original 0x%X): ours=%r original=%r" % (
             arr.name, idx, rel, arr.line, arr.orig_addr(idx), ours, orig))
+    for arr, rel in unparsed:
+        print("UNPARSED %s (%s:%d): %s" % (arr.name, rel, arr.line, arr.reason))
     for arr, reason in skipped_allowlisted:
         print("allowlisted: %s (%s)" % (arr.name, reason), file=sys.stderr)
     for arr, rel in skipped_outside:
         print("skipped (suffix not in .data/.rdata): %s (%s:%d)" % (arr.name, rel, arr.line), file=sys.stderr)
 
-    print("verify-tables: %d array(s) scanned, %d mismatch(es), %d skipped (outside .data/.rdata), %d allowlisted"
-          % (scanned, len(mismatches), len(skipped_outside), len(skipped_allowlisted)))
-    return 1 if mismatches else 0
+    print("verify-tables: %d array(s) scanned, %d mismatch(es), %d unparsed, %d skipped (outside .data/.rdata), %d allowlisted"
+          % (scanned, len(mismatches), len(unparsed), len(skipped_outside), len(skipped_allowlisted)))
+    return 1 if mismatches or unparsed else 0
 
 
 if __name__ == "__main__":

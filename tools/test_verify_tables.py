@@ -74,63 +74,80 @@ class OriginalImageTest(unittest.TestCase):
         self.assertEqual(img.section_of(0x410000)[0], ".rdata")
 
 
-class LexInitialiserTest(unittest.TestCase):
-    def _leaves(self, src):
-        leaves, end = vt.lex_initialiser(src, 0)
-        return leaves, end
+class ParseInitialiserTest(unittest.TestCase):
+    def _init(self, src):
+        return vt.parse_initialiser(src, 0)
 
     def test_plain_int_list(self):
-        leaves, _ = self._leaves("{ 1, 2, 0x10 };")
-        self.assertEqual(leaves, [("num", "1"), ("num", "2"), ("num", "0x10")])
+        init, _ = self._init("{ 1, 2, 0x10 };")
+        self.assertEqual(init, [("num", "1"), ("num", "2"), ("num", "0x10")])
 
-    def test_nested_braces_flatten_in_order(self):
-        # A 2D initialiser: only order matters for the flat byte sequence a
-        # row-major original also has (see module docstring in verify-tables.py).
-        leaves, _ = self._leaves("{ {1,2}, {3,4} };")
-        self.assertEqual([v for _, v in leaves], ["1", "2", "3", "4"])
+    def test_nested_braces_are_kept_as_nesting(self):
+        # Byte positions depend on the nesting, not only on the order: in
+        # int a[2][3], { {1}, {2,3} } puts 2 at index 3, not at index 1.
+        init, _ = self._init("{ {1}, {2,3} };")
+        self.assertEqual(init, [[("num", "1")], [("num", "2"), ("num", "3")]])
 
     def test_comment_inside_initialiser_is_skipped(self):
         # Real case: imageUtil.c's letterSpacing_4458B0 has "//20"-style
         # inline comments between values on their own lines.
-        leaves, _ = self._leaves("{ 1, //comment\n 2 };")
-        self.assertEqual([v for _, v in leaves], ["1", "2"])
+        init, _ = self._init("{ 1, //comment\n 2 };")
+        self.assertEqual(init, [("num", "1"), ("num", "2")])
 
     def test_block_comment_inside_initialiser_is_skipped(self):
-        leaves, _ = self._leaves("{ 1, /* two */ 2 };")
-        self.assertEqual([v for _, v in leaves], ["1", "2"])
+        init, _ = self._init("{ 1, /* two */ 2 };")
+        self.assertEqual(init, [("num", "1"), ("num", "2")])
 
     def test_char_literals_decode_escapes(self):
-        leaves, _ = self._leaves(r"{ 'A', '\0', '\x41', '\12' };")
-        self.assertEqual(leaves, [("byte", 65), ("byte", 0), ("byte", 65), ("byte", 10)])
+        init, _ = self._init(r"{ 'A', '\0', '\x41', '\12' };")
+        self.assertEqual([int(t) for _, t in init], [65, 0, 65, 10])
 
-    def test_string_literal_expands_with_trailing_nul(self):
-        leaves, _ = self._leaves('"AB";')
-        self.assertEqual(leaves, [("byte", 65), ("byte", 66), ("byte", 0)])
+    def test_string_literal_is_one_item_without_its_nul(self):
+        # Whether the NUL is stored depends on the array size (see
+        # FindArraysTest), so the parser must not add it.
+        init, _ = self._init('"AB";')
+        self.assertEqual(init, ("str", [65, 66]))
+
+    def test_adjacent_string_literals_are_one_literal(self):
+        # C joins "ab" "cd" into "abcd": an extra NUL between them would
+        # shift every later byte of the table by one.
+        init, _ = self._init('{ "ab" /* x */ "cd" };')
+        self.assertEqual(init, [("str", [97, 98, 99, 100])])
 
     def test_stops_at_the_terminating_semicolon(self):
-        leaves, end = self._leaves("{ 1, 2 };\nchar next")
-        self.assertEqual([v for _, v in leaves], ["1", "2"])
+        init, end = self._init("{ 1, 2 };\nchar next")
+        self.assertEqual(len(init), 2)
         self.assertEqual(end, len("{ 1, 2 };"))
 
     def test_semicolon_inside_a_string_literal_does_not_end_the_scan(self):
-        leaves, end = self._leaves('{ "a;b" };')
-        self.assertEqual(leaves, [("byte", ord("a")), ("byte", ord(";")), ("byte", ord("b")), ("byte", 0)])
+        init, end = self._init('{ "a;b" };')
+        self.assertEqual(init, [("str", [ord("a"), ord(";"), ord("b")])])
         self.assertEqual(end, len('{ "a;b" };'))
 
+    def test_second_declarator_is_unparsed_not_skipped(self):
+        # The second array of `int a[] = {1}, b[] = {2};` would never be
+        # checked, so the statement must be reported.
+        with self.assertRaises(vt.Unparsed):
+            self._init("{ 1 }, b_445010[] = { 2 };")
 
-class EvalDimsTest(unittest.TestCase):
-    def test_empty_dims_means_infer(self):
-        self.assertIsNone(vt.eval_dims("[]"))
+
+class ParseDimsTest(unittest.TestCase):
+    def test_empty_first_dim_means_infer(self):
+        self.assertEqual(vt.parse_dims("[]"), [None])
 
     def test_single_dim(self):
-        self.assertEqual(vt.eval_dims("[10]"), 10)
+        self.assertEqual(vt.parse_dims("[10]"), [10])
 
     def test_product_expression(self):
         # carAnimFrameSize_445968[6*64] in the real tree.
-        self.assertEqual(vt.eval_dims("[6*64]"), 384)
+        self.assertEqual(vt.parse_dims("[6*64]"), [384])
 
-    def test_two_dims_multiply(self):
-        self.assertEqual(vt.eval_dims("[3][4]"), 12)
+    def test_two_dims(self):
+        self.assertEqual(vt.parse_dims("[3][4]"), [3, 4])
+
+    def test_macro_dimension_is_unparsed(self):
+        with self.assertRaises(vt.Unparsed):
+            vt.parse_dims("[SIZE]")
 
 
 class FindArraysTest(unittest.TestCase):
@@ -162,16 +179,67 @@ class FindArraysTest(unittest.TestCase):
         arrs = list(vt.find_arrays(Path("x.c"), text))
         self.assertEqual([a.name for a in arrs], ["bar_401010"])
 
-    def test_unknown_type_is_skipped(self):
-        text = "ShopMessages foo_401000[] = { 1 };\n"
+    def _unparsed(self, text):
+        """The reason the one array in `text` is reported as unparsed."""
         arrs = list(vt.find_arrays(Path("x.c"), text))
-        self.assertEqual(arrs, [])
+        self.assertEqual(len(arrs), 1)
+        self.assertIsInstance(arrs[0], vt.UnparsedArray)
+        return arrs[0].reason
+
+    def test_unknown_type_is_reported_not_dropped(self):
+        # A dropped array is a check that silently passes.
+        reason = self._unparsed("ShopMessages foo_401000[] = { 1 };\n")
+        self.assertIn("unknown element type", reason)
 
     def test_unsigned_char_and_hexrays_word_types_recognised(self):
         text = "unsigned char a_401000[] = { 1 };\n_WORD b_401010[] = { 2 };\n"
         arrs = {a.name: a for a in vt.find_arrays(Path("x.c"), text)}
         self.assertEqual(arrs["a_401000"].elem_size, 1)
         self.assertEqual(arrs["b_401010"].elem_size, 2)
+
+    def test_hexrays_scalar_types_recognised(self):
+        # Hex-Rays declares data with these; before they were in TYPE_INFO
+        # such an array was silently not verified.
+        text = ("unsigned __int8 a_401000[] = { 1 };\n__int16 b_401010[] = { 2 };\n"
+                "_UNKNOWN c_401020[] = { 3 };\n")
+        arrs = {a.name: a for a in vt.find_arrays(Path("x.c"), text)}
+        self.assertEqual({k: a.elem_size for k, a in arrs.items()},
+                         {"a_401000": 1, "b_401010": 2, "c_401020": 1})
+
+    def test_string_that_exactly_fills_the_array_has_no_nul(self):
+        # Valid C (the NUL is not stored); it used to be dropped as
+        # "longer than declared".
+        a = list(vt.find_arrays(Path("x.c"), 'char foo_401000[2] = "AB";\n'))[0]
+        self.assertEqual(a.values, [65, 66])
+
+    def test_string_rows_that_exactly_fill_a_row_have_no_nul(self):
+        text = 'char foo_401000[2][2] = { "AB", "CD" };\n'
+        a = list(vt.find_arrays(Path("x.c"), text))[0]
+        self.assertEqual(a.values, [65, 66, 67, 68])
+
+    def test_more_initialisers_than_the_size_is_reported(self):
+        # clang accepts excess initialisers with -Wno-everything, so a typed
+        # extra element compiles; it must not make the array unchecked.
+        reason = self._unparsed("char foo_401000[2] = { 1, 2, 3 };\n")
+        self.assertIn("more initialisers", reason)
+
+    def test_string_longer_than_the_array_is_reported(self):
+        reason = self._unparsed('char foo_401000[2] = "ABC";\n')
+        self.assertIn("string literal", reason)
+
+    def test_casts_macros_and_expressions_are_reported_not_a_traceback(self):
+        for init in ("(char)0x80", "SIZE", "1 + 1", "'a' + 1"):
+            reason = self._unparsed("char foo_401000[] = { %s };\n" % init)
+            self.assertIn("cannot evaluate", reason, init)
+
+    def test_designated_initialiser_is_reported(self):
+        reason = self._unparsed("char foo_401000[4] = { [2] = 1 };\n")
+        self.assertIn("designated", reason)
+
+    def test_assignment_statement_is_not_a_declaration(self):
+        # `return x[i] = 2;` matches the declaration pattern; reporting it
+        # would be noise, so it is not scanned at all.
+        self.assertEqual(list(vt.find_arrays(Path("x.c"), "return foo_401000[1] = 2;\n")), [])
 
     def test_two_dimensional_array_flattens_row_major(self):
         text = "int foo_401000[2][2] = { {1,2}, {3,4} };\n"
@@ -196,6 +264,27 @@ class FindArraysTest(unittest.TestCase):
         text = "int foo_401000[2][2] = { 1, 2, 3, 4 };\n"
         a = list(vt.find_arrays(Path("x.c"), text))[0]
         self.assertEqual(a.values, [1, 2, 3, 4])
+
+    def test_braced_row_then_elided_row_zero_fills_like_c(self):
+        # Row 0 is braced and short, row 1 takes 2 and 3 by brace elision.
+        text = "int foo_401000[2][3] = { {1}, 2, 3 };\n"
+        a = list(vt.find_arrays(Path("x.c"), text))[0]
+        self.assertEqual(a.values, [1, 0, 0, 2, 3, 0])
+
+    def test_three_dimensional_short_lists_zero_fill_like_c(self):
+        text = "int foo_401000[2][2][2] = { { {1}, {2, 3} }, { {4} } };\n"
+        a = list(vt.find_arrays(Path("x.c"), text))[0]
+        self.assertEqual(a.values, [1, 0, 2, 3, 4, 0, 0, 0])
+
+    def test_braces_around_scalars(self):
+        text = "int foo_401000[3] = { {1}, 2 };\n"
+        a = list(vt.find_arrays(Path("x.c"), text))[0]
+        self.assertEqual(a.values, [1, 2, 0])
+
+    def test_inferred_first_dimension_counts_elided_rows(self):
+        text = "int foo_401000[][3] = { 1, 2, 3, 4 };\n"
+        a = list(vt.find_arrays(Path("x.c"), text))[0]
+        self.assertEqual(a.values, [1, 2, 3, 4, 0, 0])
 
     def test_rename_map_redirects_the_address(self):
         # Mirrors the real continueAnimFramesSize_4611D0 case before it was
@@ -224,7 +313,7 @@ class VerifyTest(unittest.TestCase):
     def test_matching_array_reports_no_mismatch(self):
         text = "int foo_445000[] = { 1, 2, 3 };\n"
         data = struct.pack("<3i", 1, 2, 3)
-        scanned, mismatches, skipped, allow = self._run(text, 0x45000, data)
+        scanned, mismatches, unparsed, skipped, allow = self._run(text, 0x45000, data)
         self.assertEqual(scanned, 1)
         self.assertEqual(mismatches, [])
 
@@ -235,7 +324,7 @@ class VerifyTest(unittest.TestCase):
         # reported precisely -- which array, which index, both values.
         text = "int foo_445000[] = { 1, 2, 4 };\n"  # last element should be 3
         data = struct.pack("<3i", 1, 2, 3)
-        scanned, mismatches, skipped, allow = self._run(text, 0x45000, data)
+        scanned, mismatches, unparsed, skipped, allow = self._run(text, 0x45000, data)
         self.assertEqual(len(mismatches), 1)
         arr, rel, idx, ours, orig = mismatches[0]
         self.assertEqual(arr.name, "foo_445000")
@@ -246,7 +335,7 @@ class VerifyTest(unittest.TestCase):
     def test_allowlisted_array_is_skipped_not_reported(self):
         text = "int foo_445000[] = { 1, 2, 4 };\n"
         data = struct.pack("<3i", 1, 2, 3)
-        scanned, mismatches, skipped, allow = self._run(
+        scanned, mismatches, unparsed, skipped, allow = self._run(
             text, 0x45000, data, allowlist={"foo_445000": "known layout gap"})
         self.assertEqual(mismatches, [])
         self.assertEqual(len(allow), 1)
@@ -254,14 +343,14 @@ class VerifyTest(unittest.TestCase):
     def test_address_outside_any_section_is_skipped_not_a_mismatch(self):
         text = "int foo_500000[] = { 1 };\n"  # 0x500000 is not backed by any section here
         data = struct.pack("<i", 1)
-        scanned, mismatches, skipped, allow = self._run(text, 0x45000, data)
+        scanned, mismatches, unparsed, skipped, allow = self._run(text, 0x45000, data)
         self.assertEqual(mismatches, [])
         self.assertEqual(len(skipped), 1)
 
     def test_typo_in_a_later_string_row_is_caught_at_its_address(self):
         text = 'char foo_445000[2][4] = { "AB", "CE" };\n'  # row 1 should be "CD"
         data = b"AB\0\0CD\0\0"
-        scanned, mismatches, skipped, allow = self._run(text, 0x45000, data)
+        scanned, mismatches, unparsed, skipped, allow = self._run(text, 0x45000, data)
         self.assertEqual(len(mismatches), 1)
         arr, rel, idx, ours, orig = mismatches[0]
         self.assertEqual((idx, ours, orig), (5, ord("E"), ord("D")))
@@ -270,7 +359,7 @@ class VerifyTest(unittest.TestCase):
     def test_float_array_compares_ieee754(self):
         text = "float foo_445000[] = { 1.5, -2.25 };\n"
         data = struct.pack("<2f", 1.5, -2.25)
-        scanned, mismatches, skipped, allow = self._run(text, 0x45000, data)
+        scanned, mismatches, unparsed, skipped, allow = self._run(text, 0x45000, data)
         self.assertEqual(mismatches, [])
 
     def test_main_exits_nonzero_on_mismatch(self):
@@ -279,6 +368,24 @@ class VerifyTest(unittest.TestCase):
             src.write_text("int foo_445000[] = { 1, 2, 4 };\n")
             exe = Path(tmp) / "dr.exe"
             make_pe(exe, 0x45000, struct.pack("<3i", 1, 2, 3))
+            rc = vt.main(["verify-tables.py", "--exe", str(exe), str(src)])
+        self.assertEqual(rc, 1)
+
+    def test_unparsed_array_is_counted_not_compared(self):
+        text = "int foo_445000[2] = { 1, 2, 3 };\n"
+        data = struct.pack("<3i", 1, 2, 3)
+        scanned, mismatches, unparsed, skipped, allow = self._run(text, 0x45000, data)
+        self.assertEqual((scanned, mismatches), (1, []))
+        self.assertEqual([a.name for a, _rel in unparsed], ["foo_445000"])
+
+    def test_main_exits_nonzero_on_an_unparsed_array(self):
+        # Even when nothing mismatches: an array that could not be checked
+        # must fail the run, or `make verify-tables` passes without it.
+        with tempfile.TemporaryDirectory() as tmp:
+            src = Path(tmp) / "x.c"
+            src.write_text("int foo_445000[] = { 1 };\nint bar_445004[] = { FOO };\n")
+            exe = Path(tmp) / "dr.exe"
+            make_pe(exe, 0x45000, struct.pack("<2i", 1, 2))
             rc = vt.main(["verify-tables.py", "--exe", str(exe), str(src)])
         self.assertEqual(rc, 1)
 
@@ -320,13 +427,13 @@ class StrideTest(unittest.TestCase):
 
     def test_correct_column_matches_at_its_stride(self):
         text = "int col_445004[] = { 20, 21, 22 };\n"
-        scanned, mismatches, skipped, allow = self._run(text, {"col_445004": 8})
+        scanned, mismatches, unparsed, skipped, allow = self._run(text, {"col_445004": 8})
         self.assertEqual(scanned, 1)
         self.assertEqual(mismatches, [])
 
     def test_one_element_typo_in_a_strided_column_is_caught(self):
         text = "int col_445004[] = { 20, 21, 23 };\n"  # last element should be 22
-        scanned, mismatches, skipped, allow = self._run(text, {"col_445004": 8})
+        scanned, mismatches, unparsed, skipped, allow = self._run(text, {"col_445004": 8})
         self.assertEqual(len(mismatches), 1)
         arr, rel, idx, ours, orig = mismatches[0]
         self.assertEqual((idx, ours, orig), (2, 23, 22))
@@ -336,7 +443,7 @@ class StrideTest(unittest.TestCase):
         # Why the map is needed at all: read contiguously, the column is
         # compared against its neighbours in the same row.
         text = "int col_445004[] = { 20, 21, 22 };\n"
-        scanned, mismatches, skipped, allow = self._run(text, {})
+        scanned, mismatches, unparsed, skipped, allow = self._run(text, {})
         self.assertEqual(len(mismatches), 2)
 
     def test_menu_layout_columns_are_strided_not_allowlisted(self):
