@@ -130,6 +130,16 @@ class ClassifyTest(unittest.TestCase):
         c = count("fnstcw word ptr [esp + 0x6e]\nmovzx ecx, word ptr [esp + 0x6e]\nor ecx, 0xc00")
         self.assertEqual(c["extend"], [0, 0])
 
+    def test_sign_flag_conditions_are_signed(self):
+        # refreshScreen (0x43B8CA): the original tests SDL_FULLSCREEN with
+        # cmp [surface], 0; jns where the port compared unsigned (jae)
+        self.assertEqual(count("cmp dword ptr [eax], 0x0\njns 0x1000\ntest eax, eax\njs 0x1000")["compare"], [2, 0])
+
+    def test_masked_extension_is_sign_agnostic(self):
+        # dr.c recalculateCarBoundary: `keys[frame] & IN_RACE_ACELERATE`
+        self.assertEqual(count("movsx eax, byte ptr [eax + ecx + 0x20]\nand eax, 0x1\ncmp eax, 0x0")["extend"], [0, 0])
+        self.assertEqual(count("movsx eax, byte ptr [ecx]\nand eax, 0x1ff")["extend"], [1, 0])
+
     def test_float_compare_conditions_are_ignored(self):
         c = count("ucomiss xmm0, xmm1\nmovss xmm0, dword ptr [esp]\njbe 0x1000\ncmp eax, ecx\njb 0x1000")
         self.assertEqual(c["compare"], [0, 1])
@@ -143,6 +153,14 @@ class ClassifyTest(unittest.TestCase):
         self.assertEqual((signed["divide"], signed["shift"], signed["mul"]), ([1, 0], [0, 0], [0, 0]))
         unsigned = count("mov eax, 0xcccccccd\nmul ecx\nshr edx, 0x3")
         self.assertEqual((unsigned["divide"], unsigned["shift"]), ([0, 1], [0, 0]))
+        # clang's form (race/leftBar.c, `t / 70 / 60`): the magic in edx,
+        # the shift after an add
+        clang = count("mov edx, 0x88888889\nmov dword ptr [esp + 0xdc], edx\nimul edx\nmov eax, edx\n"
+                      "add eax, ecx\nmov edx, eax\nshr edx, 0x1f\nsar eax, 0x5\nadd eax, edx")
+        self.assertEqual((clang["divide"], clang["shift"]), ([1, 0], [0, 0]))
+        spilled = count("mov edx, dword ptr [esp + 0xdc]\nimul edx\nadd edx, eax\nmov esi, edx\n"
+                        "shr esi, 0x1f\nsar edx, 0x5\nadd edx, esi")
+        self.assertEqual((spilled["divide"], spilled["shift"]), ([1, 0], [0, 0]))
 
     def test_widening_multiply(self):
         self.assertEqual(count("imul ecx\nmul ebx\nimul eax, ecx, 0x3")["mul"], [1, 1])

@@ -248,7 +248,7 @@ def original_boundaries(insns, known, text_lo, text_hi):
 
 CATEGORIES = ("shift", "extend", "divide", "mul", "compare", "dividend")
 
-SIGNED_CC = {"l", "nge", "le", "ng", "g", "nle", "ge", "nl"}
+SIGNED_CC = {"l", "nge", "le", "ng", "g", "nle", "ge", "nl", "s", "ns"}
 UNSIGNED_CC = {"b", "nae", "c", "be", "na", "a", "nbe", "ae", "nb", "nc"}
 # Instructions whose flags come from a floating-point compare: the
 # unsigned condition codes after them (ja/jb, from SSE in the port, sahf
@@ -356,9 +356,10 @@ def classify(insns):
     instructions (address, mnemonic, operands).
 
     Idioms whose instruction would otherwise be miscounted:
-    - division by a constant (optimised MSVC): `mov eax, magic; imul r`
-      then `sar edx, k` and the sign fixup `shr r, 0x1f` is one signed
-      divide; `mov eax, magic; mul r` then `shr edx, k` an unsigned one;
+    - division by a constant (optimised MSVC, and clang too, even at
+      /Od): `mov eax, magic; imul r` then `sar edx, k` (and the sign fixup
+      `shr r, 0x1f`) is one signed divide; `mov eax, magic; mul r` then
+      `shr edx, k` an unsigned one;
     - signed division by a power of two (`cdq; sub eax, edx; sar eax, 1`)
       is deliberately left as cdq plus a sar: Hex-Rays often renders it as
       `(x - HIDWORD(x)) >> 1`, and an unsigned HIDWORD there makes the
@@ -374,7 +375,8 @@ def classify(insns):
     - the port's float -> int rounding saves the x87 control word with
       fnstcw and reads it back with movzx, which is not a data load;
     - a right shift whose result is masked or narrowed so that the bits
-      shifted in never matter (see shift_is_masked).
+      shifted in never matter (see shift_is_masked), and likewise a byte
+      or word load whose extension is masked off at once (`flags & 1`).
     """
     out = []
     consumed = set()
@@ -383,21 +385,20 @@ def classify(insns):
         if i in consumed:
             continue
         if mn in ("imul", "mul") and "," not in ops:
-            magic = any(insns[k][1] == "mov" and insns[k][2].startswith("eax, 0x")
-                        and int(insns[k][2][5:], 16) >= 0x10000
-                        for k in range(max(0, i - 3), i))
+            # the magic constant just loaded, or (clang reloads it from a
+            # spill slot) the signed form's sign fixup right after
+            magic = any(insns[k][1] == "mov" and IMM.match(insns[k][2].partition(", ")[2])
+                        and int(insns[k][2].partition(", ")[2], 16) >= 0x10000
+                        for k in range(max(0, i - 6), i)) or \
+                (mn == "imul" and any(insns[k][1] == "shr" and insns[k][2].endswith(", 0x1f")
+                                      for k in range(i + 1, min(n, i + 8))))
             if magic:
                 out.append((i, "divide", "S" if mn == "imul" else "U"))
                 want = "sar" if mn == "imul" else "shr"
-                for k in range(i + 1, min(n, i + 4)):
-                    if insns[k][1] == want and insns[k][2].startswith("edx"):
+                for k in range(i + 1, min(n, i + 8)):
+                    if insns[k][1] == want and not insns[k][2].endswith(", 0x1f"):
                         consumed.add(k)
                         break
-                if mn == "imul":
-                    for k in range(i + 1, min(n, i + 6)):
-                        if insns[k][1] == "shr" and insns[k][2].endswith(", 0x1f"):
-                            consumed.add(k)
-                            break
             else:
                 out.append((i, "mul", "S" if mn == "imul" else "U"))
             continue
@@ -429,6 +430,11 @@ def classify(insns):
                     insns[k][1] == "fnstcw" and insns[k][2] == ops.split(", ", 1)[1]
                     for k in range(max(0, i - 3), i)):
                 continue  # the port's x87 control word, saved to round float -> int
+            dest, _, src = ops.partition(", ")
+            src_bits = 8 if ("byte" in src or REG_BITS.get(src) == 8) else 16
+            bits = kept_bits(insns, i, dest)
+            if bits is not None and bits <= src_bits:
+                continue  # only the loaded bits are kept: `flags[i] & 1`
             out.append((i, "extend", "S" if mn == "movsx" else "U"))
             continue
         cc = condition_code(mn)
