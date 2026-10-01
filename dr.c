@@ -433,7 +433,7 @@ char aStartRacing[13] = "Start Racing"; // weak
 char aStartANewGam_0[17] = "Start A New Game"; // weak
 
 
-char aGamepadDisable[50] = "Gamepad Disabled"; // weak
+char aGamepadDisable[50] = "Gamepad Disabled"; // 0x446976, menu 3 row 4 (see ui/util/menus.c)
 
 //int dword_4A7DC0;//este no venia
 //int dword_4A7DBC;//este no venia

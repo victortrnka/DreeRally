@@ -47,3 +47,6 @@ extern char unk_446C32[8 * 50];
 // the same table, label plus key name (see sub_41CA40).
 extern char defineKeyboardMenu_446DF4[9][50];
 extern char defineGamepadMenu_447178[9][50];
+// Original 0x446976: menu 3 (Configure)'s row 4, the Gamepad/Joystick
+// Enabled/Disabled toggle text, same table as above.
+extern char aGamepadDisable[50];

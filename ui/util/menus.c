@@ -13,7 +13,7 @@
 char * menu0[] = { menuaStartRacing, "Multiplayer Race", "Configure","See Hall Of Fame","Credits","Exit To OS" };
 char * menu1[] = { menuaStartANewGam_0, "End Current Game", "See Current Statistics","Load Game","Save Game","Previous Menu" };
 
-char * menu3[] = { "Music Volume", "Effect Volume", "Define Keyboard","Define Gamepad/Joystick","Gamepad/Joystick Disabled","Previous Menu" };
+char * menu3[] = { "Music Volume", "Effect Volume", "Define Keyboard","Define Gamepad/Joystick",aGamepadDisable,"Previous Menu" };
 
 // verified byte-exact against dr.exe by make verify-tables (index 80, menu
 // type 8's unused 9th slot -- Define Gamepad only has 8 items -- was a
