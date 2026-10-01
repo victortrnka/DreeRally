@@ -26,9 +26,10 @@ artifacts (`sub_*`, `dword_*`, `*(_DWORD *)(a1 + 12)`).
 
 ## Comments
 
-A fix that looks surprising in the code gets a one-line comment: the
-original address and why. Examples: a reproduced or deliberately fixed
-original bug, a magic constant, an odd-looking cast, removed "tuning".
+A fix that looks surprising in the code gets a short comment (one or two
+lines): the original address and why. Examples: a reproduced or
+deliberately fixed original bug, a magic constant, an odd-looking cast,
+removed "tuning".
 Everything else lives in the commit message.
 
 ## Commits
