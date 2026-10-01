@@ -467,28 +467,6 @@ int mainMenu()
   float v6; // ST38_4@10
   float v7; // ST34_4@10
   float v8; // ST30_4@10
-//  int v9; // eax@10
-//  signed int v10; // eax@10
-//  char v11; // bl@12
-//  char v12; // dl@12
-//  char v13; // cl@12
-//  char v14; // dl@12
-//  signed int v15; // esi@12
-//  signed int v16; // eax@13
-//  char v17; // cl@14
-//  char v18; // dl@16
-//  char v19; // bl@16
-//  char v20; // cl@16
-//  signed int v21; // esi@16
-//  char v22; // cl@18
-//  char v23; // dl@20
-///  signed int v24; // esi@20
-//  signed int v25; // edx@21
-//  char v26; // cl@22
-//  char v27; // dl@24
-//  signed int v28; // esi@24
-//  signed int v29; // eax@25
-//  char v30; // cl@26
   signed int v31; // ebx@32
   unsigned __int8 v32; // bp@35
   signed int v33; // esi@35
@@ -518,8 +496,8 @@ int mainMenu()
 //  char v57; // cl@71
 //  char *v58; // edi@72
 //  char v59; // al@73
-//  signed int v61; // [sp+1Ch] [bp-Ch]@17
   signed int v62; // [sp+20h] [bp-8h]@1
+  int i;
   int v63; // [sp+24h] [bp-4h]@1
 
   v62 = 0;
@@ -626,157 +604,35 @@ int mainMenu()
 
   
 
-  /*v9 = 27 * driverId;
-  *(_DWORD *)unk_461EC0 = 0;
-  *(_DWORD *)&word_461EC4 = 0;
-  *(_DWORD *)&word_461EC8 = 0;
-  *(_DWORD *)&word_461ECC = 0;
-  byte_460840[v9 * 4] = 0;
-  *(_DWORD *)&word_461ED0 = 0;
-  dword_460880[v9] = 0;
-  v10 = (signed int)&unk_462000;
-  word_461ED4 = 0;
-  do
-  {
-    *(BYTE *)v10 = 0;
-    v10 += 150;
-  }
-  while ( v10 < (signed int)&blacktx1Bpk );
-  v11 = unk_461EC3;
-  memcpy(&dword_462C4E, "     Welcome to Death Rally(tm) - Windows Version 1.0", 0x34u);
-  unk_461EC3 = word_461EC4;
-  HIBYTE(word_461EC4) = *(_DWORD *)&word_461EC4 >> 16;
-  unk_461EC6 = unk_461EC7;
-  unk_461EC7 = word_461EC8;
-  HIBYTE(word_461EC8) = unk_461ECA;
-  v12 = unk_461EC1;
-  unk_461ECA = unk_461ECB;
-  unk_461ECB = word_461ECC;
-  HIBYTE(word_461ECC) = unk_461ECE;
-  unk_461ECE = unk_461ECF;
-  unk_461ECF = word_461ED0;
-  HIBYTE(word_461ED0) = unk_461ED2;
-  unk_461ED2 = unk_461ED3;
-  v13 = word_461ED4;
-  *((_WORD *)&dword_462C4E + 26) = *(_WORD *)"0";
-  unk_461EC0[0] = v12;
-  v14 = unk_461EC2;
-  v15 = (signed int)&unk_462096;
-  unk_461ED3 = v13;
-  LOBYTE(word_461ED4) = 1;
-  do
-  {
-    v16 = v15;
-    do
-    {
-      v17 = *(BYTE *)v16;
-      *(BYTE *)(v16 - 150) = *(BYTE *)v16;
-      ++v16;
-    }
-    while ( v17 );
-    v15 += 150;
-  }
-  while ( v15 < (signed int)&blacktx1Bpk );
-  memcpy(&dword_462C4E, "         Port by Jari Komppa - http://iki.fi/sol/", 0x30u);
-  unk_461EC0[0] = v14;
-  v18 = v11;
-  v19 = unk_461EC3;
-  unk_461EC3 = word_461EC4;
-  HIBYTE(word_461EC4) = unk_461EC6;
-  unk_461EC6 = unk_461EC7;
-  unk_461EC7 = word_461EC8;
-  HIBYTE(word_461EC8) = unk_461ECA;
-  unk_461ECA = unk_461ECB;
-  unk_461ECB = word_461ECC;
-  HIBYTE(word_461ECC) = unk_461ECE;
-  unk_461ECE = unk_461ECF;
-  unk_461ECF = word_461ED0;
-  HIBYTE(word_461ED0) = unk_461ED2;
-  unk_461ED2 = unk_461ED3;
-  v20 = word_461ED4;
-  *((_WORD *)&dword_462C4E + 24) = *(_WORD *)"/";
-  v21 = (signed int)&unk_462096;
-  unk_461ED3 = v20;
-  do
-  {
-    v61 = v21;
-    do
-    {
-      v22 = *(BYTE *)v61;
-      *(BYTE *)(v61 - 150) = *(BYTE *)v61;
-      ++v61;
-    }
-    while ( v22 );
-    v21 += 150;
-  }
-  while ( v21 < (signed int)&blacktx1Bpk );
-  unk_461EC0[0] = v18;
-  unk_461EC2 = unk_461EC3;
-  unk_461EC3 = word_461EC4;
-  HIBYTE(word_461EC4) = unk_461EC6;
-  unk_461EC6 = unk_461EC7;
-  unk_461EC7 = word_461EC8;
-  HIBYTE(word_461EC8) = unk_461ECA;
-  unk_461ECA = unk_461ECB;
-  unk_461ECB = word_461ECC;
-  HIBYTE(word_461ECC) = unk_461ECE;
-  memcpy(&dword_462C4E, "    (c)Remedy Entertainment - http://www.remedygames.com", 0x38u);
-   unk_461ECE = unk_461ECF;
-  unk_461ECF = word_461ED0;
-  HIBYTE(word_461ED0) = unk_461ED2;
-  v23 = unk_461ED3;
-  *((BYTE *)&dword_462C4E + 56) = aCRemedyEnterta[56];
-  v24 = (signed int)&unk_462096;
-  unk_461ED2 = v23;
-  LOBYTE(word_461ED4) = 1;
-  do
-  {
-    v25 = v24;
-    do
-    {
-      v26 = *(BYTE *)v25;
-      *(BYTE *)(v25 - 150) = *(BYTE *)v25;
-      ++v25;
-    }
-    while ( v26 );
-    v24 += 150;
-  }
-  while ( v24 < (signed int)&blacktx1Bpk );
-  unk_461EC1 = unk_461EC2;
-  unk_461EC2 = unk_461EC3;
-  unk_461EC3 = word_461EC4;
-  HIBYTE(word_461EC4) = unk_461EC6;
-  unk_461EC6 = unk_461EC7;
-  unk_461EC7 = word_461EC8;
-  HIBYTE(word_461EC8) = unk_461ECA;
-  unk_461ECA = unk_461ECB;
-  unk_461ECB = word_461ECC;
-  HIBYTE(word_461ECC) = unk_461ECE;
-  unk_461ECE = unk_461ECF;
-  unk_461ECF = word_461ED0;
-  v27 = unk_461ED2;
-  LOBYTE(dword_462C4E) = 0;
-  unk_461ED2 = 1;
-  v28 = (signed int)&unk_462096;
-  unk_461EC0[0] = v19;
-  HIBYTE(word_461ED0) = v27;
-  unk_461ED3 = word_461ED4;
-  LOBYTE(word_461ED4) = 1;
-  do
-  {
-    v29 = v28;
-    do
-    {
-      v30 = *(BYTE *)v29;
-      *(BYTE *)(v29 - 150) = *(BYTE *)v29;
-      ++v29;
-    }
-    while ( v30 );
-    v28 += 150;
-  }
-  while ( v28 < (signed int)&blacktx1Bpk );
-  memcpy(&dword_462C4E, "Use arrow keys to change selection and press enter to confirm.", 0x3Fu);
-  HIBYTE(word_461ED4) = 1;*/
+  memset(bottomMenuTextFont, 0, sizeof(bottomMenuTextFont));
+  for ( i = 0; i < 22; ++i )
+    bottomMenuText[i][0] = 0;
+  strcpy(bottomMenuText[21], "     Welcome to Death Rally(tm) - Windows Version 1.0");
+  bottomMenuTextFont[21] = 1;
+  for ( i = 0; i < 21; ++i )
+    bottomMenuTextFont[i] = bottomMenuTextFont[i + 1];
+  for ( i = 1; i < 22; ++i )
+    strcpy(bottomMenuText[i - 1], bottomMenuText[i]);
+  strcpy(bottomMenuText[21], "         Port by Jari Komppa - http://iki.fi/sol/");
+  bottomMenuTextFont[21] = 1;
+  for ( i = 0; i < 21; ++i )
+    bottomMenuTextFont[i] = bottomMenuTextFont[i + 1];
+  for ( i = 1; i < 22; ++i )
+    strcpy(bottomMenuText[i - 1], bottomMenuText[i]);
+  strcpy(bottomMenuText[21], "    (c)Remedy Entertainment - http://www.remedygames.com");
+  bottomMenuTextFont[21] = 1;
+  for ( i = 0; i < 21; ++i )
+    bottomMenuTextFont[i] = bottomMenuTextFont[i + 1];
+  for ( i = 1; i < 22; ++i )
+    strcpy(bottomMenuText[i - 1], bottomMenuText[i]);
+  bottomMenuText[21][0] = 0;
+  bottomMenuTextFont[21] = 1;
+  for ( i = 0; i < 21; ++i )
+    bottomMenuTextFont[i] = bottomMenuTextFont[i + 1];
+  for ( i = 1; i < 22; ++i )
+    strcpy(bottomMenuText[i - 1], bottomMenuText[i]);
+  strcpy(bottomMenuText[21], "Use arrow keys to change selection and press enter to confirm.");
+  bottomMenuTextFont[21] = 1;
   drawTransparentBlock(0, 371, 639, 109);
   
   drawBottomMenuText();
