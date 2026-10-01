@@ -18,7 +18,6 @@ char othnum1Bpk_50B2C0[12672]; // weak
 void* goalnum2Bpk_4AA50C; // idb
 char damageBpk_464F80[8064]; // weak
 void* rast1Bpk_464F78; // idb
-_UNKNOWN unk_46E880; // weak
 void* sidebom1Bpk_481E04; // idb
 
 //----- (00413C90) --------------------------------------------------------
@@ -130,8 +129,9 @@ int  drawSmallLeftBar_413C90(int a1)
             ticksToPauseLapTimeInHud_4A9EB0 = 0;
     }
     v19 = 100.0 - ceil((double)raceParticipant2[userRaceOrder_4A9EA8].damageBar_4A6898 * 0.0009765625);
-    drawSprite_402590((int)&bugnum6Bpk_46E560, 8, 10, (unsigned __int64)v19, 0, 11408, -8, -16);
-    //TODO FIX drawImageInRace_43B240((int)&unk_46E880, 8, 10, v20 + dword_464F14);
+    v20 = drawSprite_402590((int)&bugnum6Bpk_46E560, 8, 10, (unsigned __int64)v19, 0, 11408, -8, -16);
+    // original 0x414007: push 0x46E880, the '%' glyph after the ten digits
+    drawImageInRace_43B240((int)&bugnum6Bpk_46E560[0x320], 8, 10, v20 + dword_464F14);
     v21 = userRaceOrder_4A9EA8;
     if (raceParticipant2[userRaceOrder_4A9EA8].damageBar_4A6898 < 20480)
     {
@@ -612,7 +612,7 @@ int drawLeftRaceBar_414220()
     drawTurboBar_43B3A0(dword_464F14 + (unsigned __int8)v58 + leftMenuInRaceWidth_456AA0 + 17444, 58 - (unsigned __int8)v58, 7, v1);
     v59 = (unsigned __int64)(100.0 - ceil((double)raceParticipant2[userRaceOrder_4A9EA8].damageBar_4A6898 * 0.0009765625));
     v60 = drawSprite_402590((int)&bugnum6Bpk_46E560, 8, 10, v59, 0, leftMenuInRaceWidth_456AA0 + 36398, -8, -16);
-    drawImageInRace_43B240((int)&unk_46E880, 8, 10, v60 + dword_464F14);
+    drawImageInRace_43B240((int)&bugnum6Bpk_46E560[0x320], 8, 10, v60 + dword_464F14);
     v61 = userRaceOrder_4A9EA8;
     if (raceParticipant2[userRaceOrder_4A9EA8].damageBar_4A6898 < 20480)
     {
