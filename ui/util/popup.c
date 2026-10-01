@@ -20,7 +20,7 @@
 
 char aASlickSteroidR[30] = "[A slick steroid run, anyone?"; // weak
 _UNKNOWN unk_452DE8; // weak
-char byte_452E38[] = { '[' }; // weak
+char byte_452E38[9] = "[Extra $"; // weak
 _UNKNOWN unk_452D70; // weak
 
 char aMoneyTalksAndT[32] = "Money talks, and [the damage is"; // weak
@@ -34,9 +34,9 @@ _UNKNOWN unk_453108; // weak
 char aWannaGetRichTo[31] = "Wanna get rich, tough guy? OK."; // weak
 char aHereSTheDeal_I[35] = "[Here's the deal{. I have put some"; // weak
 char aMajorFundsOnTh[34] = "major funds on this race, betting"; // weak
-char byte_453248[] = { 't' }; // weak
+char byte_453248[7] = "that ["; // weak
 char aFinishLine_Mak[34] = "[finish line{. Make me right, and"; // weak
-char byte_4532E8[] = { '[' }; // weak
+char byte_4532E8[17] = "[it'll pay you $"; // weak
 _UNKNOWN unk_453338; // weak
 _UNKNOWN unk_453388; // weak
 char byte_447388[4800] =
@@ -695,36 +695,12 @@ int showHitmanScreen()
   int result; // eax@2
   int v1; // eax@6
   signed int v2; // ebx@7
-  int v3; // eax@19
-  char v4; // cl@20
-  unsigned int v5; // eax@21
-  void *v6; // edi@21
-  char v7; // cl@22
-  char *v8; // edi@23
-  char v9; // al@24
   signed int v10; // esi@25
   signed int v11; // esi@27
   int v12; // eax@31
   signed int v13; // ebp@32
   int v14; // ebx@45
   int v15; // edx@45
-  int v16; // eax@46
-  char v17; // cl@47
-  char *v18; // eax@48
-  char *v19; // edx@48
-  char v20; // cl@49
-  unsigned int v21; // eax@50
-  void *v22; // edi@50
-  char v23; // cl@51
-  char *v24; // edi@52
-  char v25; // al@53
-  int v26; // eax@54
-  char v27; // cl@55
-  unsigned int v28; // eax@56
-  void *v29; // edi@56
-  char v30; // cl@57
-  char *v31; // edi@58
-  char v32; // al@59
   signed int v33; // esi@60
   signed int v34; // esi@62
   int v35; // eax@65
@@ -733,10 +709,8 @@ int showHitmanScreen()
   char v38; // cl@66
   int v39; // [sp+0h] [bp-48h]@29
   int v40; // [sp+4h] [bp-44h]@3
-  int v41; // [sp+8h] [bp-40h]@7
-  __int16 v42; // [sp+Ch] [bp-3Ch]@7
-  char v43; // [sp+13h] [bp-35h]@21
-  char v44[52]; // [sp+14h] [bp-34h]@20
+  char amount[6]; // [sp+8h] [bp-40h]@7
+  char text[52]; // [sp+14h] [bp-34h]@20
 
   if ( isDemo_456B10 )
     return 0;
@@ -749,8 +723,7 @@ int showHitmanScreen()
 		v12 = drivers[driverId].carType;
       if ( v12 == 5 )
       {
-        v41 = 808464438;//6000
-        LOBYTE(v42) = 0;
+        strcpy(amount, "6000");
         v13 = 1;
       }
       else
@@ -759,31 +732,27 @@ int showHitmanScreen()
       }
       if ( v12 == 4 )
       {
-        v41 = 808464436;//4000
-        LOBYTE(v42) = 0;
+        strcpy(amount, "4000");
         v13 = 2;
       }
       if ( v12 == 3 )
       {
-        v41 = 808464435; //3000
-        LOBYTE(v42) = 0;
+        strcpy(amount, "3000");
         v13 = 3;
       }
       if ( v12 == 2 )
       {
-        v41 = 808464434; //2000
-        LOBYTE(v42) = 0;
+        strcpy(amount, "2000");
         v13 = 4;
       }
       if ( v12 == 1 )
       {
-        v41 = 808464433;//1000
-        LOBYTE(v42) = 0;
+        strcpy(amount, "1000");
         v13 = 5;
       }
       if ( !v12 )
       {
-        v41 = 3158069;
+        strcpy(amount, "500");
         v13 = 6;
       }
       createPopup(33, 131, 482, 230, 1);
@@ -799,61 +768,15 @@ int showHitmanScreen()
         v15 = selectedRace_462CE8;
       }
       while ( racePositions[selectedRace_462CE8][v14] == driverId );
-      v16 = 0;
-      do
-      {
-        v17 = byte_453248[v16];
-        v44[v16++] = v17;
-      }
-      while ( v17 );
-	  //todo structura drivers
-      v18 = &drivers[racePositions[v15][v14]];
-      v19 = &drivers[racePositions[v15][v14]];
-      do
-        v20 = *v18++;
-      while ( v20 );
-      v21 = v18 - v19;
-      v22 = &v43;
-      do
-      {
-        v23 = *((int8*)v22 + 1);
-        v22 = (char *)v22 + 1;
-      }
-      while ( v23 );
-      memcpy(v22, v19, v21);
-      v24 = &v43;
-      do
-        v25 = (v24++)[1];
-      while ( v25 );
-      *(_DWORD *)v24 = 1852798752;
-      *((_DWORD *)v24 + 1) = 1914729511;
-      *((_DWORD *)v24 + 2) = 1751343461;
-      *((_DWORD *)v24 + 3) = 1701344288;
-      v24[16] = 0;
-      writeTextInScreen(v44, 158881);
+      strcpy(text, byte_453248);
+      strcat(text, drivers[racePositions[v15][v14]].name);
+      strcat(text, " won't reach the");
+      writeTextInScreen(text, 158881);
       writeTextInScreen(aFinishLine_Mak, 169121);
-      v26 = 0;
-      do
-      {
-        v27 = byte_4532E8[v26];
-        v44[v26++] = v27;
-      }
-      while ( v27 );
-      v28 = strlen((const char *)&v41) + 1;
-      v29 = &v43;
-      do
-      {
-        v30 = *((int8*)v29 + 1);
-        v29 = (char *)v29 + 1;
-      }
-      while ( v30 );
-      memcpy(v29, &v41, v28);
-      v31 = &v43;
-      do
-        v32 = (v31++)[1];
-      while ( v32 );
-      *(_WORD *)v31 = 46;
-      writeTextInScreen(v44, 179361);
+      strcpy(text, byte_4532E8);
+      strcat(text, amount);
+      strcat(text, ".");
+      writeTextInScreen(text, 179361);
       writeTextInScreen((const char *)&unk_453338, 189601);
       writeTextInScreen((const char *)&unk_453388, 199841);
       refreshAllScreen();
@@ -896,8 +819,7 @@ int showHitmanScreen()
 		v1 = drivers[driverId].carType;
       if ( v1 == 5 )
       {
-        v41 = 808464945;
-        v42 = 48;
+        strcpy(amount, "12000");
         v2 = 1;
       }
       else
@@ -906,65 +828,37 @@ int showHitmanScreen()
       }
       if ( v1 == 4 )
       {
-        v41 = 808464440;
-        LOBYTE(v42) = 0;
+        strcpy(amount, "8000");
         v2 = 2;
       }
       if ( v1 == 3 )
       {
-        v41 = 808464438;
-        LOBYTE(v42) = 0;
+        strcpy(amount, "6000");
         v2 = 3;
       }
       if ( v1 == 2 )
       {
-        v41 = 808464436;
-        LOBYTE(v42) = 0;
+        strcpy(amount, "4000");
         v2 = 4;
       }
       if ( v1 == 1 )
       {
-        v41 = 808464434;
-        LOBYTE(v42) = 0;
+        strcpy(amount, "2000");
         v2 = 5;
       }
       if ( !v1 )
       {
-        v41 = 808464433;
-        LOBYTE(v42) = 0;
+        strcpy(amount, "1000");
         v2 = 6;
       }
       createPopup(33, 131, 482, 230, 1);
       drawImageWithPosition((int)drugdealBpk, 104, 128, (int)((char *)screenBuffer + 107565));
       writeTextInScreen(aASlickSteroidR, 107681);
       writeTextInScreen((const char *)&unk_452DE8, 117921);
-      v3 = 0;
-      do
-      {
-        v4 = byte_452E38[v3];
-        v44[v3++] = v4;
-      }
-      while ( v4 );
-      v5 = strlen((const char *)&v41) + 1;
-      v6 = &v43;
-      do
-      {
-        v7 = *((int8*)v6 + 1);
-        v6 = (char *)v6 + 1;
-      }
-      while ( v7 );
-      memcpy(v6, &v41, v5);
-      v8 = &v43;
-      do
-        v9 = (v8++)[1];
-      while ( v9 );
-      *(_DWORD *)v8 = 1629498491;
-      *((_DWORD *)v8 + 1) = 1852799342;
-      *((_DWORD *)v8 + 2) = 1495285605;
-      *((_DWORD *)v8 + 3) = 541029743;
-      *((_DWORD *)v8 + 4) = 1936287828;
-      *((_DWORD *)v8 + 5) = 7563552;
-      writeTextInScreen(v44, 128161);
+      strcpy(text, byte_452E38);
+      strcat(text, amount);
+      strcat(text, "{, anyone? You? This is");
+      writeTextInScreen(text, 128161);
       writeTextInScreen(aEasyAsShifting, 138401);
       writeTextInScreen(aJustPickUpSome, 148641);
       writeTextInScreen(aWayAndGetThemT, 158881);
