@@ -46,9 +46,6 @@ are in `doc/FINDINGS.md` and `git log`.
     commented out, "TODO FIX halloffame").
 12. Unfixed stack-walk sites (see `doc/FINDINGS.md`'s "Stack-walk idiom"
     class for the pattern):
-    - `makeSnapshot_4092B0` / `sub_429DC0` (screenshots): a one-char
-      `DstBuf` receives `SDL_itoa`, and `(char *)&Val2 + 3` walks build the
-      file name; likely a stack smash.
     - `drawRecordByCircuit`: passes a pointer as the `memset` fill.
     - `seeHallOfFame`: benign.
     - `checkAndOpenAnimation`: dead branch.
@@ -135,10 +132,6 @@ are in `doc/FINDINGS.md` and `git log`.
 29. **Other 1-byte stand-ins still used as buffers**, found by scanning
     for the address of a `_UNKNOWN`/scalar global passed to a copy or
     walked with a stride:
-    - `sub_429DC0` (menu screenshot): `fwrite(&unk_456848, 1, 0x80,
-      File)`. dr.exe 0x456848 holds a 128-byte PCX header for 640x480, the
-      counterpart of the 320x200 one `c9cc8bf` restored for the in-race
-      screenshot.
     - `keyMenuInRace_407330` (F1 screen): the key lines are fixed
       strings ("ACCELERATE...............A"), plus one live line that
       reads `(char *)&unk_4A6B20 + 15 * configuration.accelerateKey`. The
@@ -184,11 +177,13 @@ are in `doc/FINDINGS.md` and `git log`.
     (0x481E20), past its end at 0x4A6820, over whatever the original keeps
     there. Harmless in the port, whose `textureTemp` is `int[0xFFFFF]`
     (4 MB).
-36. **Intermittent crash in a race, under investigation**: one Docker run
-    died mid-race with `Unhandled illegal instruction` in
-    `_invoke_watson`, the CRT's invalid-parameter handler, i.e. a CRT
-    function received an invalid argument. A rerun of the same key
-    sequence stayed alive, and it has not been reproduced on demand.
+36. **`generateBigPowerUps` (0x409460), money/repair branch**: it checks
+    the slot's countdown (`dword_501BAC > 0`) where the original checks
+    the slot's x position (0x409567: `posX > 0`); latent, since slots
+    12-15 have a position on all ten tracks. Its background save also
+    reads the first dword of every fourth row from `+4` instead of `+0`
+    (0x4095c9), so 4 bytes of each saved row are wrong when the big
+    power-up is taken and the track is restored.
 
 ## Deliberate deviations from the original (not bugs)
 
@@ -211,6 +206,14 @@ are in `doc/FINDINGS.md` and `git log`.
   field, where the original copies up to the NUL (same visible name).
 - `-noeffect` (the `configNoSoundEffect` guard in `loadMusic`) is a port
   feature, not present in the original.
+- Screenshots are taken on F6. The original's screenshot code checks F12
+  (`keysRead[0x58]`, 0x416B14 in a race, 0x42A480/0x42A570 in menus),
+  but its own event loop (0x43BD18) never sets that slot, so the original
+  never takes one. Under the Docker runner one F6 in a menu keeps writing
+  files up to `HS-PIC99.PCX`: each 640x480 snapshot makes the frame loop
+  fall behind, and `refreshScreenWithDelay` (0x43C760, the same in the
+  original) skips the event pump while it catches up, so the key-up is
+  never seen.
 - The DreeRally branding "Windows Version 0.2" in the menu footer is the
   project's own text, not the original's: `drawBottomMenuText` (0x41E810)
   draws it instead of the original's six message lines (open issue 28).
@@ -255,3 +258,19 @@ original and rejected; neither is in the tree:
   the three typos it found were fixed by `f60c84a fix: restore three menu
   popup heights`.
 - "Sponsor-popup stub tables": layout understood, see item 27.
+- The hitman offer crashed the game (a /GS stack-cookie failure) when it
+  returned, and both offers' texts were garbled: `977c13f fix: build
+  showHitmanScreen's offer text safely`.
+- Accepting the steroid run crashed the next race's load: `9747355 fix:
+  place the steroid pills by position value`.
+- Screenshots (item 12's `makeSnapshot` stack walks, item 29's menu PCX
+  header) and their RLE writer: `fc669f4 fix: give both screenshot
+  functions real buffers`, `1c58ea8 fix: give the menu screenshot its PCX
+  header`, `8cd5382 fix: escape lone PCX bytes of 0xC0 and up`.
+- The intermittent `_invoke_watson` crash in a Docker race (formerly item
+  36) was the test harness, not the game: the run's `run-docker/` was
+  emptied while the race ran, and the first file load after the race, an
+  `fopen`/`fread` of `MENU.BPA` in `extractFromBpa` (unchecked in the
+  original too, 0x4027D7), failed. Emptying that directory mid-race
+  reproduces the exact log; never touch a worktree's `run-docker/` while
+  its container runs.
