@@ -35,10 +35,10 @@ extern _UNKNOWN unk_45F8BC; // weak
 
 extern char aDeliverator[12] = "Deliverator"; // weak
 
-char byte_456618[] = { 'A' }; // weak
-char byte_45665E[] = { 'S' }; // weak
-char byte_4566A4[] = { 'f' }; // weak
-char byte_4566EA[] = { 'k' }; // weak
+char byte_456618[70] = "Ah, fortune and glory! You are special, True Tom tells no lies.";
+char byte_45665E[70] = "Sweet driver, it's been a long and winding road, but now you have";
+char byte_4566A4[70] = "finally arrived. The Adversary's evil reign is over. The demon-";
+char byte_4566EA[70] = "king is dead, long live the king of Death Rally!";
 
 
 //----- (00431510) --------------------------------------------------------
