@@ -15313,7 +15313,7 @@ int   setWindowCaption3(int a1)
       screenPtr = screenPtr_456BF4;
       glResolution_456C14 = 19;
       //TODO fix
-      SDL_WM_SetCaption("DreeRally RACE", 0);
+      SDL_WM_SetCaption("DR", 0);
       //result = SDL_WM_SetCaption("DreeRally", 0);
     }
     else
@@ -15324,7 +15324,7 @@ int   setWindowCaption3(int a1)
         glResolution_456C14 = 257;
       }
       //TODO fix
-      SDL_WM_SetCaption("DreeRally RACE", 0);
+      SDL_WM_SetCaption("DR", 0);
       //result = SDL_WM_SetCaption("DreeRally", 0);
     }
   }
@@ -15343,7 +15343,7 @@ int setWindowCaption2()
     screenPtr = screenPtr_456BF4;
     glResolution_456C14 = 257;
     //TODO fix
-      SDL_WM_SetCaption("DreeRally", 0);
+      SDL_WM_SetCaption("DR", 0);
       //result = SDL_WM_SetCaption("DreeRally", 0);
   }
   return result;
@@ -15358,7 +15358,7 @@ int setWindowCaption()
   memset((void *)screenPtr_456BF4, 0, 0x4B000u);
   if ( glResolution_456C14 != 3 )
     //TODO fix
-      SDL_WM_SetCaption("DreeRally", 0);
+      SDL_WM_SetCaption("DR", 0);
       //result = SDL_WM_SetCaption("DreeRally", 0);
   return result;
 }
