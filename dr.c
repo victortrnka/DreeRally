@@ -4600,7 +4600,7 @@ int keyMenuInRace_407330()
       v110 = (unsigned __int8)keysRead_45E0C0[v109+3]
            + (unsigned __int8)keysRead_45E0C0[v109+1]
            + (unsigned __int8)keysRead_45E0C0[v109+0];
-      v111 = v108 + (unsigned __int8)keysRead_45E0C0[v109];
+      v111 = v108 + (unsigned __int8)keysRead_45E0C0[v109+2]; // 0x4091B9: [i+2], not [i] again
       v109 += 4;
       v108 = v111 + v110;
     }
