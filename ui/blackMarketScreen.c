@@ -164,7 +164,7 @@ int initBlackMarketMessages()
     blackMarketMessages.outOfStockMessage.line3 = "till after the next race";
 
     blackMarketMessages.continueMessage.title = "[CONTINUE";
-    blackMarketMessages.continueMessage.line1 = "Exit the the Underground Market and";
+    blackMarketMessages.continueMessage.line1 = "Exit the Underground Market and";
     blackMarketMessages.continueMessage.line2 = "enter the Race Sign-Up.";
     blackMarketMessages.continueMessage.line3 = "Press [Esc{ for previous menu";
 
