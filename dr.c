@@ -13425,7 +13425,7 @@ int   sub_426460(unsigned __int8 a1, unsigned __int8 a2)
 
   if ( a2 )
   {
-    if ( a2 != 1 || (a1 & 0xC0) == -64 )
+    if ( a2 != 1 || (a1 & 0xC0) == 0xC0 )
     {
       if ( putc(a2 | 0xC0, File) == -1 )
         result = 0;
