@@ -45,7 +45,7 @@ else
 $(error PROFILE must be debug or equiv)
 endif
 
-.PHONY: all clean setup-run run check-equiv stats docker-test verify-tables
+.PHONY: all clean setup-run run check-equiv stats docker-test verify-tables signcheck
 
 BASE ?= HEAD
 
@@ -94,6 +94,9 @@ stats:
 
 verify-tables:
 	@python3 tools/verify-tables.py --dr-data "$(DR_DATA)"
+
+signcheck: $(OUT)/dreerally.exe
+	@LLVM=$(LLVM) python3 tools/signcheck.py --dr-data "$(DR_DATA)" --exe $(OUT)/dreerally.exe $(SIGNCHECK_ARGS)
 
 # --- Headless Docker test runner ---------------------------------------
 # keys.exe: a small standalone console tool, not part of the game itself, so

@@ -21,6 +21,7 @@ CrossOver. Everything below runs on Apple Silicon.
 | `make run ARGS="-window"` | Copies the build into `run/` and starts it in the bottle |
 | `make check-equiv [BASE=rev]` | Machine-code equivalence against `BASE` (default `HEAD`) |
 | `make verify-tables` | Compare hand-typed data tables against the original `dr.exe` |
+| `make signcheck` | Rank functions whose signed/unsigned instructions differ from the original's |
 | `make stats` | Remaining Hex-Rays names per file (cleanup progress) |
 | `make clean` | Removes `build/` |
 
@@ -241,6 +242,53 @@ cannot fix:
   `doc/KNOWN-ISSUES.md`).
 
 Tests: `python3 tools/test_verify_tables.py`.
+
+## Signedness check
+
+`make signcheck` looks for the "Unsigned `_DWORD` where the original uses
+`sar`" and "Signed `BYTE`" bug classes (`doc/FINDINGS.md`): Hex-Rays types
+a value as unsigned where the original treats it as signed, or the other
+way round, and the port then compiles `shr` for the original's `sar`,
+`div` for `idiv`, `jb`/`ja` for `jl`/`jg`, `movzx` for `movsx`.
+`check-equiv` cannot see this; the code is wrong from the start.
+
+`tools/signcheck.py` pairs each port function with its original by
+address (the `//----- (00XXXXXX)` marker above the definition, a marker
+above a commented-out copy of the signature when the function moved to
+another file, or an `_XXXXXX` name suffix). It disassembles the debug
+build's function (range from the map) and the original from its address
+to the next known function start or switch jump table. In both it counts
+the signed and unsigned form of six categories: `sar`/`shr`,
+`movsx`/`movzx`, `idiv`/`div`, one-operand `imul`/`mul`, signed/unsigned
+`jcc`/`setcc`, and `cdq`/`xor edx, edx` before a divide. It ranks the
+functions by how many signed instructions the port has swapped for
+unsigned ones or the other way round, e.g. "orig sar 5 shr 0 | port sar
+2 shr 2" is 2 lost. Idioms that look like a signedness signal but are
+not are left out: a shift whose result is masked so the shifted-in bits
+never matter, `shr r, 31` (the sign bit), MSVC's division by a constant,
+`abs()`, the port's 0/1 booleans and x87 control word, conditions after a
+float compare, and switch range checks.
+
+The compilers differ (optimised MSVC against clang-cl `/Od`), so the
+list is candidates to check by hand, not a verdict. Read each against
+the source (`--show` prints both sides' instructions and the port's
+`file:line`), then decide whether the value can actually be negative (or
+reach 0x80/0x8000/2^31 for the reverse direction).
+
+```sh
+make signcheck                                         # top 40 candidates
+make signcheck SIGNCHECK_ARGS="--all"                  # every hint, plus unpaired functions
+make signcheck SIGNCHECK_ARGS="--show refreshScreen"   # or --show 0x43B580
+```
+
+Two things worth knowing beyond single candidates: the original's game
+code has **no** `movsx` at all, apart from two joystick-axis reads at
+0x43C674/0x43C690 and minifmod's code from 0x43D940 on, so nearly every
+`movsx` the port has in game code loads a byte or word the original
+zero-extends; and a function missing from the list may simply be
+unpaired (`--all` lists those).
+
+Tests: `python3 tools/test_signcheck.py`.
 
 ## Hooking the original dr.exe
 
