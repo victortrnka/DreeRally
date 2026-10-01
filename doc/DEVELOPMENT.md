@@ -191,6 +191,11 @@ Things to know:
   into the image), since the container has no GPU. The *original* `dr.exe`
   needs it too and has no non-GL fallback; the port degrades gracefully via
   `-gl` either way.
+- **Never run two `make docker-test` at the same time in one worktree.**
+  Each run starts with `rm -rf` of its runtime directory (`run-docker/`,
+  or the `-orig`/`-orighook` one) and writes to the same `OUT_SHOTS`, so a
+  second run deletes the first one's files under it. Run them one after
+  the other, or from separate worktrees.
 - **Screenshot, then check state, before sending the next key.** The
   intro-skip count is not deterministic. Esc on the main menu is not a no-op:
   it moves the highlighted item to the last one ("Exit to OS"), not back to a
@@ -209,15 +214,34 @@ dumps at some point, and nothing else checks them against the original
 ever again; `check-equiv` cannot catch a wrong data value, only a code
 change. See `doc/FINDINGS.md`'s "hand-typed data tables" bug class.
 
+The initialiser is evaluated with C's rules, so the compared bytes are
+the bytes the compiler stores: short lists and short rows are zero-filled
+(each row of `char t[9][50] = { "Brake", ... }` is padded to 50), brace
+elision works, and a string literal's NUL is stored only when there is
+room for it. An address-suffixed array the tool cannot evaluate (an
+unknown element type, a cast, macro or expression, a designated
+initialiser, more initialisers than the declared size, two declarators
+in one statement) is printed as `UNPARSED` with the reason and also makes
+the run fail: an array that is silently skipped is a check that silently
+passes.
+
 A genuine port typo found this way gets its own `fix:` commit, byte-exact
 against `dr.exe`. An array whose name suffix is provably not its real
 address is better renamed to the correct address (a `refactor:` commit,
-`EQUIVALENT`) than added to the tool's exception lists. `tools/verify-tables.py`
-has two small, explicit exception lists for what renaming cannot fix: `RENAME_MAP`
-for a suffix that is definitely wrong but the correct name is not worth
-cleaning up yet, and `ALLOWLIST`, with a reason, for an array whose true
-original layout is not understood (see `doc/KNOWN-ISSUES.md`). Tests:
-`python3 tools/test_verify_tables.py`.
+`EQUIVALENT`) than added to the tool's exception lists.
+`tools/verify-tables.py` has three small, explicit lists for what renaming
+cannot fix:
+- `STRIDE`: arrays that are one column of a larger original table, so
+  element `i` is at `addr + stride * i`. The seven menu layout arrays in
+  `ui/menu.c` are the columns of the original's 9x7 int table at
+  0x4456F0, one 0x1C-byte row per menu type.
+- `RENAME_MAP`: a suffix that is definitely wrong but whose correct name is
+  not worth cleaning up yet.
+- `ALLOWLIST`, with a reason: an array the tool cannot compare as is
+  (today the nine blank sponsor-table lines in `ui/util/popup.c`, see
+  `doc/KNOWN-ISSUES.md`).
+
+Tests: `python3 tools/test_verify_tables.py`.
 
 ## Hooking the original dr.exe
 
@@ -233,13 +257,16 @@ of `dr.exe`, never the Steam install.
   `LoadLibraryA` IAT slot -- already valid by the time this runs, since
   Windows resolves every import before calling a PE's entry point) `; jmp
   <original AddressOfEntryPoint>`. It then points `AddressOfEntryPoint` at
-  the stub and extends `.text`'s `VirtualSize` so the loader maps it.
+  the stub and extends `.text`'s `VirtualSize` so the loader maps it. It
+  refuses to write its output over the source file.
 - `tools/orighook/hook_template.c` is the DLL: one example hook (an
   ordinary 5-byte-`jmp`-plus-trampoline x86 inline detour) on
   `calculateNextRaces` (original `0x4240B0`), which logs each call to
   `orighook.log` in the current directory and otherwise runs the original
   function unchanged. The file's own comment explains how to point it at a
-  different or additional function.
+  different or additional function. `DllMain` runs from the stub, before
+  dr.exe's own entry point: code and initialised data can be patched, but
+  the original's CRT startup has not run yet.
 - `make orighook` builds the DLL with the same clang-cl/lld/xwin toolchain
   as the main game; `make docker-test ORIGHOOK=1 SCENARIO=orighook-race`
   builds it, patches a copy of `dr.exe` into `run-docker-orighook/` (never
