@@ -832,7 +832,10 @@ void *prepw1Bpk; // idb
 
 void *statpop4Bpk; // idb
 
-_UNKNOWN unk_4611E0; // weak
+// 0x4611E0: scratch space reused to swap two Driver records (0x6C bytes,
+// drivers[].name onward) or two RaceParticipant records (0x54 bytes,
+// raceParticipant[].name onward); never written outside those memcpy pairs.
+char unk_4611E0[0x6C];
 
 int dword_461250; // weak
 void *bases44Bpk; // idb
