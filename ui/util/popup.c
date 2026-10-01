@@ -523,7 +523,7 @@ _UNKNOWN unk_44C1A8; // weak
 _UNKNOWN unk_44C478; // weak
 _UNKNOWN unk_44CB08; // weak
 _UNKNOWN unk_44CB58; // weak
-_UNKNOWN unk_45FBE0; // weak
+char unk_45FBE0[16]; // 0x45FBE0..0x45FBF0: holds a copy of the killed driver's name (max 12 bytes)
 
 _UNKNOWN unk_454C38; // weak
 char aEndOfTheRoadDr[26] = "[End of the road, driver."; // weak
@@ -881,7 +881,7 @@ int showHitmanScreen()
 		v36 = drivers[v35].name;
 		// v36 = &byte_460840[108 * v35];
         killOneQuest_456BB8 = v13;
-        v37 = (char *)(&unk_45FBE0 - (_UNKNOWN *)v36);
+        v37 = (char *)(unk_45FBE0 - (_UNKNOWN *)v36);
         do
         {
           v38 = *v36;
@@ -1519,7 +1519,7 @@ LABEL_15:
     v31[v7++] = v8;
   }
   while ( v8 );
-  v9 = strlen((const char *)&unk_45FBE0) + 1;
+  v9 = strlen((const char *)unk_45FBE0) + 1;
   v10 = &v30;
   do
   {
@@ -1527,7 +1527,7 @@ LABEL_15:
     v10 = (char *)v10 + 1;
   }
   while ( v11 );
-  memcpy(v10, &unk_45FBE0, v9);
+  memcpy(v10, unk_45FBE0, v9);
   v12 = &v30;
   do
     v13 = (v12++)[1];
