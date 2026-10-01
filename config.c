@@ -50,7 +50,7 @@ int checkArgs(char* args)
 char byte_45FB6C; // weak
 char byte_45FBF0; // weak
 char byte_463D9C; // weak
-__int16 word_462D54; // weak
+int word_462D54; // 0x462D54, 4 bytes despite the name: fread/fwrite use size 4
 
 char loadConfig()
 {
