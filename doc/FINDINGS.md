@@ -41,7 +41,11 @@ strcat((char *)&Filename + 3, "SANIM.haf");
 15-byte list of reserved scancodes had become 15 separate `char` locals,
 walked upward through the cookie and the return address, so a valid key
 setup could be rejected; its 27-byte message went into a single `char`,
-and leaving Define Keyboard died in `___report_gsfailure`).
+and leaving Define Keyboard died in `___report_gsfailure`),
+`3734ad9 fix: give sub_43D050 its vertex array` (the same idiom with
+`int` locals: nine arguments the original copies into one array and
+indexes by vertex, walked as `&v75 + k`; nothing crashed, the triangle
+would just have been drawn from unrelated stack slots).
 
 **Detect / verify:** grep for `(char *)&` / `(int)&` walks on a scalar
 local feeding a `strcpy`/`strcat`/`_itoa`/`sprintf`. Size the buffer from the
@@ -379,6 +383,10 @@ it.
   functions walked original addresses that the port had only as 1-byte
   globals, so restoring the calls also meant giving those real storage
   (see "Hex-Rays 1-byte stand-ins used as buffers");
+- draw3dElements' two gouraud-shaded triangle cases, colours 0x80 and
+  0x8A (`4d96525 fix: restore draw3dElements' shaded triangles`), which a
+  signed colour then kept unreachable (`8d7d1f8`, see "Unsigned `_DWORD`
+  where the original uses `sar`");
 - the F1 screen's screen save and palette copy (`06c5823 fix: save the race
   screen before the F1 screen`, `4119bc6 fix: fade the F1 screen out from
   the track palette`): the save into a 1-byte global had been disabled,
@@ -474,12 +482,43 @@ in `defs.h`) and then shifts it right, which C compiles to a logical
 v166 = 2 * *(_DWORD *)((char *)dword_4A6854 + v163) >> 1;
 ```
 
-**Example:** `89caa70 fix: rotate the status-bar-off outro correctly`
-(original 0x405F84..0x405F8E: `shl edi; ... sar edx`).
+The same goes for compares (`jb`/`jae` for the original's `jl`/`jns`),
+divides (`div` for `idiv`) and, the other way round, a signed `char`
+where the original reads an unsigned or wider value (`movsx` for
+`movzx`).
 
-**Detect / verify:** grep for `*(_DWORD *)` or an `unsigned` cast feeding
-`>>` and compare the original's instruction at that site (`sar` or `shr`).
-Unchecked candidates are listed in `doc/KNOWN-ISSUES.md`.
+**Examples:**
+- `89caa70 fix: rotate the status-bar-off outro correctly` (original
+  0x405F84..0x405F8E: `shl edi; ... sar edx`);
+- `e34f46a fix: shift the drunk view's sine signed`: the drunk view's
+  vertical wobble shifted a negative sine with `shr` (original 0x404871
+  `sar edx, 0x7`), so about half of the race view was cleared to black
+  in diagonal bands; it went unnoticed because the view also ended after
+  one frame (`c557187 fix: count the drunk view's time down`, a `=-` for
+  `-=`);
+- `bcbe879 fix: read the fullscreen flag as signed`: `*(_DWORD
+  *)screenSurface < 0` is never true, so Alt+Enter could not leave
+  fullscreen (original 0x43BCEA `cmp dword ptr [ecx], 0; jns`);
+- `8d7d1f8 fix: read polygon colours unsigned`: a 3D-object triangle's
+  colour was a signed `char`, so no colour from 0x80 up matched its
+  `switch` case and the gouraud-shaded triangles (the cacti on Snake
+  Alley and Desert Run, 0x8A) were filled flat. Making those cases
+  reachable also needed two other classes fixed first: the cases were
+  commented out (`4d96525`, see "Original code commented out by the
+  port author") and the triangle function they call walked its
+  arguments as separate locals (`3734ad9`, see "Stack-walk idiom").
+
+**Detect / verify:** `make signcheck` (`tools/signcheck.py`, see
+`doc/DEVELOPMENT.md`) pairs every port function with the original by
+address and ranks those where the port has the unsigned form of an
+instruction the original has signed, or the reverse; `--show NAME`
+prints both sides with the port's `file:line`. Most candidates are type
+mismatches that cannot matter (repair costs, points, lap counters and
+pixel sums are never negative); judge each by whether the value can be
+negative (or reach 0x80/2^31 the other way round). Then compare the
+original's instruction at that site. The original's game code has no
+`movsx` at all apart from two joystick-axis reads, so a `movsx` in a
+port function is always worth a look.
 
 ## Wrong field or wrong base
 
