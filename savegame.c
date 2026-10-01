@@ -64,24 +64,3 @@ int  decryptEntireSavegame(int a1, char *Filename)
 	} while (result < 15);
 	return result;
 }
-
-char* getSaveGameName(int savegame) {
-	char Filename[20];
-	char saveNumber[8];
-	char *saveGameName = (char *) malloc(20);
-	memset(saveGameName, 0, 20);
-
-	strcpy(Filename, "DR.SG");
-	SDL_itoa(savegame, saveNumber, 10);
-	strcat(Filename, saveNumber);
-	if ((signed int)fileExists(Filename) > 0) {
-
-		decryptEntireSavegame((int)saveGameName, Filename);
-
-		return saveGameName;
-	}
-	else {
-		return NULL;
-	}
-}
-

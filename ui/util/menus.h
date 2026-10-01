@@ -40,3 +40,6 @@ char* getMenuText(int menu, int position);
 extern char menuaStartANewGame[17];
 extern char menuaStartANewGam_0[50];
 extern char menuaStartRacing[50];
+// Original 0x446C32: menu 5's rows of the same table, the 8 Load/Save slot
+// texts that loadGame and savegameWithName fill.
+extern char unk_446C32[8 * 50];
