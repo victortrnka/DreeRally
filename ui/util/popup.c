@@ -414,7 +414,7 @@ char aThereWasThatMu[33] = "there was that much smoke in the"; // weak
 char aWholeBurningHe[32] = "whole burning hell, and through"; // weak
 char aItAllBearingGi[32] = "it all, bearing gifts like some"; // weak
 char aBlessedBeastYo[35] = "blessed beast, you came. And [this"; // weak
-char byte_44ADF8[] = { '[' }; // weak
+char byte_44ADF8[24] = "[here is prime stuff! $"; // weak
 _UNKNOWN unk_44AE48; // weak
 _UNKNOWN unk_44AE98; // weak
 char aWhereReMyStero[23] = "[Where're my steroids?"; // weak
@@ -433,8 +433,8 @@ char aAKillerRaceThe[36] = "A killer race! The bullets took the"; // weak
 char aSkyLikeCloudsO[32] = "sky like clouds of locusts, and"; // weak
 char aTheScreamsOfMo[29] = "the screams of motors were a"; // weak
 char aBansheeWail_De[32] = "banshee wail. [Death!{ You were"; // weak
-char byte_44B3E8[] = { 'b' }; // weak
-char byte_44B438[] = { '[' }; // weak
+char byte_44B3E8[13] = "beautiful, ["; // weak
+char byte_44B438[17] = "[coffin grave. $"; // weak
 _UNKNOWN unk_44B488; // weak
 _UNKNOWN unk_44B4D8; // weak
 char aYourHitMissed[18] = "[Your hit missed!"; // weak
@@ -1098,23 +1098,14 @@ int steriodsNotFoundPopup()
   int v3; // ecx@5
   int v4; // ecx@9
   int v5; // ecx@11
-  int v6; // eax@15
-  char v7; // cl@16
-  unsigned int v8; // eax@17
-  void *v9; // edi@17
-  char v10; // cl@18
-  char *v11; // edi@19
-  char v12; // al@20
   signed int v13; // esi@23
 //  int v14; // ecx@34
   int v15; // eax@34
   int v16; // eax@35
   int v17; // eax@36
   signed int v19=0; // [sp+4h] [bp-44h]@0
-  int v20; // [sp+8h] [bp-40h]@3
-  __int16 v21; // [sp+Ch] [bp-3Ch]@3
-  char v22; // [sp+13h] [bp-35h]@17
-  char v23[52]; // [sp+14h] [bp-34h]@16
+  char amount[6]; // [sp+8h] [bp-40h]@3
+  char text[52]; // [sp+14h] [bp-34h]@16
 
   createPopup(33, 131, 482, 230, 1);
   drawImageWithPosition((int)drugdealBpk, 104, 128, (int)((char *)screenBuffer + 107565));
@@ -1175,44 +1166,38 @@ int steriodsNotFoundPopup()
   switch ( drugQuest_456BB4 )
   {
     case 1:
-      v21 = 48;
+      strcpy(amount, "12000");
       v0 = drivers[driverId].money;
       v1 = &drivers[driverId].money;
-      v20 = 808464945;
       v2 = v0 + 12000;
       break;
     case 2:
-      v20 = 808464440;
+      strcpy(amount, "8000");
       v3 = drivers[driverId].money;
       v1 = &drivers[driverId].money;
-      LOBYTE(v21) = 0;
       v2 = v3 + 8000;
       break;
     case 3:
-      v20 = 808464438;
-      LOBYTE(v21) = 0;
+      strcpy(amount, "6000");
       v1 = &drivers[driverId].money;
       v2 = drivers[driverId].money + 6000;
       break;
     case 4:
-      LOBYTE(v21) = 0;
       v4 = drivers[driverId].money;
       v1 = &drivers[driverId].money;
-      v20 = 808464436;
+      strcpy(amount, "4000");
       v2 = v4 + 4000;
       break;
     case 5:
-      v20 = 808464434;
+      strcpy(amount, "2000");
       v5 = drivers[driverId].money;
       v1 = &drivers[driverId].money;
-      LOBYTE(v21) = 0;
       v2 = v5 + 2000;
       break;
     default:
       if ( drugQuest_456BB4 != 6 )
         goto LABEL_15;
-      v20 = 808464433;
-      LOBYTE(v21) = 0;
+      strcpy(amount, "1000");
       v1 = &drivers[driverId].money;
       v2 = drivers[driverId].money + 1000;
       break;
@@ -1226,30 +1211,10 @@ LABEL_15:
   writeTextInScreen(aWholeBurningHe, 148641);
   writeTextInScreen(aItAllBearingGi, 158881);
   writeTextInScreen(aBlessedBeastYo, 169121);
-  v6 = 0;
-  do
-  {
-    v7 = byte_44ADF8[v6];
-    v23[v6++] = v7;
-  }
-  while ( v7 );
-  v8 = strlen((const char *)&v20) + 1;
-  v9 = &v22;
-  do
-  {
-    v10 = *((int8*)v9 + 1);
-    v9 = (char *)v9 + 1;
-  }
-  while ( v10 );
-  memcpy(v9, &v20, v8);
-  v11 = &v22;
-  do
-    v12 = (v11++)[1];
-  while ( v12 );
-  *(_DWORD *)v11 = 1869881388;
-  *((_DWORD *)v11 + 1) = 1970239776;
-  *((_WORD *)v11 + 4) = 46;
-  writeTextInScreen(v23, 179361);
+  strcpy(text, byte_44ADF8);
+  strcat(text, amount);
+  strcat(text, ", to you.");
+  writeTextInScreen(text, 179361);
   writeTextInScreen((const char *)&unk_44AE48, 189601);
   writeTextInScreen((const char *)&unk_44AE98, 199841);
 LABEL_40:
@@ -1272,30 +1237,14 @@ int killOnePopup()
   int v4; // ecx@9
   int v5; // ecx@11
   int v6; // ecx@13
-  int v7; // eax@15
-  char v8; // cl@16
-  unsigned int v9; // eax@17
-  void *v10; // edi@17
-  char v11; // cl@18
-  char *v12; // edi@19
-  char v13; // al@20
-  int v14; // eax@21
-  char v15; // cl@22
-  unsigned int v16; // eax@23
-  void *v17; // edi@23
-  char v18; // cl@24
-  char *v19; // edi@25
-  char v20; // al@26
   signed int v21; // esi@29
 //  int v22; // ecx@40
   int v23; // eax@40
   int v24; // eax@41
   int v25; // eax@42
   signed int v27=0; // [sp+4h] [bp-44h]@0
-  int v28; // [sp+8h] [bp-40h]@3
-  char v29; // [sp+Ch] [bp-3Ch]@3
-  char v30; // [sp+13h] [bp-35h]@17
-  char v31[52]; // [sp+14h] [bp-34h]@16
+  char amount[5]; // [sp+8h] [bp-40h]@3
+  char text[52]; // [sp+14h] [bp-34h]@16
 
   createPopup(33, 131, 482, 230, 1);
   drawImageWithPosition((int)event2Bpk, 104, 128, (int)((char *)screenBuffer + 107565));
@@ -1356,37 +1305,32 @@ int killOnePopup()
   switch ( killOneQuest_456BB8 )
   {
     case 1:
-      v29 = 0;
+      strcpy(amount, "6000");
       v0 = drivers[driverId].money;
       v1 = &drivers[driverId].money;
-      v28 = 808464438;
       v2 = v0 + 6000;
       break;
     case 2:
-      v28 = 808464436;
+      strcpy(amount, "4000");
       v3 = drivers[driverId].money;
       v1 = &drivers[driverId].money;
-      v29 = 0;
       v2 = v3 + 4000;
       break;
     case 3:
-      v28 = 808464435;
-      v29 = 0;
+      strcpy(amount, "3000");
       v1 = &drivers[driverId].money;
       v2 = drivers[driverId].money + 3000;
       break;
     case 4:
-      v29 = 0;
       v4 = drivers[driverId].money;
       v1 = &drivers[driverId].money;
-      v28 = 808464434;
+      strcpy(amount, "2000");
       v2 = v4 + 2000;
       break;
     case 5:
-      v28 = 808464433;
+      strcpy(amount, "1000");
       v5 = drivers[driverId].money;
       v1 = &drivers[driverId].money;
-      v29 = 0;
       v2 = v5 + 1000;
       break;
     default:
@@ -1394,7 +1338,7 @@ int killOnePopup()
         goto LABEL_15;
       v6 = drivers[driverId].money;
       v1 = &drivers[driverId].money;
-      v28 = 3158069;
+      strcpy(amount, "500");
       v2 = v6 + 500;
       break;
   }
@@ -1406,56 +1350,14 @@ LABEL_15:
   writeTextInScreen(aSkyLikeCloudsO, 138401);
   writeTextInScreen(aTheScreamsOfMo, 148641);
   writeTextInScreen(aBansheeWail_De, 158881);
-  v7 = 0;
-  do
-  {
-    v8 = byte_44B3E8[v7];
-    v31[v7++] = v8;
-  }
-  while ( v8 );
-  v9 = strlen((const char *)unk_45FBE0) + 1;
-  v10 = &v30;
-  do
-  {
-    v11 = *((int8*)v10 + 1);
-    v10 = (char *)v10 + 1;
-  }
-  while ( v11 );
-  memcpy(v10, unk_45FBE0, v9);
-  v12 = &v30;
-  do
-    v13 = (v12++)[1];
-  while ( v13 );
-  *(_DWORD *)v12 = 544434464;
-  *((_DWORD *)v12 + 1) = 1629515369;
-  *((_DWORD *)v12 + 2) = 1918984992;
-  *((_WORD *)v12 + 6) = 45;
-  writeTextInScreen(v31, 169121);
-  v14 = 0;
-  do
-  {
-    v15 = byte_44B438[v14];
-    v31[v14++] = v15;
-  }
-  while ( v15 );
-  v16 = strlen((const char *)&v28) + 1;
-  v17 = &v30;
-  do
-  {
-    v18 = *((int8*)v17 + 1);
-    v17 = (char *)v17 + 1;
-  }
-  while ( v18 );
-  memcpy(v17, &v28, v16);
-  v19 = &v30;
-  do
-    v20 = (v19++)[1];
-  while ( v20 );
-  *(_DWORD *)v19 = 1870209068;
-  *((_DWORD *)v19 + 1) = 1830842997;
-  *((_DWORD *)v19 + 2) = 2036690543;
-  *((_WORD *)v19 + 6) = 46;
-  writeTextInScreen(v31, 179361);
+  strcpy(text, byte_44B3E8);
+  strcat(text, unk_45FBE0);
+  strcat(text, " is in a car-");
+  writeTextInScreen(text, 169121);
+  strcpy(text, byte_44B438);
+  strcat(text, amount);
+  strcat(text, ", your money.");
+  writeTextInScreen(text, 179361);
   writeTextInScreen((const char *)&unk_44B488, 189601);
   writeTextInScreen((const char *)&unk_44B4D8, 199841);
 LABEL_46:
