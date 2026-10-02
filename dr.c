@@ -9021,7 +9021,7 @@ int recalculateCarBoundary_411D10()
       raceParticipantIngame[v1].backRightAbsoluteXPosition_4A7E40 = sin((raceParticipantIngame[v1].carAngle_4A7DAC + 22.0) * 0.01745329251994444) * 12.0
                                + raceParticipantIngame[v1].absolutePositionX_4A7DB4;
 	  raceParticipantIngame[v1].backRightAbsoluteYPosition_4A7E44 = cos((raceParticipantIngame[v1].carAngle_4A7DAC + 22.0) * 0.01745329251994444) * 9.999995999999999
-                               + raceParticipantIngame[userRaceOrder_4A9EA8].absolutePositionY_4A7DB8;
+                               + raceParticipantIngame[v1].absolutePositionY_4A7DB8;
       if ( v3 > 0
         && raceParticipantIngame[ v1].carVelocity_4A7DB0 > 0.0
         && raceParticipant2[v1].efectiveEngine_4A6884 * 0.55 > raceParticipantIngame[ v1].carVelocity_4A7DB0
