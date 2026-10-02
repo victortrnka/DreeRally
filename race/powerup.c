@@ -138,9 +138,7 @@ int generatePowerUps()
     char* v60 = malloc(100); // [sp+10h] [bp-18h]@76
     signed int v61; // [sp+14h] [bp-14h]@40
     int v62; // [sp+18h] [bp-10h]@40
-    int v63[12]; // [sp+1Ch] [bp-Ch]@40
-    int v64; // [sp+20h] [bp-8h]@40
-    int v65; // [sp+24h] [bp-4h]@40
+    int v63[12]; // the original: 12 byte flags at [esp+0x1c]
 
     v0 = dword_4A9EA4;
     if (dword_456AC4 <= 0)
@@ -196,10 +194,9 @@ int generatePowerUps()
                 ++v9;
             v10 += 6;
         } while (v10 < 12); // 0x41037D..0x410382: slots 0-11, each once
-        v63[0] = 0;
-        v64 = 0;
+        for (v62 = 0; v62 < 12; ++v62) // 0x410389..0x410397: clear all 12 flags
+            v63[v62] = 0;
         v61 = v9;
-        v65 = 0;
         v62 = 0;
         while (1)
         {
