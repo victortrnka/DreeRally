@@ -170,6 +170,12 @@ Variables (Makefile defaults in parentheses):
 - `ORIG` (`0`) — `1` copies the original `dr.exe` (+ `msvcr71.dll`) from
   `DR_DATA` into `run-docker-orig/` and runs that instead of our build.
   `DR_DATA`/the Steam bottle are only ever read.
+- `AUDIO` (`0`) — `1` starts a PulseAudio null sink and records its
+  monitor to `audio.wav` in `OUT_SHOTS` for the run. The default
+  `DOCKER_ARGS` (`-nosound`) and `AUDIO=0` both skip `FSOUND_Init`, so
+  none of the sound code (`FreeSong`, the file callbacks, `loadMusic`'s
+  frees, `FSOUND_Close`) ever runs; checking sound code needs real sound,
+  `DOCKER_ARGS="-window" AUDIO=1`.
 
 Things to know:
 

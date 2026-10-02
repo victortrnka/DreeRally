@@ -171,12 +171,24 @@ are in `doc/FINDINGS.md` and `git log`.
     reads the first dword of every fourth row from `+4` instead of `+0`
     (0x4095c9), so 4 bytes of each saved row are wrong when the big
     power-up is taken and the track is restored.
-37. **Fullscreen not verified at runtime**: `refreshScreen`'s fullscreen
-    branches (Alt+Enter toggle, aspect-corrected GL quads) now follow the
-    original but cannot be exercised in the headless runner.
+37. **Fullscreen's Alt+Enter toggle not verified at runtime**: `refreshScreen`'s
+    fullscreen branches (aspect-corrected GL quads) run under Docker
+    without `-window` and match the original there; only the Alt+Enter
+    toggle itself cannot be exercised, since `keys.exe` has no Alt.
 38. **Gouraud case 0x80 not seen on screen**: `draw3dElements_4116D0`'s
     colour-0x80 triangles (Suburbia/West End, TR0) are restored from the
     original's code but no such triangle is in view at the West End start.
+39. **`mainMenu`'s two unrestored stores**: the commented-out block
+    `6058ab7` removed (to restore the bottom panel) also held
+    `drivers[driverId].name[0] = 0` and `drivers[driverId].face = 0`
+    (dr.exe 0x43A2AA/0x43A2B7 with `ebx = 0`), not carried over.
+    `mainMenu` runs once at start-up, so there is no visible effect today.
+40. **Shop missing the DEATH RALLY logo after results -> statistics**: the
+    shop shows black top rows (with stray pixels) where dr.exe shows the
+    logo. The shop entry (`postLoadedOrLicense`) copies the top of the
+    current `screenBuffer`, as dr.exe 0x4388A3 does, so the cause is
+    whatever leaves `screenBuffer` in that state on the way through
+    statistics, not the shop entry itself; not investigated further.
 
 ## Deliberate deviations from the original (not bugs)
 
@@ -281,15 +293,33 @@ original and rejected; neither is in the tree:
   from slot 0's state), cleared the wrong field when an explosion
   finished, and its compaction loop never advanced, plus its call from
   `startRace` was commented out: `0adff23 fix: draw and clear mine
-  explosions`.
+  explosions`. With drawing restored, a pre-existing bug became visible:
+  see the mine-slot-reset fix below.
 - `calculateNextRaces` picked the medium and hard next races from the
   same pool as the easy race (`circuitOrder_45673C[0..4]` for all three,
   instead of offsets 2 and 5), so Utopia, Bogota, Downtown and Velodrome
-  could never be offered as hard races: `fix: read medium/hard races
-  from own pools`. `lastCircuitsSelected_456780` was zero-initialised
-  instead of the original's `{-1, -1, -1}`, so the first easy race could
-  never be Suburbia: `fix: init lastCircuitsSelected to -1,-1,-1`.
+  could never be offered as hard races: `1ea8b1f fix: read medium/hard
+  races from own pools`. `lastCircuitsSelected_456780` was
+  zero-initialised instead of the original's `{-1, -1, -1}`, so the
+  first easy race could never be Suburbia: `05eba79 fix: init
+  lastCircuitsSelected to -1,-1,-1`.
 - The news-already-used flags (`dword_45F000`..`byte_45F012`) were kept
   as 6 separate globals that only acted as one 19-byte array because the
-  linker happened to place them adjacently: `fix: use one real array for
-  news-used flags`.
+  linker happened to place them adjacently: `0d4627f fix: use one real
+  array for news-used flags`.
+- `FMUSIC_LoadXM` ran two iterations past `numinsts`, writing two
+  instrument entries past the end of its table and corrupting the next
+  heap block; the heap corruption crashed the game as soon as a loaded
+  song was freed, with real sound on: `1d585cb fix: load exactly
+  numinsts XM instruments`.
+- `initRaceValues` reset only 16 of the 32 mine slots, so any 17th or
+  later armed mine animated an explosion by itself: `fix: reset all 32
+  mine slots in race init`.
+- `-lang=`/`-mod=`'s `strtok` parsing cut the shared argument string, so
+  a trailing `-window` was lost: `fix: test -window before the strtok
+  parsers`.
+- Three 256-byte polygon-colour remap tables (colours 0x81-0x83) were
+  1-byte stand-ins: `fix: size the 0x81-0x83 colour remap tables`.
+- A handle-sized block in `FSOUND_File_Open_43F720` and `openAnimation`'s
+  packed-data buffer on the `FEATURE_SKIP_VIDEO` path leaked: `fix: drop
+  two leaks next to restored frees`.
