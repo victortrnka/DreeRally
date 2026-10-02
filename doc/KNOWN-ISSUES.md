@@ -248,6 +248,14 @@ are in `doc/FINDINGS.md` and `git log`.
   the English label. "Previous Menu" and the save-slot texts are still
   translated.
 
+- On the 0.4.x line the menus show the DreeRally footer ("Welcome to
+  DreeRally - Windows Version 0.4", the project URL and the arrow-keys
+  hint) where the original's `drawBottomMenuText` (0x41E810) draws the
+  six message rows of `bottomMenuText`, so the welcome line and the
+  pre-race news lines are kept up to date but not shown. The window
+  caption is "DreeRally" ("DreeRally RACE" in a race) instead of the
+  original's "DR".
+
 ## Rejected patches
 
 Two proposed patches to `readKeyboard` were evaluated against the
