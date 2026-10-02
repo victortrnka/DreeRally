@@ -1538,7 +1538,7 @@ int initParticipantValues_401060()
   int indexRaceParticipantt; // [sp+Ch] [bp-4F0h]@1
 
   int arrayv35[24]= {360,370,430,460,510,440,450,460,470,520,510,520,530,580,600,240,280,330,380,440,120,130,140,230};
-  int arrayv59[24] = {300,350,130,135,140,230,300,350,150,160,230,300,350,150,190,240,290,360,400};
+  int arrayv59[24] = {120,130,140,230,300,350,130,135,140,230,300,350,150,155,160,230,300,350,150,190,240,290,360,400};
 	  //todo esto son posiciones de memoria :S
   //car sizes
   double arrayv29[6] ={8.3,9.7,9,10.5,8.5,9.2};
@@ -1733,7 +1733,7 @@ LABEL_36:
     v17 = arrayv79[ 6 * raceParticipant[1].difficulty+1];//18 posiciones maximo (12)
     v18 = arrayv35[ 5 * raceParticipant[1].difficulty+4];//15 posiciones maximo (10) //v39
 	raceParticipant2[0].damageBar_4A6898 = (100 - raceParticipant[0].damage) << 10;
-    v19 = arrayv59[6 * raceParticipant[1].difficulty+4] + v18; //era v55
+    v19 = arrayv59[6 * raceParticipant[1].difficulty+5] + v18; //0x40208B: [esp + eax + 0x90], entry 6 * difficulty + 5
 	raceParticipant2[0].efectiveTire_4A688C = 0;
 	raceParticipant2[0].efectiveArmour_4A689C = v19;
 	raceParticipant2[0].steeringCapacity_4A6894 = 3.75 / (v17 - (double)raceParticipant[0].engine * 0.05);///comprobar si es 0 o 1 el indice
