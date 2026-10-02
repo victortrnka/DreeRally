@@ -252,8 +252,8 @@ int stopAndOpenMusic()
     FSOUND_Stream_Close(soundStream);
 	#ifndef _NO_MINIFMOD
 	 FMUSIC_FreeSong_43D940(musicModuleModified_456C24);
-	 result = FMUSIC_FreeSong_43D940(musicModule);
 	#endif
+	 result = FMUSIC_FreeSong(musicModule);
 	musicModule = NULL;
     musicModuleModified_456C24 = 0;
   }
