@@ -45,6 +45,8 @@ int hash_index (hash_t *h, char *key) {
 void hash_insert (hash_t *h, char *key, void *value) {
     //int i = hash_index(h, key);
 
+    if (h->filled >= (int)(sizeof(h->keys) / sizeof(h->keys[0])))
+        return;
     h->keys[h->filled] = key;
     h->values[h->filled] = value;
 	h->filled = h->filled +1;
@@ -54,7 +56,6 @@ void *hash_lookup (hash_t *h, char *key) {
     signed int i = hash_index(h, key);
     if(i==-1)
 		return NULL;
-	h->filled = h->filled +1;
 
 	return h->values[i];
 }
