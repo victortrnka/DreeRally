@@ -300,8 +300,8 @@ typedef struct RaceParticipantIngame {
 	float flt_4A7E58; // weak//parece algo relacionado con el angulo del coche
 	float advanceXAxis_4A7E5C; // weak   //avance eje x    parece que son float
 	float advanceYAxis_4A7E60; // weak   //avance eje y 
-	int unk_4A7E64; // weak
-	int dword_4A7E68;//este no venia
+	float unk_4A7E64; // weak
+	float dword_4A7E68;//este no venia
 	int dword_4A7E6C; // weak
 	int dword_4A7E70; // weak
 	int dword_4A7E74; // weak
