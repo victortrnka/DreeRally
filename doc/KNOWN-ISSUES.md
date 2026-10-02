@@ -205,6 +205,13 @@ are in `doc/FINDINGS.md` and `git log`.
 44. **`startRace` clears `dword_47968C` unconditionally**; dr.exe does it
     only in multiplayer.
 
+45. **`flatViewMode_456AA4` is dead code in dr.exe**: nothing ever sets
+    it (0x409B90 only clears it), so `sub_405430`'s flat, centred race
+    view and the other branches it gates never run, in the original or
+    in the port. The DOS game has no such flag. The mushroom pickup
+    (type 4) and the DRUG cheat are the drunk view
+    (`mushroomPendingTime_4A8050`), which works.
+
 ## Deliberate deviations from the original (not bugs)
 
 - `bbc54cc fix: don't skip the easy race results screen`: the original has
