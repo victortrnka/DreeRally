@@ -134,11 +134,14 @@ are in `doc/FINDINGS.md` and `git log`.
     "Tone Dialing", rewritten to "Pulse Dialing" by `mainMenu`) is three
     `int` stand-ins plus `word_4470EE` in `ui/menu.c`, not a 50-byte row.
     Multiplayer only; the port never draws it.
-31. **Possible unsigned-shift sites** (the "Unsigned `_DWORD`" class in
-    `doc/FINDINGS.md`), not checked against the original yet: e.g.
-    `draw3dElements_4116D0` (`race/3dSystem.c:606/609/632`) shifts
-    `(100 - *(_DWORD *)&dword_4B4328[...]) >> 8`, a logical shift if the
-    difference is negative.
+31. **Signedness mismatches** (the "Unsigned `_DWORD`" class in
+    `doc/FINDINGS.md`): `make signcheck` lists them. The sites in
+    `draw3dElements_4116D0` once listed here were in commented-out code,
+    now restored with the original's signed shifts. The remaining
+    candidates are type mismatches whose values never reach the sign bit
+    (repair costs and texture sizes halved through `HIDWORD`, driver
+    points, lap counters and race positions held in signed `char` fields,
+    font indices of fixed ASCII text); none has a visible effect.
 32. **Define Keyboard popup, one pixel column**: side by side with the
     original, the popup's rightmost inner column (x = 581, y 132..372) is
     popup fill in the port and background in the original, with the same
@@ -168,6 +171,12 @@ are in `doc/FINDINGS.md` and `git log`.
     reads the first dword of every fourth row from `+4` instead of `+0`
     (0x4095c9), so 4 bytes of each saved row are wrong when the big
     power-up is taken and the track is restored.
+37. **Fullscreen not verified at runtime**: `refreshScreen`'s fullscreen
+    branches (Alt+Enter toggle, aspect-corrected GL quads) now follow the
+    original but cannot be exercised in the headless runner.
+38. **Gouraud case 0x80 not seen on screen**: `draw3dElements_4116D0`'s
+    colour-0x80 triangles (Suburbia/West End, TR0) are restored from the
+    original's code but no such triangle is in view at the West End start.
 
 ## Deliberate deviations from the original (not bugs)
 
@@ -267,3 +276,20 @@ original and rejected; neither is in the tree:
   fix: restore mainMenu's bottom panel lines`, `193d81b fix: restore the
   end-game panel lines`, `1ba4827 fix: draw the bottom panel like the
   original`. The branding deviation is gone with it.
+- Mine explosions were never drawn: `drawExplosion_40FE20` reset its only
+  loop index on every drawn frame (so any mine past slot 0 was animated
+  from slot 0's state), cleared the wrong field when an explosion
+  finished, and its compaction loop never advanced, plus its call from
+  `startRace` was commented out: `0adff23 fix: draw and clear mine
+  explosions`.
+- `calculateNextRaces` picked the medium and hard next races from the
+  same pool as the easy race (`circuitOrder_45673C[0..4]` for all three,
+  instead of offsets 2 and 5), so Utopia, Bogota, Downtown and Velodrome
+  could never be offered as hard races: `fix: read medium/hard races
+  from own pools`. `lastCircuitsSelected_456780` was zero-initialised
+  instead of the original's `{-1, -1, -1}`, so the first easy race could
+  never be Suburbia: `fix: init lastCircuitsSelected to -1,-1,-1`.
+- The news-already-used flags (`dword_45F000`..`byte_45F012`) were kept
+  as 6 separate globals that only acted as one 19-byte array because the
+  linker happened to place them adjacently: `fix: use one real array for
+  news-used flags`.
