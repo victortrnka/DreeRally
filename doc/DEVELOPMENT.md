@@ -155,7 +155,9 @@ Variables (Makefile defaults in parentheses):
 - `KEYS` (empty) — tokens for `keys.exe`: named keys
   (`up`/`down`/`left`/`right`/`enter`/`esc`/`space`/`back`, in a race
   `f1`/`tab`, and `f6` for a screenshot, `HS-PICnn.PCX` in the run
-  directory), letters `a`-`z`,
+  directory), letters `a`-`z`, `+KEY`/`-KEY` to hold and release an
+  arrow or letter key (`+up w3000 +left w800 -left -up` accelerates and
+  turns left in a race),
   `wNNN` to wait `NNN` ms, and `shot:<label>` to take a mid-sequence screenshot
   (handled by `entrypoint.sh`, which splits the sequence there). Ignored if
   `SCENARIO` is set.

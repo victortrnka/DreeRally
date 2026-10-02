@@ -13,6 +13,8 @@
  *   f6                             - screenshot (menus and races)
  *   up, down, left, right          - arrow keys
  *   a-z                            - letter keys (e.g. to type a nickname)
+ *   +KEY, -KEY                     - hold / release an arrow or letter key
+ *                                    (e.g. +up w3000 -up to accelerate)
  *   wNNN                           - wait NNN milliseconds (e.g. w1500)
  *
  * Originally a scratch tool for reproducing a crash; promoted to
@@ -78,6 +80,26 @@ int main(int argc, char **argv)
 		else if (strlen(a) == 1 && a[0] >= 'a' && a[0] <= 'z') {
 			int sc = scancodeForLetter(a[0]);
 			key(h, 'A' + (a[0] - 'a'), sc, 0);
+		}
+		else if ((a[0] == '+' || a[0] == '-') && a[1]) {
+			/* +KEY presses an arrow or letter key and keeps it held, -KEY
+			 * releases it: "+up w3000 +left w800 -left -up" accelerates,
+			 * turns left for 0.8 s and stops. */
+			int vk = 0, sc = 0, ext = 1;
+			LPARAM l;
+			if (!strcmp(a + 1, "up")) { vk = VK_UP; sc = 0x48; }
+			else if (!strcmp(a + 1, "down")) { vk = VK_DOWN; sc = 0x50; }
+			else if (!strcmp(a + 1, "left")) { vk = VK_LEFT; sc = 0x4b; }
+			else if (!strcmp(a + 1, "right")) { vk = VK_RIGHT; sc = 0x4d; }
+			else if (!a[2] && a[1] >= 'a' && a[1] <= 'z') {
+				vk = 'A' + (a[1] - 'a');
+				sc = scancodeForLetter(a[1]);
+				ext = 0;
+			}
+			if (!vk) { printf("bad token %s\n", a); return 2; }
+			l = 1 | (sc << 16) | (ext << 24);
+			if (a[0] == '+') PostMessageA(h, WM_KEYDOWN, vk, l);
+			else PostMessageA(h, WM_KEYUP, vk, l | (1u << 30) | (1u << 31));
 		}
 		else { printf("bad token %s\n", a); return 2; }
 		printf("%lu %s\n", GetTickCount() - t0, a); fflush(stdout);
