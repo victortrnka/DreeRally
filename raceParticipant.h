@@ -279,20 +279,20 @@ typedef struct RaceParticipantIngame {
 	char currentLap_4A7E08; // weak
 	char racePosition_4A7E09; // weak
 	int hasFinishedTheRace_4A7E0C; // weak
-	int frontLeftAbsoluteXPosition_4A7E10; // weak
-	int frontLeftAbsoluteYPosition_4A7E14; // weak
+	float frontLeftAbsoluteXPosition_4A7E10; // weak
+	float frontLeftAbsoluteYPosition_4A7E14; // weak
 	float lastFrontLeftAbsoluteXPosition_4A7E18; // weak  related to the previous one
  	float lastFrontLeftAbsoluteYPosition_4A7E1C; // weak related to the previous one
-	int frontRightAbsoluteXPosition_4A7E20;
-	int frontRightAbsoluteYPosition_4A7E24; // weak
+	float frontRightAbsoluteXPosition_4A7E20;
+	float frontRightAbsoluteYPosition_4A7E24; // weak
 	float lastFrontRightAbsoluteXPosition_4A7E28; // weak related to the previous one
 	float lastFrontRightAbsoluteYPosition_4A7E2C; // weak related to the previous one
-	int backLeftAbsoluteXPosition_4A7E30; // weak  //esquina de atras izquierda
-	int backLeftAbsoluteYPosition_4A7E34; // weak
+	float backLeftAbsoluteXPosition_4A7E30; // weak  //esquina de atras izquierda
+	float backLeftAbsoluteYPosition_4A7E34; // weak
 	float lastBackLeftAbsoluteXPosition_4A7E38; // weak
 	float lastBackLeftAbsoluteYPosition_4A7E3C; // weak  
-	int backRightAbsoluteXPosition_4A7E40; // weak//esquina de atras derecha
-	int backRightAbsoluteYPosition_4A7E44; // weak
+	float backRightAbsoluteXPosition_4A7E40; // weak//esquina de atras derecha
+	float backRightAbsoluteYPosition_4A7E44; // weak
 	float lastBackRightAbsoluteXPosition_4A7E48; // weak 
 	float lastBackRightAbsoluteYPosition_4A7E4C; // weak
 	int dword_4A7E50; // weak

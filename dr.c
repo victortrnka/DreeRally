@@ -9273,11 +9273,11 @@ int checkVaiZones_412DF0()
       v4 = 864 * v1;
       v5 = raceParticipantIngame[v1].actualVaiZone_4A7D00 + 1;
       if ( *((BYTE *)v2
-           + v3 * (raceParticipantIngame[v1].frontLeftAbsoluteYPosition_4A7E14 >> 2)
-           + (raceParticipantIngame[v1].frontLeftAbsoluteXPosition_4A7E10 >> 2)) == v5
+           + v3 * ((int)raceParticipantIngame[v1].frontLeftAbsoluteYPosition_4A7E14 >> 2)
+           + ((int)raceParticipantIngame[v1].frontLeftAbsoluteXPosition_4A7E10 >> 2)) == v5
         || *((BYTE *)v2
-           + circuitVaiBpk_width_4A6858 * (raceParticipantIngame[v1].frontRightAbsoluteYPosition_4A7E24  >> 2)
-           + (raceParticipantIngame[v1].frontRightAbsoluteXPosition_4A7E20>> 2)) == v5 )
+           + circuitVaiBpk_width_4A6858 * ((int)raceParticipantIngame[v1].frontRightAbsoluteYPosition_4A7E24 >> 2)
+           + ((int)raceParticipantIngame[v1].frontRightAbsoluteXPosition_4A7E20 >> 2)) == v5 )
         ++raceParticipantIngame[v1].actualVaiZone_4A7D00;
       v3 = circuitVaiBpk_width_4A6858;
        if ( *((BYTE *)v2
