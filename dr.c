@@ -6315,7 +6315,7 @@ LABEL_33:
   {
     raceParticipantIngame[v0].dword_4A7DBC = raceParticipantIngame[v0].dword_4A7DC0
                              * raceParticipantIngame[ currentDriverSelectedIndex_503518].carVelocity_4A7DB0
-							 * (raceParticipant2[v0].efectiveTire_4A688C
+							 * ((double)raceParticipant2[v0].efectiveTire_4A688C
 							 / raceParticipant2[v0].efectiveEngine_4A6884);
     v16 = raceParticipantIngame[v0].dword_4A7DBC;
 	if(raceParticipantIngame[v0].dword_4A7DC0 | raceParticipantIngame[v0].dword_4A7DC4)  
