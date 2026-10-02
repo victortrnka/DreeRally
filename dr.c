@@ -10622,29 +10622,30 @@ LABEL_213:
         currentDriverSelectedIndex_503518 = 0;
         if ( v50 > 0 )
         {
-			v64 = (int)raceParticipant2[0].damageBar_4A6898;
-          v65 = (int)dword_4A7E98;
+          //0x4166D0: walks raceParticipant2 and the live participant records; a car that
+          //has just hit a wall (0x4A7E94 or 0x4A7E98 == 2) takes damage from its push
+          v64 = 0;
           currentDriverSelectedIndex_503518 = v50;
           do
           {
-            if ( (*(_DWORD *)(v65 - 4) == 2 || *(_DWORD *)v65 == 2) && !*(_DWORD *)(v65 - 140) )
+            if ( (raceParticipantIngame[v64].dword_4A7E94 == 2 || raceParticipantIngame[v64].dword_4A7E98 == 2)
+              && !raceParticipantIngame[v64].hasFinishedTheRace_4A7E0C )
             {
-              v66 = (unsigned __int64)((*(float *)(v65 - 156) * *(float *)(v65 - 156)
-                                      + *(float *)(v65 - 152) * *(float *)(v65 - 152))
-                                     * (double)(1024 - *(_DWORD *)(v64 + 4)));
+              v66 = (unsigned __int64)((raceParticipantIngame[v64].unk_4A7DFC * raceParticipantIngame[v64].unk_4A7DFC
+                                      + raceParticipantIngame[v64].unk_4A7E00 * raceParticipantIngame[v64].unk_4A7E00)
+                                     * (double)(1024 - raceParticipant2[v64].efectiveArmour_4A689C));
               dword_50B2B0 = v66;
               if ( (signed int)v66 > 10000 )
               {
                 LODWORD(v66) = 10000;
                 dword_50B2B0 = 10000;
               }
-              v93 = *(_DWORD *)v64 - (signed int)v66 < 0;
-              *(_DWORD *)v64 -= v66;
+              v93 = raceParticipant2[v64].damageBar_4A6898 - (signed int)v66 < 0;
+              raceParticipant2[v64].damageBar_4A6898 -= v66;
               if ( v93 )
-                *(_DWORD *)v64 = 0;
+                raceParticipant2[v64].damageBar_4A6898 = 0;
             }
-            v65 += 864;
-            v64 += 148;
+            ++v64;
             --v50;
           }
           while ( v50 );
