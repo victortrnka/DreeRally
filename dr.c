@@ -6318,11 +6318,8 @@ LABEL_33:
 							 * ((double)raceParticipant2[v0].efectiveTire_4A688C
 							 / raceParticipant2[v0].efectiveEngine_4A6884);
     v16 = raceParticipantIngame[v0].dword_4A7DBC;
-	if(raceParticipantIngame[v0].dword_4A7DC0 | raceParticipantIngame[v0].dword_4A7DC4)  
-		v16 = -v16;
-	//if(debug==1) v17=1;if(debug==1)v18=1;
-	//if ( v17 | v18 )
-      //v16 = -v16;
+    if ( v16 < 0.0 )
+      v16 = -v16;
     if ( v16 > 20.0 )
       raceParticipantIngame[ currentDriverSelectedIndex_503518].carVelocity_4A7DB0 = raceParticipantIngame[ currentDriverSelectedIndex_503518].carVelocity_4A7DB0 - 0.02 * raceParticipantIngame[ currentDriverSelectedIndex_503518].carVelocity_4A7DB0;
   }
@@ -9086,9 +9083,8 @@ int recalculateCarBoundary_411D10()
       {
         v61 = raceParticipantIngame[ v1].dword_4A7DBC;
         v63 = (raceParticipantIngame[ v1].dword_4A7DBC);
-		if(raceParticipantIngame[ v1].dword_4A7DC0!=0.0 |  raceParticipantIngame[ v1].dword_4A7DC4!=0.0)
-			v63 =-v63;
-       //TODO FIX esto esta sin inicializar if ( v64 | v65 )      v63 = -v63;
+        if ( v63 < 0.0 )
+          v63 = -v63;
 		v174 = (double)(raceParticipant2[v1].carType + 13);
         if ( v63 > v174
           || raceParticipantIngame[ v1].carVelocity_4A7DB0 > 0.0 && raceParticipantIngame[ v1].dword_4A7D20[dword_4A7A20] & IN_RACE_BRAKE
@@ -9103,17 +9099,13 @@ int recalculateCarBoundary_411D10()
             {
               v67 = raceParticipantIngame[ v1].dword_4A7DBC;
               v69 = (raceParticipantIngame[ v1].dword_4A7DBC);
-              //if ( v70 | v71 )
-
-			  if(raceParticipantIngame[ v1].dword_4A7DC0!=0.0 |  raceParticipantIngame[ v1].dword_4A7DC4!=0.0)
-				v69 = -v69;
+              if ( v69 < 0.0 )
+                v69 = -v69;
               if ( v69 > v174 )
               {
                 v72 = raceParticipantIngame[ v1].dword_4A7DBC;
                 v74 = (raceParticipantIngame[ v1].dword_4A7DBC);
-                //if ( v75 | v76 )
-				 if(raceParticipantIngame[ v1].dword_4A7DC0!=0.0 |  raceParticipantIngame[ v1].dword_4A7DC4!=0.0)
-			
+                if ( v74 < 0.0 )
                   v74 = -v74;
                 dword_4AA92C = (unsigned __int64)(v74 * 2048.0);
               }
