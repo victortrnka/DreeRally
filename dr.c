@@ -13784,7 +13784,7 @@ void refreshAndCheckConnection_42A570()
   char v12; // cl@24
   int v13; // eax@26
   char v14; // cl@27
-  void *v15 = malloc(0x64u); // eax@34
+  void *v15; // eax@34
   char *v16; // eax@34
   char v17; // dl@35
   unsigned int v18; // eax@36
