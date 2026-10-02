@@ -303,7 +303,8 @@ side's call targets. In the original these are `call rel32`, a `jmp` to
 another function's start (a tail call), `call [IAT]`, and `call reg`
 after `mov reg, [IAT]`; a call through a `jmp [IAT]` or `jmp func` stub
 counts as a call to what the stub jumps to. In the port the map names
-every target. Port callees are mapped to original addresses through the
+every target, also through the function-pointer locals Hex-Rays made of
+MSVC's import registers (`v8 = rand; v8()`). Port callees are mapped to original addresses through the
 pairing, and per function the tool lists:
 
 - `missing`: an original callee the port never calls, with the count
@@ -333,8 +334,9 @@ Noise to expect:
   `freeMusic`, `printf` and `exit` calls are allocateMemory's error
   path, inlined at each of its allocations; the port calls `malloc`
   directly.
-- The original calls `_ftol2` for every float-to-int conversion, while
-  clang converts inline; it is left out.
+- The original calls `_ftol2` for every float-to-int conversion and
+  `_allshr` for a 64-bit shift, while clang does both inline; they are
+  left out.
 - A bare `ret` function (0x43C720, the port's `nullsub_1`) is ignored
   on both sides.
 - An original callee without a marker (`sub_XXXXXX` that the port names

@@ -128,6 +128,40 @@ class PortCallsTest(unittest.TestCase):
         self.assertEqual(c, {("fn", 0x401080): 1, ("port", "getLanguageEntry"): 1, cd.EMPTY: 1,
                              ("lib", "_itoa"): 1, ("lib", "SDL_Delay"): 2, cd.INDIRECT: 1})
 
+    def test_function_pointer_locals_are_followed(self):
+        # Hex-Rays keeps MSVC's `mov esi, [IAT]; call esi` as a local
+        # function pointer (`v8 = rand; v8()`, `v10 = glTexCoord2f`), which
+        # clang /Od spills to the frame; counting those as unknown made
+        # generatePowerUps look as if it had lost two rand() calls
+        p = self.port()
+        c = cd.call_targets(insns("""
+            mov dword ptr [ebp - 0x24], 0x500400
+            mov eax, dword ptr [0x4c2574]
+            mov dword ptr [ebp - 0x4c], eax
+            call dword ptr [ebp - 0x24]
+            mov eax, dword ptr [ebp - 0x4c]
+            call eax
+            call dword ptr [ebp - 0x4c]
+            call dword ptr [ebp - 0x30]
+        """), 0x500000, 0x500100, p.resolve, p.resolve_slot)
+        self.assertEqual(c, {("lib", "_itoa"): 1, ("lib", "SDL_Delay"): 2, cd.INDIRECT: 1})
+
+    def test_esp_slots_only_without_pushes_in_between(self):
+        # clang /Od keeps esp fixed in a body (generatePowerUps: lea eax,
+        # [rand]; mov [esp + 0xe8], eax; call [esp + 0xe8]); MSVC pushes
+        # arguments, so the same text then names another slot
+        p = self.port()
+        c = cd.call_targets(insns("""
+            lea eax, [0x500400]
+            mov dword ptr [esp + 0xe8], eax
+            call dword ptr [esp + 0xe8]
+            cmp dword ptr [esp + 0xe8], 0x0
+            call dword ptr [esp + 0xe8]
+            push eax
+            call dword ptr [esp + 0xe8]
+        """), 0x500000, 0x500100, p.resolve, p.resolve_slot)
+        self.assertEqual(c, {("lib", "_itoa"): 2, cd.INDIRECT: 1})
+
 
 class CompareTest(unittest.TestCase):
     def test_a_callee_the_port_never_calls_is_flagged(self):

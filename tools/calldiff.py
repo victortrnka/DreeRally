@@ -83,10 +83,11 @@ CRT_INLINE = {
 }
 # The original's statically linked runtime helpers that game code calls,
 # and 0x43C4C0, a bare wrapper that passes its argument to malloc.
-ORIG_RUNTIME = {0x43F8D0: "_ftol2", 0x43F950: "_alldiv", 0x43C4C0: "malloc"}
+ORIG_RUNTIME = {0x43F8D0: "_ftol2", 0x43F950: "_alldiv", 0x43FA00: "_allshr", 0x43C4C0: "malloc"}
 # Library calls only the original makes, for a reason that is not a
-# dropped call: clang converts float to int inline (cvttss2si).
-LIB_NOISE = {"_ftol2"}
+# dropped call: clang converts float to int inline (cvttss2si) and
+# shifts a 64-bit value by a constant inline.
+LIB_NOISE = {"_ftol2", "_allshr"}
 EMPTY = ("empty",)
 INDIRECT = ("indirect",)
 HEXADDR = re.compile(r"^0x[0-9a-fA-F]+$")
@@ -149,9 +150,9 @@ def read_imports(path):
 # --- callees ------------------------------------------------------------------
 
 def register_source(insns, i, reg):
-    """The instruction that last loaded `reg` before insns[i], in address
-    order, skipping the `pop reg` of an epilogue placed earlier in the
-    function (MSVC loads an import into esi once and calls it many
+    """Index of the instruction that last loaded `reg` before insns[i], in
+    address order, skipping the `pop reg` of an epilogue placed earlier in
+    the function (MSVC loads an import into esi once and calls it many
     times). None if a call clobbers the (caller-saved) register first."""
     for k in range(i - 1, -1, -1):
         mn, ops = insns[k][1], insns[k][2]
@@ -160,7 +161,7 @@ def register_source(insns, i, reg):
         if mn in ("pop", "push", "call", "cmp", "test") or mn.startswith("j"):
             continue  # reads its first operand, or is an epilogue's pop
         if ops.split(", ")[0] in sc.REG_PARTS.get(reg, (reg,)):
-            return insns[k]
+            return k
     return None
 
 
@@ -168,6 +169,47 @@ def memory_address(operand):
     """0x441024 of `dword ptr [0x441024]`, else None."""
     m = re.match(r"^dword ptr \[(0x[0-9a-fA-F]+)\]$", operand)
     return int(m.group(1), 16) if m else None
+
+
+FRAME_SLOT = re.compile(r"^dword ptr \[(ebp|esp)( [-+] 0x[0-9a-fA-F]+)?\]$")
+
+
+def operand_value(insns, i, operand, depth=4):
+    """What `operand` holds at insns[i]: ("addr", a) for a constant
+    address, ("slot", a) for the dword at address a (an import slot), or
+    None. Follows `mov reg, x` and, for the port's function-pointer locals
+    (`v8 = rand; v8()`), `mov dword ptr [ebp - n], x` or the same
+    through esp (clang /Od, which never pushes in a body: a push, pop or
+    esp adjustment on the way back ends the search). `lea reg, [a]` is
+    the address a."""
+    if HEXADDR.match(operand):
+        return "addr", int(operand, 16)
+    slot = memory_address(operand)
+    if slot is not None:
+        return "slot", slot
+    if depth == 0:
+        return None
+    if operand in sc.REG_PARTS:
+        k = register_source(insns, i, operand)
+        if k is None or insns[k][1] not in ("mov", "lea"):
+            return None
+        src = insns[k][2].partition(", ")[2]
+        if insns[k][1] == "lea":
+            m = re.match(r"^\[(0x[0-9a-fA-F]+)\]$", src)
+            return ("addr", int(m.group(1), 16)) if m else None
+        return operand_value(insns, k, src, depth - 1)
+    m = FRAME_SLOT.match(operand)
+    if m:
+        for k in range(i - 1, -1, -1):
+            mn, ops = insns[k][1], insns[k][2]
+            if m.group(1) == "esp" and (mn in ("push", "pop") or re.match(r"^(add|sub|and) esp,", mn + " " + ops)):
+                return None
+            if mn in ("call", "push", "cmp", "test") or mn.startswith("j"):
+                continue  # reads the slot
+            dest, _, src = ops.partition(", ")
+            if dest == operand:
+                return operand_value(insns, k, src, depth - 1) if mn == "mov" else None
+    return None
 
 
 def call_targets(insns, start, end, resolve_address, resolve_slot):
@@ -181,26 +223,14 @@ def call_targets(insns, start, end, resolve_address, resolve_slot):
     for i, (_a, mn, ops) in enumerate(insns):
         if mn not in ("call", "jmp"):
             continue
+        if mn == "jmp" and HEXADDR.match(ops) and start <= int(ops, 16) < end:
+            continue  # a branch inside the function
         key = None
-        if HEXADDR.match(ops):
-            t = int(ops, 16)
-            if mn == "jmp" and start <= t < end:
-                continue  # a branch inside the function
-            key = resolve_address(t)
-        else:
-            slot = memory_address(ops)
-            if slot is None and ops in sc.REG_PARTS:
-                src = register_source(insns, i, ops)
-                if src is not None and src[1] == "mov":
-                    loaded = src[2].partition(", ")[2]
-                    if HEXADDR.match(loaded):
-                        key = resolve_address(int(loaded, 16))
-                    else:
-                        slot = memory_address(loaded)
-            if slot is not None:
-                key = resolve_slot(slot)
-            if key is None and mn == "call":
-                key = INDIRECT
+        value = operand_value(insns, i, ops)
+        if value is not None:
+            key = resolve_address(value[1]) if value[0] == "addr" else resolve_slot(value[1])
+        if key is None and mn == "call":
+            key = INDIRECT
         if key is not None:
             out[key] += 1
     return out
