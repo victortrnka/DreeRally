@@ -25,7 +25,7 @@
 # race with AI cars moving, 0 Unhandled (also re-verified
 # with the Esc-free prefix and the RUN_SECS-derived keys bound).
 # Three Enters, as in results-orig.keys: the port now shows dr.exe's two
-# publisher splashes (Apogee, then rmd.bmp) before its own intro, like the
+# publisher splashes (Apogee, then rmd.bmp) after its own intro animation, like the
 # original, so the single Enter measured for the port before no longer
 # reaches the main menu.
 enter w3000
