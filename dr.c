@@ -5173,8 +5173,9 @@ int *initRaceValues_409F90()
 	
 	raceParticipantIngame[indexRaceParticipant].lastKeysReadPreviousIndex_4A7DA4 =0;
 	raceParticipantIngame[indexRaceParticipant].lastKeysReadIndex_4A7DA0 =0;
+	raceParticipantIngame[indexRaceParticipant].carVelocity_4A7DB0 =0;
+	raceParticipantIngame[indexRaceParticipant].dword_4A7DBC =0;
 	raceParticipantIngame[indexRaceParticipant].dword_4A7DC0 =0;
-	raceParticipantIngame[indexRaceParticipant].dword_4A7DC4 =0;
 	raceParticipantIngame[indexRaceParticipant].unk_4A7DFC =0;
 	raceParticipantIngame[indexRaceParticipant].unk_4A7E00 =0;
 	raceParticipantIngame[indexRaceParticipant].unk_4A7E04 =0;
