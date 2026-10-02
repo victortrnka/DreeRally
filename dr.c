@@ -6459,25 +6459,25 @@ LABEL_64:
     v89 = 15;
   else
     v89 = *((BYTE *)trxImaBpk_50A16C + v40) & 0xF;
-  v42 = raceParticipantIngame[v0].dword_4A7DC4 +  raceParticipantIngame[currentDriverSelectedIndex_503518].absolutePositionX_4A7DB4
-      + circuitWidth_464F40 * (unsigned __int64)(raceParticipantIngame[currentDriverSelectedIndex_503518].absolutePositionY_4A7DB8 +raceParticipantIngame[v0].dword_4A7DC8);
+  v42 = (unsigned __int64)(raceParticipantIngame[v0].dword_4A7DC4 + raceParticipantIngame[currentDriverSelectedIndex_503518].absolutePositionX_4A7DB4)
+      + circuitWidth_464F40 * (unsigned __int64)(raceParticipantIngame[currentDriverSelectedIndex_503518].absolutePositionY_4A7DB8 + raceParticipantIngame[v0].dword_4A7DC8);
   if ( v42 < 0 || v42 >= circuitWidth_464F40 * circuitHeight_4A7CF8 )
     v87 = 15;
   else
     v87 = *((BYTE *)trxImaBpk_50A16C + v42) & 0xF;
-  v43 = raceParticipantIngame[v0].dword_4A7DCC + raceParticipantIngame[currentDriverSelectedIndex_503518].absolutePositionX_4A7DB4
+  v43 = (unsigned __int64)(raceParticipantIngame[v0].dword_4A7DCC + raceParticipantIngame[currentDriverSelectedIndex_503518].absolutePositionX_4A7DB4)
       + circuitWidth_464F40 * (unsigned __int64)(raceParticipantIngame[currentDriverSelectedIndex_503518].absolutePositionY_4A7DB8 + raceParticipantIngame[v0].dword_4A7DD0);
   if ( v43 < 0 || v43 >= circuitWidth_464F40 * circuitHeight_4A7CF8 )
     v83 = 15;
   else
     v83 = *((BYTE *)trxImaBpk_50A16C + v43) & 0xF;
-  v44 = raceParticipantIngame[v0].dword_4A7DD4 +  raceParticipantIngame[currentDriverSelectedIndex_503518].absolutePositionX_4A7DB4
+  v44 = (unsigned __int64)(raceParticipantIngame[v0].dword_4A7DD4 + raceParticipantIngame[currentDriverSelectedIndex_503518].absolutePositionX_4A7DB4)
       + circuitWidth_464F40 * (unsigned __int64)(raceParticipantIngame[currentDriverSelectedIndex_503518].absolutePositionY_4A7DB8 + raceParticipantIngame[v0].dword_4A7DD8);
   if ( v44 < 0 || v44 >= circuitWidth_464F40 * circuitHeight_4A7CF8 )
     v84 = 15;
   else
     v84 = *((BYTE *)trxImaBpk_50A16C + v44) & 0xF;
-  v45 = raceParticipantIngame[v0].dword_4A7DDC +  raceParticipantIngame[currentDriverSelectedIndex_503518].absolutePositionX_4A7DB4
+  v45 = (unsigned __int64)(raceParticipantIngame[v0].dword_4A7DDC + raceParticipantIngame[currentDriverSelectedIndex_503518].absolutePositionX_4A7DB4)
       + circuitWidth_464F40 * (unsigned __int64)(raceParticipantIngame[currentDriverSelectedIndex_503518].absolutePositionY_4A7DB8 + raceParticipantIngame[v0].dword_4A7DE0);
   if ( v45 < 0 || v45 >= circuitWidth_464F40 * circuitHeight_4A7CF8 )
     v85 = 15;
