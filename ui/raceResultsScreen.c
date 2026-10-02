@@ -1343,13 +1343,13 @@ int drawPressAnyKeyToContinue()
   result = waitCounter2_456BE4++ + 1;
   if ( waitCounter2_456BE4 == 30 )
   {
-   // sub_426080();
+    sub_426080();
     drawTextWithFont((int)graphicsGeneral.fsma3bBpk, (int)&letterSpacing_4458B0, getLanguageEntry("Press any key to continue..."), 289646);
     result = drawKeyCursor(289634, (char *)screenBuffer + 289634, 0x10Eu, 16);
   }
   if ( waitCounter2_456BE4 == 60 )
   {
-   // sub_426080();
+    sub_426080();
     drawTextWithFont((int)graphicsGeneral.fsma3aBpk, (int)&letterSpacing_4458B0, getLanguageEntry("Press any key to continue..."), 289646);
     result = drawKeyCursor(289634, (char *)screenBuffer + 289634, 0x10Eu, 16);
     waitCounter2_456BE4 = 0;
