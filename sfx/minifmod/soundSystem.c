@@ -2445,10 +2445,10 @@ LABEL_94:
           FSOUND_File_SeekCallback_43AE30(fp->userhandle, firstsampleoffset, SEEK_SET);
         //FSOUND_File_Seek_43F7B0(fp);
       }
-	  v45 = mod->numinsts;
-	  if(v45<v53)
-		goto LABEL_90;
 	  v53++;
+	  v45 = mod->numinsts;
+	  if(v53>=v45)
+		goto LABEL_90;
 
 	  //esto hay que cambiarlo porque ni idea
       /*v45 = *(_WORD *)(effectStruct + 32);
