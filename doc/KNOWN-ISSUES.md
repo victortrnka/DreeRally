@@ -196,6 +196,14 @@ are in `doc/FINDINGS.md` and `git log`.
     a sign flip depending on 0x4A7DC0/0x4A7DC4, so skid smoke can start
     or stop at different moments than in dr.exe.
 
+42. **Power-up follow-ups** (`generatePowerUps`): its blink windows are
+    10 units lower than dr.exe's (port 1520..1990, dr.exe 1530..2000;
+    visual only), and it leaks a `malloc(100)` on every call.
+43. **Opponent HUD panels 2 px low**: at the race start the 2nd-4th
+    opponents' left-bar panels are drawn about 2 px lower than in dr.exe.
+44. **`startRace` clears `dword_47968C` unconditionally**; dr.exe does it
+    only in multiplayer.
+
 ## Deliberate deviations from the original (not bugs)
 
 - `bbc54cc fix: don't skip the easy race results screen`: the original has
@@ -250,6 +258,14 @@ original and rejected; neither is in the tree:
 
 ## Fixed since the previous pass
 
+- With the same rand() seed the port started races with another grid
+  and drew a different rand() stream from race init on: `3b40780 fix:
+  sort each race's grid like dr.exe`, `f2af4e1 fix: init all 20 power-up
+  slots like dr.exe`; in-race power-up slots: `ff8556e fix: cycle only
+  the 12 regular power-up slots`, `11335ef fix: clear all 12 power-up
+  spawn flags`. Different opponent names under one seed are frame timing
+  on the sign-up screen (one `rand() % 75` per frame, as in dr.exe), not
+  a bug.
 - Command-line flags: `-window` was ignored and the game always started
   windowed (`30d1e78 fix: start fullscreen unless -window is given`);
   `-nosound` did nothing and GL was switched off by `-gl` instead of the
