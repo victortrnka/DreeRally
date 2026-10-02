@@ -5079,9 +5079,9 @@ int *initRaceValues_409F90()
   raceParticipantIngame[1].flt_4A7E58 = v4;
   v5 = (double)raceParticipant2[1].b;
   /*dword_4A8070*/raceParticipantIngame[1].participantBpkOffser_4A7D10 = 1600 * (raceParticipantIngame[1].directionRotation_4A7D0C + 96);
-  raceParticipantIngame[1].dword_4A7E50 = LODWORD(raceParticipantIngame[1].absolutePositionX_4A7DB4 );
+  raceParticipantIngame[1].dword_4A7E50 = raceParticipantIngame[1].absolutePositionX_4A7DB4;
   v6 = (double)raceParticipant2[1].g;
-  raceParticipantIngame[1].dword_4A7E54 = LODWORD(raceParticipantIngame[1].absolutePositionY_4A7DB8);
+  raceParticipantIngame[1].dword_4A7E54 = raceParticipantIngame[1].absolutePositionY_4A7DB8;
  raceParticipantIngame[1].currentLap_4A7E08 = 1;
   raceParticipantIngame[1].racePosition_4A7E09 = 2;
   dword_4A83AC = 0;
@@ -5092,9 +5092,9 @@ int *initRaceValues_409F90()
   raceParticipantIngame[2].flt_4A7E58 = v8;
   v9 = (double)raceParticipant2[2].b;
   /*dword_4A83D0*/raceParticipantIngame[2].participantBpkOffser_4A7D10 = 1600 * (raceParticipantIngame[2].directionRotation_4A7D0C + 192);
-  raceParticipantIngame[2].dword_4A7E50 = LODWORD(raceParticipantIngame[2].absolutePositionX_4A7DB4 );
+  raceParticipantIngame[2].dword_4A7E50 = raceParticipantIngame[2].absolutePositionX_4A7DB4;
   v10 = (double)raceParticipant[2].g;
-  raceParticipantIngame[2].dword_4A7E54 = LODWORD(raceParticipantIngame[2].absolutePositionY_4A7DB8);
+  raceParticipantIngame[2].dword_4A7E54 = raceParticipantIngame[2].absolutePositionY_4A7DB8;
   raceParticipantIngame[2].currentLap_4A7E08 = 1;
   raceParticipantIngame[2].racePosition_4A7E09 = 3;
   dword_4A870C = 0;
@@ -5107,8 +5107,8 @@ int *initRaceValues_409F90()
   raceParticipantIngame[3].currentLap_4A7E08 = 1;
   v14 = (double)raceParticipant2[3].g;
   /*dword_4A8730*/raceParticipantIngame[3].participantBpkOffser_4A7D10 = 1600 * (raceParticipantIngame[3].directionRotation_4A7D0C + 288);
-  raceParticipantIngame[3].dword_4A7E50 = LODWORD(raceParticipantIngame[3].absolutePositionX_4A7DB4 );
-  raceParticipantIngame[3].dword_4A7E54 = LODWORD(raceParticipantIngame[3].absolutePositionY_4A7DB8);
+  raceParticipantIngame[3].dword_4A7E50 = raceParticipantIngame[3].absolutePositionX_4A7DB4;
+  raceParticipantIngame[3].dword_4A7E54 = raceParticipantIngame[3].absolutePositionY_4A7DB8;
   raceParticipantIngame[3].racePosition_4A7E09 = 4;
   v15 = (double)raceParticipant2[3].r;
   dword_4A8A6C = 0;
