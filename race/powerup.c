@@ -99,9 +99,7 @@ int generatePowerUps()
     int v21; // ecx@77
     int v22; // ecx@77
     int v23; // edx@77
-    int v24; // ecx@77
     int v25; // ecx@77
-    int v26; // edx@77
     signed int v27; // ecx@78
     signed int v28; // eax@79
     char v29; // dl@80
@@ -135,7 +133,6 @@ int generatePowerUps()
     int v57; // edx@125
     int v58; // eax@126
     signed __int64 v59; // rtt@126
-    char* v60 = malloc(100); // [sp+10h] [bp-18h]@76
     signed int v61; // [sp+14h] [bp-14h]@40
     int v62; // [sp+18h] [bp-10h]@40
     int v63[12]; // the original: 12 byte flags at [esp+0x1c]
@@ -299,13 +296,11 @@ int generatePowerUps()
                             powerups[v11].screenBackup_501BC0[v21 + 6] = *(_DWORD*)(v22 + 8);
                             powerups[v11].screenBackup_501BC0[v21 + 7] = *(_DWORD*)(v22 + 12);
                             v23 = (int)((char*)v17 + powerups[v11].posX_501BA0 + v18 * (powerups[v11].posY_501BA4 + v19 - 6) - 8);
-                            v24 = (int)(v60 + 16);
                             powerups[v11].screenBackup_501BC0[v21 + 8] = *(_DWORD*)v23;
                             powerups[v11].screenBackup_501BC0[v21 + 9] = *(_DWORD*)(v23 + 4);
                             powerups[v11].screenBackup_501BC0[v21 + 10] = *(_DWORD*)(v23 + 8);
                             powerups[v11].screenBackup_501BC0[v21 + 11] = *(_DWORD*)(v23 + 12);
                             v25 = (int)((char*)v17 + powerups[v11].posX_501BA0 + v18 * (powerups[v11].posY_501BA4 + v19 - 5) - 8);
-                            v26 = (int)(v60 + 32);
                             powerups[v11].screenBackup_501BC0[v21 + 12] = *(_DWORD*)v25;
                             powerups[v11].screenBackup_501BC0[v21 + 13] = *(_DWORD*)(v25 + 4);
                             powerups[v11].screenBackup_501BC0[v21 + 14] = *(_DWORD*)(v25 + 8);
@@ -313,7 +308,6 @@ int generatePowerUps()
                             v20 += 4;
                             v21 += 16;
                             v19 += 4;
-                            v60 += 64;
                         } while (v19 < 16);
 
 

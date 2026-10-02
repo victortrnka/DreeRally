@@ -196,7 +196,6 @@ are in `doc/FINDINGS.md` and `git log`.
     a sign flip depending on 0x4A7DC0/0x4A7DC4, so skid smoke can start
     or stop at different moments than in dr.exe.
 
-42. **`generatePowerUps` leaks a `malloc(100)`** on every call.
 43. **Opponent HUD panels 2 px low**: at the race start the 2nd-4th
     opponents' left-bar panels are drawn about 2 px lower than in dr.exe.
 44. **`startRace` clears `dword_47968C` unconditionally**; dr.exe does it
