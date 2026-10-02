@@ -253,7 +253,7 @@ typedef struct RaceParticipantIngame {
 	int lastKeysReadPreviousIndex_4A7DA4; // weak
 	float currentSteeringAngleDelta_4A7DA8; // weak
 	float carAngle_4A7DAC; // weak  //parece el angulo en grados
-	double carVelocity_4A7DB0; // weak //parece la velocidad que llevas
+	float carVelocity_4A7DB0; // weak //parece la velocidad que llevas
 	float absolutePositionX_4A7DB4; // weak
 	float absolutePositionY_4A7DB8; // weak
 	int dword_4A7DBC;//este no venia

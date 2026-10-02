@@ -6314,7 +6314,7 @@ LABEL_33:
   else
   {
     raceParticipantIngame[v0].dword_4A7DBC = raceParticipantIngame[v0].dword_4A7DC0
-                             * raceParticipantIngame[ currentDriverSelectedIndex_503518].carVelocity_4A7DB0
+                             * (double)raceParticipantIngame[ currentDriverSelectedIndex_503518].carVelocity_4A7DB0
 							 * ((double)raceParticipant2[v0].efectiveTire_4A688C
 							 / raceParticipant2[v0].efectiveEngine_4A6884);
     v16 = raceParticipantIngame[v0].dword_4A7DBC;
@@ -10757,7 +10757,7 @@ LABEL_248:
           stopSoundChannel_43C3E0(1u);
           stopSoundChannel_43C3E0(6u);
         }
-		v73 = raceParticipantIngame[ userRaceOrder_4A9EA8].carVelocity_4A7DB0 /  raceParticipant2[userRaceOrder_4A9EA8].efectiveEngine_4A6884;
+		v73 = (double)raceParticipantIngame[ userRaceOrder_4A9EA8].carVelocity_4A7DB0 /  raceParticipant2[userRaceOrder_4A9EA8].efectiveEngine_4A6884;
         if ( v73 < 0.0 )
           v73 = -v73;
         dword_445034 = (unsigned __int64)((double)(5 * dword_4A7EA0[ userRaceOrder_4A9EA8]) * v73
