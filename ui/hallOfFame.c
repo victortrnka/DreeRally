@@ -134,7 +134,7 @@ int seeHallOfFame()
   screenBuffer = (void *)dword_461250;
   sub_42C560(-1);
 
- //FIX ME LOWORD(dword_462D7C) = sub_43C1F0() & 0xFF00;
+  LOWORD(dword_462D7C) = sub_43C1F0() & 0xFF00;
 
   dword_462D7C = (unsigned __int16)dword_462D7C;
   musicSetOrder(20736);
