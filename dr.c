@@ -514,7 +514,7 @@ char aFatalError[12] = "Fatal Error"; // weak
 char aOutOfMemoryAbo[25] = "Out of memory - aborting"; // weak
 char LibFileName[] = "DDRAW.DLL"; // idb
 int leftMenuInRaceWidth_456AA0 = 0; // weak
-int mushroomTaken_456AA4 = 0; // weak
+int flatViewMode_456AA4 = 0; // never set in dr.exe (only cleared at 0x409B90): gates the flat sub_405430 view; the mushroom pickup is the drunk view (mushroomPendingTime_4A8050)
 int isCircuitReversed_456AA8 = 0; // weak
 int consecutiveFramesUsingRocket_456AAC = 0; // weak
 int pokeDamageSelected_456AB0 = 0; // weak
@@ -4639,7 +4639,7 @@ int keyMenuInRace_407330()
   while ( v113 );
   result = 0;
   memset(keysRead_45E0C0, 0, 0x100u);
-  if ( mushroomTaken_456AA4 == 1 )
+  if ( flatViewMode_456AA4 == 1 )
   {
     result = 0;
     memset((void *)screenPtr, 0, 0xFA00u);
@@ -4792,7 +4792,7 @@ int initRaceValues_409A90()
   isLapRecord_456AE4 = 0;
 
   consecutiveFramesUsingRocket_456AAC = 0;
-  mushroomTaken_456AA4 = 0;
+  flatViewMode_456AA4 = 0;
  
   rallyGoSoundPlayed_456AD8 = 0;
 
@@ -11019,7 +11019,7 @@ LABEL_318:
       drawTextInRaceScreen(0, 7, "                                ");
       drawTextInRaceScreen(0, 8, "    PRESS ENTER TO CONTINUE     ");
       racePauseMenu_4064A0(0);
-      if ( mushroomTaken_456AA4 == 1 )
+      if ( flatViewMode_456AA4 == 1 )
         memset((void *)screenPtr, 0, 0xFA00u);
       musicSetOrder(v82);
       setMusicVolume(0x10000);
@@ -11150,12 +11150,12 @@ LABEL_318:
     v88 = userRaceOrder_4A9EA8;
     if ( raceParticipantIngame[userRaceOrder_4A9EA8].mushroomPendingTime_4A8050 > 0 )
     {
-      if ( !mushroomTaken_456AA4 || (sub_405430(), !mushroomTaken_456AA4) )
+      if ( !flatViewMode_456AA4 || (sub_405430(), !flatViewMode_456AA4) )
         sub_404730();
     }
     else
     {
-      if ( !mushroomTaken_456AA4 )
+      if ( !flatViewMode_456AA4 )
       {
         v89 = 0;
         dword_4A7A38 = 0;
@@ -11172,7 +11172,7 @@ LABEL_318:
         while ( v93 ^ v94 );
         v88 = userRaceOrder_4A9EA8;
       }
-      if ( mushroomTaken_456AA4 == 1 )
+      if ( flatViewMode_456AA4 == 1 )
       {
         sub_405430();
         v88 = userRaceOrder_4A9EA8;
@@ -11197,7 +11197,7 @@ LABEL_318:
       v93 = raceEffectiveWidth_445010 - 256 < 0;
       if ( raceEffectiveWidth_445010 > 256 )
       {
-        if ( !mushroomTaken_456AA4 )
+        if ( !flatViewMode_456AA4 )
         {
           v95 = -v90;
           v92 = raceEffectiveWidth_445010 + 4 * v95;
@@ -11221,7 +11221,7 @@ LABEL_426:
       v97 = raceEffectiveWidth_445010 - 320 < 0;
       if ( raceEffectiveWidth_445010 < 320 )
       {
-        if ( !mushroomTaken_456AA4 )
+        if ( !flatViewMode_456AA4 )
         {
           v92 = raceEffectiveWidth_445010 + 2 * v90;
           raceEffectiveWidth_445010 += 2 * v90;
@@ -11316,7 +11316,7 @@ LABEL_473:
     dword_464F68 = 0;
 	//SOUND KUPLA Y DEMAS
     loadMenuSoundEffect(1u, v100, 0, 0x10000, 163840);
-    if ( mushroomTaken_456AA4 == 1 )
+    if ( flatViewMode_456AA4 == 1 )
       memset((void *)screenPtr, 0, 0xFA00u);
     if ( isMultiplayerGame )
     {
