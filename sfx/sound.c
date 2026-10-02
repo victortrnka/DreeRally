@@ -267,9 +267,10 @@ int freeMusic()
 
   result = mainArgs.configNoSound;
   if ( !mainArgs.configNoSound )
-  //TODO
-	result = 0;
-    //result = FSOUND_Close();
+  {
+    FSOUND_Close();
+    result = 0;
+  }
   return result;
 }
 
