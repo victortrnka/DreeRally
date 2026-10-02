@@ -10774,7 +10774,7 @@ LABEL_248:
           v73 = -v73;
         dword_445034 = (unsigned __int64)((double)(5 * dword_4A7EA0[ userRaceOrder_4A9EA8]) * v73
                                         + (double)(dword_4A7E9C[ userRaceOrder_4A9EA8] + 163840));
-       //TODO FIX SONIDO  sub_43C1B0(1u, 0x10000, dword_445034);
+        sub_43C1B0(1u, 0x10000, dword_445034);
         recalculateCarBoundary_411D10(); //esto peta creo que calcula posiciones con velocidad y tal.
         checkVaiZones_412DF0();
         v74 = isMultiplayerGame;
