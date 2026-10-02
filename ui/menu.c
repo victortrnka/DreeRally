@@ -366,7 +366,7 @@ LABEL_2:
           showWelcomePopup_456B74 = 1;
 		  
 		  isMultiplayerGame = 0; ///puesto por mi!
-		 //initDrivers();
+		  initDrivers();
           drivers[driverId].colour = v1;
           copyPalette1toPalette();
           *(_DWORD *)menuaStartANewGam_0 = 1702129221;
