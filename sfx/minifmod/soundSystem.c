@@ -120,16 +120,14 @@ void *  FSOUND_File_OpenCallback_43AD80(int size,char *data)
   handle->data = v5;//handle->data
   //*((_DWORD *)handle + 1) = 0;//handle->pos
   handle->pos = 0;//handle->pos
-  //memcpy(v5, name, v2);//copiar estructura handle en handle 
-  //fix a esto que no se sabe el tama?o porque es un string
-  handle->data = data;
+  memcpy(v5, data, v2);
   return handle;
 }
 
 //----- (0043ADD0) --------------------------------------------------------
 void   FSOUND_File_CloseCallback_43ADD0(unsigned int handle)
 {
-  //free(*((void **)handle + 2));free del handle->data
+  free(((struct_userhandle *)handle)->data);
   free((void *)handle);
 }
 
