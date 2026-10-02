@@ -16631,11 +16631,11 @@ int drawDebugInfo(){
   sprintf(str, "ADVANCEY=%f", raceParticipantIngame[0].advanceYAxis_4A7E60);
   writeTextInRace_402510(200+ 512*8*line++, str);
 
-  sprintf(str, "dword_4A7DC0=%d", raceParticipantIngame[0].dword_4A7DC0);  
+  sprintf(str, "dword_4A7DC0=%f", raceParticipantIngame[0].dword_4A7DC0);  
   writeTextInRace_402510(200+ 512*8*line++, str);
   sprintf(str, "currentSteeringAngleDelta_4A7DA8=%f", raceParticipantIngame[0].currentSteeringAngleDelta_4A7DA8);
   writeTextInRace_402510(200+ 512*8*line++, str);
-  sprintf(str, "dword_4A7DBC=%d", raceParticipantIngame[0].dword_4A7DBC);
+  sprintf(str, "dword_4A7DBC=%f", raceParticipantIngame[0].dword_4A7DBC);
   writeTextInRace_402510(200+ 512*8*line++, str);
   sprintf(str, "dword_50E71C=%d", dword_50E71C);
   writeTextInRace_402510(200+ 512*8*line++, str);

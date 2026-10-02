@@ -256,9 +256,9 @@ typedef struct RaceParticipantIngame {
 	float carVelocity_4A7DB0; // weak //parece la velocidad que llevas
 	float absolutePositionX_4A7DB4; // weak
 	float absolutePositionY_4A7DB8; // weak
-	int dword_4A7DBC;//este no venia
-	int dword_4A7DC0;//este no venia  parece como el tiempo que llevas girando
-	int dword_4A7DC4; //este n venia  estos son para el calculo del mobvimiento dle usuario
+	float dword_4A7DBC;//este no venia
+	float dword_4A7DC0;//este no venia  parece como el tiempo que llevas girando
+	float dword_4A7DC4; //este n venia  estos son para el calculo del mobvimiento dle usuario
 	float dword_4A7DC8; //este no venia
 	float dword_4A7DCC;//float
 	float dword_4A7DD0;
