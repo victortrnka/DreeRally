@@ -8720,7 +8720,6 @@ int killPedestrian_410FA0()
   int v4; // eax@3
   int v5; // ecx@3
   int v6; // ecx@6
-  int *v7; // esi@14
   unsigned int v8; // esi@14
   int v9; // eax@14
   int v10; // edi@14
@@ -8761,8 +8760,7 @@ int killPedestrian_410FA0()
 		  if ( raceParticipant2[ v1].damageBar_4A6898 < 0 )
 			  raceParticipant2[ v1].damageBar_4A6898 = 0;
           raceParticipantIngame[v1].absolutePositionX_4A7DB4 = (double)(rand() % 7 - 3) + raceParticipantIngame[v1].absolutePositionX_4A7DB4;
-          v7 =(signed int)(unsigned __int64)raceParticipantIngame[v1].absolutePositionY_4A7DB8;
-          //parece que no se usa *(float *)v7 = (double)(rand() % 7 - 3) + *(float *)v7;
+          raceParticipantIngame[currentDriverSelectedIndex_503518].absolutePositionY_4A7DB8 = (double)(rand() % 7 - 3) + raceParticipantIngame[currentDriverSelectedIndex_503518].absolutePositionY_4A7DB8;
           v8 = 864 * currentDriverSelectedIndex_503518;
           v9 = rand();
           v10 = userRaceOrder_4A9EA8;
