@@ -434,13 +434,13 @@ LABEL_95:
         }
         v43 = powerups[v33].timeShowed_501BB0;
         v44 = 0;
-        result = 1990;
+        result = 2000;
         do
         {
             if (v43 > result - 10 && v43 < result)
                 v44 = 1;
             result -= 20;
-        } while (result >= 1530);
+        } while (result >= 1540);
         if (v44)
         {
             result = 0;
