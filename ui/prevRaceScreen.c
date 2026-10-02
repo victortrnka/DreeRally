@@ -2670,7 +2670,10 @@ LABEL_534:
       userRaceOrder_45FC20 = 1;
   startRace(userRaceOrder_45FC20, numberOfParticipants);
   if ( isMultiplayerGame && dword_45E0A8 == 2 )
+  {
+    // multiplayer_4181B0 is not ported
     //setBackgroundRefreshFunction_43C7B0((int (*)(void))multiplayer_4181B0);
+  }
   v126 = userRaceOrder_45FC20;
   v127 = driverId;
   v244 = 84 * userRaceOrder_45FC20;
