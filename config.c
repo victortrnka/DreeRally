@@ -39,6 +39,9 @@ int checkArgs(char* args)
 			mainArgs.configGL = 0;
 		if (strstr(args, "-smooth"))
 			mainArgs.configSmooth = 0;
+		result = strstr(args, "-window");
+		if (result)
+			mainArgs.configWindow = 0;
 		if (strstr(args, "-lang=")){
 			s = strstr(args, "-lang=");
 			pch = strtok (s," ");
@@ -52,10 +55,7 @@ int checkArgs(char* args)
 			mainArgs.mod = &pch[5];
 			pch=NULL;
 		}
-		result = strstr(args, "-window");
-		if (result)
-			mainArgs.configWindow = 0;
-	}	
+	}
 	return 1;
 }
 
