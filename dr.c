@@ -7139,14 +7139,14 @@ LABEL_119:
           if ( v65 < 20 && *((BYTE *)participantCarBpk_5034FC + 40 * v63 + raceParticipantIngame[v5].participantBpkOffser_4A7D10 + v62 + 820) > 3u )
             v74 = 1;
         }
-        v66 = v61 - raceParticipantIngame[v5].dword_4A7DC4 + raceParticipantIngame[v5].absolutePositionX_4A7DB4;
-        v67 = v88 - raceParticipantIngame[v5].dword_4A7DC8 + raceParticipantIngame[v5].absolutePositionY_4A7DB8;
+        v66 = v61 - (unsigned __int64)((raceParticipantIngame[v5].dword_4A7DC4) + raceParticipantIngame[v5].absolutePositionX_4A7DB4);
+        v67 = v88 - (unsigned __int64)((raceParticipantIngame[v5].dword_4A7DC8) + raceParticipantIngame[v5].absolutePositionY_4A7DB8);
         v68 = v66;
         if ( v66 < 0 )
           v68 = -v66;
         if ( v68 < 20 )
         {
-          v69 = v88 - raceParticipantIngame[v5].dword_4A7DC8 + raceParticipantIngame[v5].absolutePositionY_4A7DB8;
+          v69 = v88 - (unsigned __int64)((raceParticipantIngame[v5].dword_4A7DC8) + raceParticipantIngame[v5].absolutePositionY_4A7DB8);
           if ( v67 < 0 )
             v69 = -v67;
           if ( v69 < 20 && *((BYTE *)participantCarBpk_5034FC + 40 * v67 + raceParticipantIngame[v5].participantBpkOffser_4A7D10+ v66 + 820) > 3u )
