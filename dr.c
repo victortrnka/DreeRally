@@ -6400,10 +6400,8 @@ LABEL_64:
   {
     v29 =  raceParticipantIngame[ currentDriverSelectedIndex_503518].carVelocity_4A7DB0;
 	v31 = raceParticipantIngame[ currentDriverSelectedIndex_503518].carVelocity_4A7DB0;
-	//if(raceParticipantIngame[currentDriverSelectedIndex_503518].absolutePositionX_4A7DB4!=0.0 | raceParticipantIngame[currentDriverSelectedIndex_503518].absolutePositionY_4A7DB8 !=0.0)
-		///v31 = -v31;
-	/*if ( v32 | v33 )
-      v31 = -v31;*/
+    if ( v31 < 0.0 )
+      v31 = -v31;
     v34 = v31 / sqrt(v28);
   }
   dword_4AA924 = 0;
