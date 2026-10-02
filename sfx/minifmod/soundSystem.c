@@ -2502,7 +2502,6 @@ FSOUND_FILE_HANDLE * FSOUND_File_Open_43F720(int size,char *data, signed char ty
 	void *result; // eax@2
   FSOUND_FILE_HANDLE *handle;
 
-  void *v3 = calloc(0x18u, 1u); // esi@1
   handle = calloc(0x18u, 1u);
   result = handle;
   handle->type = type;

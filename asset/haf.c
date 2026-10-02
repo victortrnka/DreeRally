@@ -294,7 +294,6 @@ void   openAnimation(const char *animFile, int a2, char * music, int a4, char * 
 {
 	
 //  void *v13 =malloc(0xFA00u); // eax@7
-  void *v14 = malloc(0xFA00u); // eax@7
   int (  *v15)(FILE *); // ebx@11
   FILE *fAnimFile; // ebp@11
   unsigned __int8 v17; // ST3F_1@11
@@ -346,7 +345,7 @@ void   openAnimation(const char *animFile, int a2, char * music, int a4, char * 
   anim_currentFrameData = malloc(0xFA00u);
   //allocateMemory(0xFA00u);
   //allocateMemoryPtr((void*)&v14, 0xFA00u);
-  DstBuf = v14;
+  DstBuf = malloc(0xFA00u);
   if ( (BYTE)a2 )
     loadMusic(a2, music, a4, effect);
   nullsub_1();
