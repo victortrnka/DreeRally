@@ -290,9 +290,7 @@ void   loadMusic(int a1, char * music1, int a3, char* soundEffect)
 	if (!mainArgs.configNoSound)
 	{
 		musicSize = getSizeMusic(music1);
-		musicStream = malloc(musicSize);
 		soundEffectSize = getSizeMusic(soundEffect);
-		soundEffectStream = malloc(soundEffectSize);
 
 		soundEffectStream = getMusicStream(soundEffect);
 		
@@ -347,7 +345,7 @@ void   loadMusic(int a1, char * music1, int a3, char* soundEffect)
 				}
 			#endif
 		}
-		//free(musicStream);
-		//free(soundEffectStream);
+		free(musicStream);
+		free(soundEffectStream);
 	}
 }
