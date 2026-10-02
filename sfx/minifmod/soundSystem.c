@@ -2040,19 +2040,19 @@ char   FMUSIC_LoadXM_43EF60(FMUSIC_MODULE *mod, FSOUND_FILE_HANDLE *fp)
     do
     {
       //v6 = *(BYTE *)v5;
-      if ( mod->orderlist[v5] >= mod->numpatterns);//+24
+      if ( mod->orderlist[v5] >= mod->numpatterns )//+24
         mod->numpatterns = mod->orderlist[v5] + 1; //+24
       ++v5;
     }
-    while ( mod->orderlist[v5] < mod->numorders ); //+16
+    while ( v5 < mod->numorders ); //+16
   }
   
   
-  v7 = mod->numpatternsmem;
+  v7 = mod->numpatterns;
   if ( v7 <= (unsigned __int16)filenumpatterns_v54 )
     v7 = (unsigned __int16)filenumpatterns_v54;
  
-  mod->numpatternsmem = (mod->numpatterns > filenumpatterns_v54 ? mod->numpatterns : filenumpatterns_v54);
+  mod->numpatternsmem = v7;
   mod->pattern = calloc(8 * v7, 1u);	//FIXME:MEMLEAK
 
   v8 = filenumpatterns_v54;
@@ -2149,6 +2149,7 @@ char   FMUSIC_LoadXM_43EF60(FMUSIC_MODULE *mod, FSOUND_FILE_HANDLE *fp)
     do
     {
       //v19 = *(_DWORD *)effectStruct + 8 * v18;
+      pptr_v10 = &mod->pattern[v18];
       pptr_v10->rows= 64; //v19
       pptr_v10->data = (FMUSIC_NOTE *)FSOUND_Memory_Calloc(mod->numchannels * pptr_v10->rows * sizeof(FMUSIC_NOTE));
 	
