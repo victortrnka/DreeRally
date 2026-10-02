@@ -261,34 +261,46 @@ char   FMUSIC_StopSong_43D8E0(FMUSIC_MODULE *mod)
 //----- (0043D940) --------------------------------------------------------
 char   FMUSIC_FreeSong_43D940(FMUSIC_MODULE *mod)
 {
-  void *v1; // edi@1
-  char result; // al@2
-  int v3; // esi@7
-  int v4; // eax@7
-  int v5; // esi@7
-  int v6; // ebx@7
-  int v7; // ebp@8
-  void **v8; // edi@9
-  int v9; // ecx@13
-  bool v10; // sf@13
-  unsigned __int8 v11; // of@13
-  int i; // esi@17
-  int v13; // [sp+8h] [bp-8h]@6
-  int v14; // [sp+Ch] [bp-4h]@5
+  int count; // ebx@8
+  int count2; // ebx@8
+  FMUSIC_INSTRUMENT *iptr; // esi@8
+  FSOUND_SAMPLE *sptr; // edi@9
 
-  v1 = Memory;
-  if ( mod )
+  if ( !mod )
+    return 0;
+  while ( byte_456C35 )//while(FSOUND_Software_UpdateMutex);
+    ;
+  FMUSIC_StopSong_43D8E0(mod);
+  if ( mod->instrument )
   {
-    while ( byte_456C35 )//while(FSOUND_Software_UpdateMutex);
-      ;
-    FMUSIC_StopSong_43D8E0(mod);
-    result = 1;
+    for ( count = 0; count < mod->numinsts; count++ )
+    {
+      iptr = &mod->instrument[count];
+      for ( count2 = 0; count2 < iptr->numsamples; count2++ )
+      {
+        sptr = iptr->sample[count2];
+        if ( sptr )
+        {
+          FSOUND_Memory_Free(sptr->buff);
+          FSOUND_Memory_Free(sptr);
+        }
+      }
+    }
   }
-  else
+  if ( mod->instrument )
+    FSOUND_Memory_Free(mod->instrument);
+  if ( mod->pattern )
   {
-    result = 0;
+    for ( count = 0; count < mod->numpatternsmem; count++ )
+    {
+      if ( mod->pattern[count].data )
+        FSOUND_Memory_Free(mod->pattern[count].data);
+    }
+    if ( mod->pattern )
+      FSOUND_Memory_Free(mod->pattern);
   }
-  return result;
+  FSOUND_Memory_Free(mod);
+  return 1;
 }
 // 456C35: using guessed type char byte_456C35;
 
