@@ -57,9 +57,9 @@ extern float flt_4A8C00[256]; // weak
 extern float flt_4A9A60[256]; // weak
 extern int dword_46F220[1000][100]; // weak
 extern int dword_4A6AFC; // weak
-extern _UNKNOWN unk_46ED00; // weak
-extern _UNKNOWN unk_4A7BC0; // weak
-extern _UNKNOWN unk_4AA400; // weak
+extern _UNKNOWN unk_46ED00[256]; // weak
+extern _UNKNOWN unk_4A7BC0[256]; // weak
+extern _UNKNOWN unk_4AA400[256]; // weak
 
 int   sub_4115C0(int a1, int a2);
 int processSceFile_40A360();

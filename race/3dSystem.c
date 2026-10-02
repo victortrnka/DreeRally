@@ -21,9 +21,11 @@ float flt_4A9A60[256]; // weak
 
 int dword_46F220[1000][100]; // weak
 int dword_4A6AFC; // weak
-_UNKNOWN unk_46ED00; // weak
-_UNKNOWN unk_4A7BC0; // weak
-_UNKNOWN unk_4AA400; // weak
+// Original 0x46ED00/0x4A7BC0/0x4AA400: 256-byte .data tail, all zero
+// (no other reference in dr.exe writes or reads them).
+_UNKNOWN unk_46ED00[256]; // weak
+_UNKNOWN unk_4A7BC0[256]; // weak
+_UNKNOWN unk_4AA400[256]; // weak
 int textureTemp[0xFFFFFu];
 
 //----- (0040A360) --------------------------------------------------------
