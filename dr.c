@@ -8560,8 +8560,7 @@ LABEL_85:
 	 
 
 	 //ESTOS CALCULOS SON COMPLICADOS PORQUE NO SE QUE ES CADA VARIABLE
-	 //v45 = raceParticipantIngame[currentDriverSelectedIndex_503518].unk_4A7E00;
-     // *(float *)v45 = (double)(rand() % 3 - 1) * 0.5 + *(float *)v45;
+     raceParticipantIngame[currentDriverSelectedIndex_503518].unk_4A7E00 = (double)(rand() % 3 - 1) * 0.5 + raceParticipantIngame[currentDriverSelectedIndex_503518].unk_4A7E00;
 
 	  //esto te hecha para atras
       //v46 = (signed int)(unsigned __int64)raceParticipantIngame[currentDriverSelectedIndex_503518].absolutePositionX_4A7DB4;
