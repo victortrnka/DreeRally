@@ -173,7 +173,7 @@ int generatePowerUps()
           *(_DWORD *)(v2 + 1440) = v0 + v7;
         v2 = v2+1;
         */
-    } while (v2 < 16);
+    } while (v2 < 12); // 0x41030A: only the 12 regular slots, not the big power-ups/pills
     v8 = rand;
     if (!v1 && !isRaceFinish_456AC8)
     {
@@ -194,8 +194,8 @@ int generatePowerUps()
                 ++v9;
             if (powerups[v10 + 5].powerUp_ID_501BA8 > 0)
                 ++v9;
-            v10 += 5;
-        } while (v10 < 16);
+            v10 += 6;
+        } while (v10 < 12); // 0x41037D..0x410382: slots 0-11, each once
         v63[0] = 0;
         v64 = 0;
         v61 = v9;
@@ -525,7 +525,7 @@ LABEL_95:
             powerups[v33].dword_501BAC = (unsigned __int64)(v59 % 200) + 300;
         }
         v33 += 1;
-    } while (v33 < 16);//864 );
+    } while (v33 < 12); // 0x410B76: 12 slots (0xD80 / 0x120)
     return result;
 }
 
