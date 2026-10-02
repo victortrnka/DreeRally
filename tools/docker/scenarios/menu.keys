@@ -27,5 +27,11 @@
 # at the screenshot before trusting that a scenario built on this prefix
 # landed on the main menu rather than still mid-intro or already one level
 # into "Start Racing".
+# Three Enters, as in results-orig.keys: the port now shows dr.exe's two
+# publisher splashes (Apogee, then rmd.bmp) before its own intro, like the
+# original, so the single Enter measured for the port before no longer
+# reaches the main menu.
+enter w3000
+enter w3000
 enter w3500
 shot:menu

@@ -29,6 +29,12 @@
 # Works for both our exe and the original dr.exe (make docker-test ORIG=1
 # SCENARIO=results) when the menu timing matches closely enough for the
 # same wait values; results-orig.keys exists because it does not.
+# Three Enters, as in results-orig.keys: the port now shows dr.exe's two
+# publisher splashes (Apogee, then rmd.bmp) before its own intro, like the
+# original, so the single Enter measured for the port before no longer
+# reaches the main menu.
+enter w3000
+enter w3000
 enter w3500
 shot:menu
 enter w1500

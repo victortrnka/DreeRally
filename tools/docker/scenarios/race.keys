@@ -24,6 +24,12 @@
 # Driver's Licence, the difficulty popup, the sign-up screen, and a running
 # race with AI cars moving, 0 Unhandled (also re-verified
 # with the Esc-free prefix and the RUN_SECS-derived keys bound).
+# Three Enters, as in results-orig.keys: the port now shows dr.exe's two
+# publisher splashes (Apogee, then rmd.bmp) before its own intro, like the
+# original, so the single Enter measured for the port before no longer
+# reaches the main menu.
+enter w3000
+enter w3000
 enter w3500
 shot:menu
 enter w1500

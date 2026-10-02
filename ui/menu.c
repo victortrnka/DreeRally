@@ -571,7 +571,7 @@ int mainMenu()
   //puesto por mi
   screenBuffer = v1;
   dword_461250 = v1;  
-  //apogeeScreen();  
+  apogeeScreen();
   showStartScreen();
  
   inicializeGraphicVars();
