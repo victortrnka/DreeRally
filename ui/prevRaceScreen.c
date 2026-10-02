@@ -3480,8 +3480,8 @@ char sub_4279C0()
   while ( v1 );
   do
     v6 = rand() % 19;
-  while ( *((BYTE *)&dword_45F000 + v6) == 1 );
-  *((BYTE *)&dword_45F000 + v6) = 1;
+  while ( usedNewsMessageFlags[v6] == 1 );
+  usedNewsMessageFlags[v6] = 1;
   v7 = 280 * v6;
   v8 = &aThisIsIt_Here_455150[v7];
   do
@@ -3526,12 +3526,7 @@ char sub_4279C0()
   ++byte_45FB84;
   if ( !v18 && !v19 )
   {
-    dword_45F000 = 0;
-    dword_45F004 = 0;
-    dword_45F008 = 0;
-    dword_45F00C = 0;
-    word_45F010 = 0;
-    byte_45F012 = 0;
+    memset(usedNewsMessageFlags, 0, sizeof(usedNewsMessageFlags));
     byte_45FB84 = 0;
   }
   return result;

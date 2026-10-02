@@ -503,13 +503,8 @@ int mainMenu()
   v62 = 0;
   v63 = 0;
   //checkIntro(); //esto solo chequea intro
-  dword_45F000 = 0;
-  dword_45F004 = 0;
-  dword_45F008 = 0;
-  dword_45F00C = 0;
-  word_45F010 = 0;
+  memset(usedNewsMessageFlags, 0, sizeof(usedNewsMessageFlags));
   dword_45E1C0 = 0;
-  byte_45F012 = 0;
   byte_45FB84 = 0;
   initCars();
   initDrivers();

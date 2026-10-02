@@ -90,14 +90,9 @@ extern char byte_456B01;
 extern char byte_44512A;
 extern char bottomMenuText[22][150];
 
-extern __int16 word_45F010; // weak
+extern char usedNewsMessageFlags[19]; // 0x45F000
 
-extern int dword_45F000; // weak
-extern int dword_45F004; // weak
-extern int dword_45F008; // weak
-extern int dword_45F00C; // weak
 extern char byte_45FB84; // weak
-extern char byte_45F012; // weak
 extern char aGamepadDisable[50];
 extern int menuOptionSelected_463DF0; // weak
 extern int debug;
