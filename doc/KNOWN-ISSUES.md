@@ -184,17 +184,24 @@ are in `doc/FINDINGS.md` and `git log`.
     current `screenBuffer`, as dr.exe 0x4388A3 does, so the cause is
     whatever leaves `screenBuffer` in that state on the way through
     statistics, not the shop entry itself; not investigated further.
-41. **Per-car physics fields still not float**: next to the fields fixed
-    below (0x4A7DF4..0x4A7E54), dr.exe also keeps `carVelocity_4A7DB0`
-    (a `double` in the port, 8 bytes; dr.exe reads a dword float),
-    `dword_4A7DBC`/`dword_4A7DC0`/`dword_4A7DC4` and
-    `unk_4A7E64`/`dword_4A7E68` (`int` in the port) as floats, read and
-    written with x87 `fld`/`fstp dword` (e.g. in calculateUserMovements,
-    0x40BAB0). 0x4A7DBC is the sideways slide: recalculateCarBoundary
-    spawns skid smoke when `|0x4A7DBC| > carType + 13` (dr.exe
-    0x4124A2..0x4124E3), and the port also mistranslates that `fabs` as
-    a sign flip depending on 0x4A7DC0/0x4A7DC4, so skid smoke can start
-    or stop at different moments than in dr.exe.
+42. **Leftovers next to the physics fields** (found with item 41's
+    fixes, not fixed):
+    - `recalculateRaceCarWithOrientation` compares two colliding cars'
+      angle difference with 315/45/135/225 as `|a - b|` (dr.exe
+      0x40D29B..0x40D32D, four `fcomp 0`/`fchs` pairs); the port forces
+      those sign flags to 0 and compares the signed difference, so the
+      collision spin kick differs when the difference is negative.
+    - Its spike test reads the finished flag (0x4A7E0C) and sprite offset
+      (0x4A7D10) of the car with the spikes; dr.exe reads the other
+      car's (`esi` at 0x40D3C3, 0x40D433, 0x40D4A0).
+    - `drawMine`'s hit test truncates `x - mine x`, where dr.exe
+      subtracts the mine's position from `__ftol(x)` (0x40FAAC..0x40FAC8):
+      one pixel off when the car is left of or above the mine.
+    - The player's state still drifts from dr.exe's by a float ulp or two
+      after a few hundred physics frames (x87 against SSE arithmetic, and
+      Hex-Rays float constants written as rounded doubles, e.g. `0.02`
+      for the float at 0x442130), which could tip a terrain probe onto
+      the next pixel much later.
 
 43. **Opponent HUD panels 2 px low**: at the race start the 2nd-4th
     opponents' left-bar panels are drawn about 2 px lower than in dr.exe.
@@ -353,4 +360,31 @@ original and rejected; neither is in the tree:
   position as floats`). Listing the push's users also showed that
   startRace's wall-hit damage walked a dead global, so walls never
   damaged a car: `fix: damage cars that hit a wall like dr.exe`. The
-  fields still left are item 41.
+  remaining fields (formerly item 41) are in the next entry.
+- The remaining per-car physics fields and the skid test (formerly item
+  41): the speed 0x4A7DB0 was a `double`, and the slide fields 0x4A7DBC,
+  0x4A7DC0, 0x4A7DC4 and the unstick offsets 0x4A7E64/0x4A7E68 were
+  `int`, where dr.exe keeps floats (`fix: keep each car's speed as a
+  float`, `fix: keep the slide fields as floats`, `fix: keep the unstick
+  jitter as floats`). The tyre value 0x4A688C was an `int` as well,
+  which cut it to 0, so no car ever slid (`fix: keep each car's tyre
+  grip as a float`). The slide's `fabs` was a sign flip on
+  0x4A7DC0/0x4A7DC4, so only a slide to one side made skid smoke or
+  slowed the car (`fix: compare the slide's magnitude like dr.exe`), and
+  the speed's `fabs` was commented out, so a car with negative speed
+  moved forwards (`fix: move a reversing car backwards like dr.exe`).
+  Found next to them: `fix: reset each car's speed and slide per race`,
+  `fix: place the second spike point like dr.exe`, `fix: truncate the
+  corner probes like dr.exe`. With these, a run scripted per physics
+  frame (same track, `rand()` reseeded per frame, AI cars held on the
+  grid) spawns skid smoke on the same frames as dr.exe and keeps the
+  player's state within a float ulp or two of dr.exe's for about 790
+  frames, until the player touches one of the AI cars (dr.exe picks
+  other opponents); what is left is item 42.
+- Mines did about half of dr.exe's damage (5680 instead of 10680 to the
+  player's car in the test race). The formula, 20 x (1024 - armour), and
+  the single hit are the same; the armour was not: initParticipantValues'
+  armour table by car and difficulty was mistyped (shifted by four
+  entries, one missing), so every car had the wrong armour, which also
+  scales wall, spike, gun and pedestrian damage: `fix: read car armour
+  from the original table`.
