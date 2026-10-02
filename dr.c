@@ -4752,7 +4752,7 @@ int initRaceValues_409A90()
 	  raceMines[v2].unk_481C08=-1;
 	  raceMines[v2].unk_481C0C=0;
 	  v2++;
-  }while ( v2 < 16);
+  }while ( v2 < 32);
   /*
   v2 = (signed int)&unk_481C08;
   
