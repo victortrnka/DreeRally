@@ -325,7 +325,7 @@ void   openAnimation(const char *animFile, int a2, char * music, int a4, char * 
   signed int v42; // esi@39
   int v43; // [sp+Ch] [bp-404h]@1
   char Filename[256]; // [sp+10h] [bp-400h]@1
-  char *v45 = malloc(768); // [sp+110h] [bp-300h]@17
+  char v45[768]; // [sp+110h] [bp-300h]@17
   //char v46; // [sp+111h] [bp-2FFh]@17
   int frames;
   int currentFrame;
@@ -396,7 +396,6 @@ void   openAnimation(const char *animFile, int a2, char * music, int a4, char * 
   do
     setPaletteValue(v23++, 0, 0, 0);
   while ( v23 < 255 );
-  DstBuf = malloc(0xFA00u);
   extractFromBpa("MENU.BPA", DstBuf, "FRAMES.BPK");
   //esto parece que pinta los cuadros de arriba y abajo
   
@@ -489,7 +488,7 @@ void   openAnimation(const char *animFile, int a2, char * music, int a4, char * 
   do
     stopSoundChannel_43C3E0(v42++);
   while ( v42 <= 6 );
-  //free(anim_currentFrameData);
+  free(anim_currentFrameData);
   free(DstBuf);
   free(animationSoundEffectByFrame_45EEA4);
   free(framesDelay);
