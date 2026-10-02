@@ -49,10 +49,13 @@ int initI18n() {
 	char delim[] = "=";
 	char *key ;
 	char *value ;
+	char path[256];
     languageEntries = hash_new(150);
-	if(mainArgs.language)
-		fp = fopen(strcat(strcat("lang/",mainArgs.language),".txt"), "r");
-	else
+	if(!mainArgs.language)
+		return -1;
+	snprintf(path, sizeof(path), "lang/%s.txt", mainArgs.language);
+	fp = fopen(path, "r");
+	if(fp == NULL)
 		return -1;
 	while ((s = readline(fp, 0)) != NULL)
 	{
