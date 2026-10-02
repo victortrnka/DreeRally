@@ -20,10 +20,6 @@
 
 
 
-int dword_461FD4; // weak
-int dword_461F30[256]; //weak
-
-int dword_461F2C[256]; // weak
 
 extern char  unk_445928[];
 extern int dword_45FC00; // wea
@@ -762,35 +758,14 @@ int   drawRecordByCircuit(int a1)
 //----- (00430FA0) --------------------------------------------------------
 char showHallOfFameEndGame_430FA0()//muestra hall of fame
 {
-  int v0; // edi@1
   signed int v1; // esi@1
-  signed int v2; // eax@1
-  int *v3; // eax@7
   int v4; // edx@7
-  int v5; // ebx@8
-  char *v6; // eax@9
-  int v7; // edi@9
-  char *v8; // edx@9
-  char v9; // cl@10
-  int v10; // ecx@11
   int v11; // esi@12
   int v12; // ebx@13
-  char *v13; // edi@13
-  char v14; // al@14
-  int v15; // edx@15
-  int v16; // edi@18
-  int *v17; // eax@18
-  char *v18; // edx@18
-  char v19; // cl@19
   int v20; // esi@20
   int v21; // eax@20
-  int v22; // eax@23
-  int v23; // eax@28
-  char *v24; // edx@28
-  char v25; // cl@29
   char *v26; // eax@30
   char v27; // al@32
-  char v29; // [sp-1h] [bp-29h]@13
   char DstBuf[40]; // [sp+0h] [bp-28h]@13
 
   memcpy(screenBuffer, graphicsGeneral.menubg5Bpk, 0x4B000u);
@@ -798,101 +773,45 @@ char showHallOfFameEndGame_430FA0()//muestra hall of fame
   sub_427BC0();
   drawBottomMenuText();
   drawImageWithPosition((int)graphics2.fametxtBpk, 640, 54, (int)((char *)screenBuffer + 53760));
-  v0 = driverId;
+  // the first entry with more races than the player's game took
   v1 = 0;
-  v2 = (signed int)dword_461F2C;
-  while ( drivers[driverId].totalRaces >= configuration.hallOfFameEntries[0].races )
+  while ( drivers[driverId].totalRaces >= configuration.hallOfFameEntries[v1].races )
   {
-    v2 += 20;
-    ++v1;
-    if ( v2 >= (signed int)&event2Bpk )
+    if ( ++v1 >= 10 )
       goto LABEL_12;
   }
-  if ( v1 >= 0 )
-  {
-    if ( v1 < 9 )
-    {
-
-      v3 = &dword_461FD4;
-      v4 = 9 - v1;
-      do
-      {
-        --v4;
-        *v3 = *(v3 - 5);
-        v3[1] = *(v3 - 4);
-        v3[2] = *(v3 - 3);
-        v5 = *(v3 - 1);
-        v3[3] = *(v3 - 2);
-        v3[4] = v5;
-        v3 -= 5;
-      }
-      while ( v4 );
-    }
-    v6 = &byte_460840[v0];
-    v7 = 5 * v1;
-   //TODO FIX halloffame v8 = (char *)((char *)&configuration.dword_461F20[5 * v1] - v6);
-    do
-    {
-      v9 = *v6;
-      v6[(_DWORD)v8] = *v6;
-      ++v6;
-    }
-    while ( v9 );
-	//TODO FIX halloffame strupr((char *)&configuration.dword_461F20[5 * v1]);
-    v10 = configuration.difficulty;
-    dword_461F2C[v7] = drivers[driverId].totalRaces;
-    dword_461F30[v7] = v10;
-    drawBorder_421980(17, 22 * v1 + 138, 603, 24);
-    saveConfiguration();
-  }
+  for ( v4 = 9; v4 > v1; --v4 )
+    configuration.hallOfFameEntries[v4] = configuration.hallOfFameEntries[v4 - 1];
+  strcpy(configuration.hallOfFameEntries[v1].name, drivers[driverId].name);
+  _strupr(configuration.hallOfFameEntries[v1].name);
+  configuration.hallOfFameEntries[v1].races = drivers[driverId].totalRaces;
+  configuration.hallOfFameEntries[v1].difficulty = configuration.difficulty;
+  drawBorder_421980(17, 22 * v1 + 138, 603, 24);
+  saveConfiguration();
 LABEL_12:
   v11 = 0;
   do
   {
     v12 = v11 + 1;
     SDL_itoa(v11 + 1, DstBuf, 10);
-    v13 = &v29;
-    do
-      v14 = (v13++)[1];
-    while ( v14 );
-    v15 = (int)graphicsGeneral.fmed1aBpk;
-    *(_WORD *)v13 = 46;
+    strcat(DstBuf, ".");
     if ( v11 == 9 )
-      drawTextWithFont(v15, (int)&unk_445928, DstBuf, 218908);
+      drawTextWithFont((int)graphicsGeneral.fmed1aBpk, (int)&unk_445928, DstBuf, 218908);
     else
-      drawTextWithFont(v15, (int)&unk_445928, DstBuf, 14080 * v11 + 92196);
-    v16 = 5 * v11;
-	//TODO FIX  v17 = &configuration.dword_461F20[5 * v11];
-    v18 = (char *)(DstBuf - (char *)v17);
-    do
-    {
-      v19 = *(BYTE *)v17;
-      *((BYTE *)v17 + (_DWORD)v18) = *(BYTE *)v17;
-      v17 = (int *)((char *)v17 + 1);
-    }
-    while ( v19 );
+      drawTextWithFont((int)graphicsGeneral.fmed1aBpk, (int)&unk_445928, DstBuf, 14080 * v11 + 92196);
+    strcpy(DstBuf, configuration.hallOfFameEntries[v11].name);
     _strupr(DstBuf);
     v20 = 14080 * v11;
     drawTextWithFont((int)graphicsGeneral.fmed1aBpk, (int)&unk_445928, DstBuf, v20 + 92297);
-    SDL_itoa(dword_461F2C[v16], DstBuf, 10);
-    v21 = dword_461F2C[v16];
+    v21 = configuration.hallOfFameEntries[v11].races;
+    SDL_itoa(v21, DstBuf, 10);
     if ( v21 >= 0 && v21 < 10 )
       drawTextWithFont((int)graphicsGeneral.fmed1aBpk, (int)&unk_445928, DstBuf, v20 + 92504);
-    v22 = dword_461F2C[v16];
-    if ( v22 >= 10 && v22 < 100 )
+    if ( v21 >= 10 && v21 < 100 )
       drawTextWithFont((int)graphicsGeneral.fmed1aBpk, (int)&unk_445928, DstBuf, v20 + 92496);
-    if ( dword_461F2C[v16] >= 100 )
+    if ( v21 >= 100 )
       drawTextWithFont((int)graphicsGeneral.fmed1aBpk, (int)&unk_445928, DstBuf, v20 + 92488);
-    v23 = 24 * dword_461F30[v16] + 4485952;
-    v24 = &DstBuf[-v23];
-    do
-    {
-      v25 = *(BYTE *)v23;
-      v24[v23] = *(BYTE *)v23;
-      ++v23;
-    }
-    while ( v25 );
-    v26 = _strupr(DstBuf);
+    v26 = getDifficultyText(configuration.hallOfFameEntries[v11].difficulty);
     drawTextWithFont((int)graphicsGeneral.fmed1aBpk, (int)&unk_445928, v26, v20 + 92589);
     v11 = v12;
   }
