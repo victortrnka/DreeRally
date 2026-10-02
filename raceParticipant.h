@@ -273,9 +273,9 @@ typedef struct RaceParticipantIngame {
 	
 	int dword_4A7DF4;//est eno venia
 	int dword_4A7DF8;//este no venia
-	int unk_4A7DFC; // weak  modificador del avance ejex
-	int unk_4A7E00; // weak modificador del avance eje y sobre todo para choques
-	int unk_4A7E04; // weak modificador del angulo con choques y terreno.
+	float unk_4A7DFC; // weak  modificador del avance ejex
+	float unk_4A7E00; // weak modificador del avance eje y sobre todo para choques
+	float unk_4A7E04; // weak modificador del angulo con choques y terreno.
 	char currentLap_4A7E08; // weak
 	char racePosition_4A7E09; // weak
 	int hasFinishedTheRace_4A7E0C; // weak
