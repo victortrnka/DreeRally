@@ -15,11 +15,6 @@ are in `doc/FINDINGS.md` and `git log`.
    dword_4A7D20[64]` (`raceParticipant.h:361`; `dr.c` only has a
    commented-out copy): the same Hex-Rays name for two different original
    globals.
-4. Physics fields int vs float: only the last-corner fields were retyped.
-   The current-corner fields `0x4A7E10/14/20/24/30/34/40/44` are `int` in
-   `raceParticipant.h` but `float` in the original (`fld dword ptr [esi +
-   0x4a7e10]` etc.), so the 4 smoke-spawn `roundHalfUpToInt` calls act on
-   truncated ints.
 5. With `-lang=<name>`, `initI18n` builds the file name by `strcat`ing
    onto the `"lang/"` literal (`i18n/i18n.c:54`), i.e. writes into a
    string literal.
@@ -189,6 +184,17 @@ are in `doc/FINDINGS.md` and `git log`.
     current `screenBuffer`, as dr.exe 0x4388A3 does, so the cause is
     whatever leaves `screenBuffer` in that state on the way through
     statistics, not the shop entry itself; not investigated further.
+41. **Per-car physics fields still not float**: next to the fields fixed
+    below (0x4A7DF4..0x4A7E54), dr.exe also keeps `carVelocity_4A7DB0`
+    (a `double` in the port, 8 bytes; dr.exe reads a dword float),
+    `dword_4A7DBC`/`dword_4A7DC0`/`dword_4A7DC4` and
+    `unk_4A7E64`/`dword_4A7E68` (`int` in the port) as floats, read and
+    written with x87 `fld`/`fstp dword` (e.g. in calculateUserMovements,
+    0x40BAB0). 0x4A7DBC is the sideways slide: recalculateCarBoundary
+    spawns skid smoke when `|0x4A7DBC| > carType + 13` (dr.exe
+    0x4124A2..0x4124E3), and the port also mistranslates that `fabs` as
+    a sign flip depending on 0x4A7DC0/0x4A7DC4, so skid smoke can start
+    or stop at different moments than in dr.exe.
 
 ## Deliberate deviations from the original (not bugs)
 
@@ -323,3 +329,15 @@ original and rejected; neither is in the tree:
 - A handle-sized block in `FSOUND_File_Open_43F720` and `openAnimation`'s
   packed-data buffer on the `FEATURE_SKIP_VIDEO` path leaked: `fix: drop
   two leaks next to restored frees`.
+- Skid smoke and the per-car physics fields 0x4A7DF4..0x4A7E54
+  (formerly item 4): every AI car's right-rear smoke puffs and skid
+  marks were drawn at the player's height, up to about 400 px off
+  (`fix: use the car's own Y for its rear-right corner`), and the car
+  corners, push, spin, nose terrain probe and previous position were
+  `int` where dr.exe keeps floats (`fix: keep the car corner positions
+  as floats`, `fix: keep the push and spin fields as floats`, `fix: keep
+  the nose terrain probe as floats`, `fix: keep each car's previous
+  position as floats`). Listing the push's users also showed that
+  startRace's wall-hit damage walked a dead global, so walls never
+  damaged a car: `fix: damage cars that hit a wall like dr.exe`. The
+  fields still left are item 41.
