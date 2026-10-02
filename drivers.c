@@ -400,7 +400,7 @@ int initDrivers()
 		  offset = 1;
 	  }
 	  drivers[index].face = index+ offset;
-	  memcpy(drivers[index].name, driverNames[index+ offset], strlen(driverNames[index+offset]));
+	  strcpy(drivers[index].name, driverNames[index+ offset]);
 	  drivers[index].racesWon = 0;
 	  drivers[index].totalRaces = 0;
 	  drivers[index].lastRaceIncome = 0;
@@ -422,7 +422,7 @@ int initDrivers()
 	  drivers[index].carMoneyCost = cars[v9].cost;
 	  v21 = index + 1;
 	  drivers[index].rank = index + 1; ///esta es la posicion
-	  drivers[index].colour = index+1;
+	  drivers[index].colour = index+ offset; // the face's index (0x428F07)
 	  
   } while (++index < 19); // drivers[19] is the player, set up below
  /* v5 = (signed int)dword_460890;
