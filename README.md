@@ -47,7 +47,7 @@ In this version you can add a few parameters when you launch dreerally:
 - -nogl: use the software renderer instead of OpenGL.
 - -window: start in a window instead of fullscreen (Alt+Enter toggles).
 - -smooth
-- -lang=lang(locale): run with a specific locale
+- -lang=lang(locale): run with a specific locale, e.g. -lang=langEs, -lang=langBr, -lang=langIt or -lang=langCz (Czech)
 - -mod={modName: run with a specific mod.
 - -window: run in window mode
 

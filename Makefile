@@ -84,6 +84,7 @@ setup-run:
 run: $(OUT)/dreerally.exe
 	@test -f run/ENGINE.BPA || { echo "Run 'make setup-run' first"; exit 1; }
 	cp $(OUT)/dreerally.exe $(OUT)/dreerally.pdb run/
+	cp -R lang run/
 	"$(CX)/wine" --bottle "$(BOTTLE)" --workdir "$(CURDIR)/run" "$(CURDIR)/run/dreerally.exe" $(ARGS)
 
 check-equiv:
@@ -190,6 +191,7 @@ docker-test: $(OUT)/dreerally.exe $(OUT)/keys.exe
 	  cp $(OUT)/dreerally.exe $(RUN_DIR)/ || exit 1; \
 	fi
 	@cp $(OUT)/keys.exe $(RUN_DIR)/
+	@cp -R lang $(RUN_DIR)/
 	@mkdir -p $(OUT_SHOTS)
 	RUNTIME_DIR="$(CURDIR)/$(RUN_DIR)" OUT_DIR="$(CURDIR)/$(OUT_SHOTS)" \
 	  DR_ARGS="$(DOCKER_ARGS)" DR_KEYS="$(KEYS)" DR_SHOTS="$(SHOTS)" RUN_SECS="$(SECS)" \

@@ -15,9 +15,6 @@ are in `doc/FINDINGS.md` and `git log`.
    dword_4A7D20[64]` (`raceParticipant.h:361`; `dr.c` only has a
    commented-out copy): the same Hex-Rays name for two different original
    globals.
-5. With `-lang=<name>`, `initI18n` builds the file name by `strcat`ing
-   onto the `"lang/"` literal (`i18n/i18n.c:54`), i.e. writes into a
-   string literal.
 6. `mod/mod.c:58` has no NULL check after `fopen`.
 7. About 60 TODO and 5 FIXME comments remain across the tree.
 8. The `readKeyboard` typing cursor is 40 rows tall
@@ -262,6 +259,11 @@ original and rejected; neither is in the tree:
 
 ## Fixed since the previous pass
 
+- `-lang=` crashed at start-up: `initI18n` appended the language name
+  to the read-only `"lang/"` literal (`fix: build the language file
+  path in a buffer`). A Czech translation, `-lang=langCz`, was added at
+  the same time; the game's fonts have no accented letters, so it is
+  written without diacritics.
 - With the same rand() seed the port started races with another grid
   and drew a different rand() stream from race init on: `3b40780 fix:
   sort each race's grid like dr.exe`, `f2af4e1 fix: init all 20 power-up
