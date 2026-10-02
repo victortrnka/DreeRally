@@ -297,28 +297,17 @@ void selectRaceScreen()
   int v29; // ecx@57
   unsigned __int8 v30; // al@57
   signed int v31; // edx@61
-  char v32; // cl@62
   char v33; // bl@62
-  char v34; // al@62
-  char v35; // cl@62
   signed int v36; // esi@62
   signed int v37; // edi@62
   signed int v38; // ebp@62
   char *v39; // ecx@63
   signed int v40; // eax@64
-  bool v41; // zf@74
   signed int v42; // esi@78
 //  const char **v43; // [sp+0h] [bp-6Ch]@0
 //  const char **v44; // [sp+4h] [bp-68h]@0
-  char Str; // [sp+10h] [bp-5Ch]@53
-  char v46; // [sp+11h] [bp-5Bh]@62
-  char v47; // [sp+12h] [bp-5Ah]@62
-  char v48; // [sp+13h] [bp-59h]@62
-  char DstBuf[256]; // [sp+1Ch] [bp-50h]@45
-  int v50; // [sp+20h] [bp-4Ch]@62
-  int v51; // [sp+24h] [bp-48h]@62
-  int v52; // [sp+28h] [bp-44h]@62
-  int v53; // [sp+2Ch] [bp-40h]@46
+  unsigned __int8 entrants[4]; // the original: [esp+0x10]
+  char seen[20]; // the original: [esp+0x1c], one flag per driver
   char rankDigits[20]; // the original: acStack_38[0x14]
   char *name =malloc(100); // [sp+30h] [bp-3Ch]@45
   int index = 176;
@@ -564,91 +553,34 @@ void selectRaceScreen()
         }
         while (participantsRace[0] < 4u || participantsRace[2] < 4u );
 		///while (HIBYTE(word_461EB4) < 4u || (unsigned __int8)byte_461EB6 < 4u);
-		//este codigo ordena los participantes en la parrilla
-        v31 = &dword_45EB50[2];//45EB52
-        do
+        // original 0x435EE2..0x435F82: put each race's four entrants on the
+        // grid by driver id, highest first, and note the player's slot.
+        for ( v31 = 0; v31 < 3; ++v31 )
         {
-          v32 = *(BYTE *)(v31 - 2);
-          v33 = *(BYTE *)(v31 + 1);
-          *(_DWORD *)DstBuf = 0;
-          v50 = 0;
-          v51 = 0;
-          v52 = 0;
-          v53 = 0;
-          v34 = *(BYTE *)(v31 - 1);
-          Str = v32;
-          v35 = *(BYTE *)v31;
-          v48 = v33;
-          v46 = v34;
-          v47 = v35;
-          v36 = 0;
-          v37 = (unsigned __int8)v34;
-          v38 = (unsigned __int8)v35;
-          do
+          memset(seen, 0, sizeof(seen));
+          for ( v36 = 0; v36 < 4; ++v36 )
+            entrants[v36] = racePositions[v31][v36];
+          v37 = entrants[1];
+          v38 = entrants[2];
+          v33 = entrants[3];
+          for ( v36 = 0; v36 < 4; ++v36 )
           {
-            v39 = &Str;
+            v39 = (char *)entrants;
             do
               v40 = (unsigned __int8)*v39++;
-            while ( DstBuf[v40] );
-            if ( v37 > v40 && !DstBuf[v37] )
+            while ( seen[v40] );
+            if ( v37 > v40 && !seen[v37] )
               v40 = v37;
-            if ( v38 > v40 && !DstBuf[v38] )
+            if ( v38 > v40 && !seen[v38] )
               v40 = v38;
-            if ( (unsigned __int8)v33 > v40 && !DstBuf[(unsigned __int8)v33] )
+            if ( (unsigned __int8)v33 > v40 && !seen[(unsigned __int8)v33] )
               v40 = (unsigned __int8)v33;
-            v41 = v40 == driverId;
-            DstBuf[v40] = 1;
-           //>TODO FIX LO HE QUITADO PORQU PETA *(BYTE *)(v31 + v36 - 2) = v40;
-            if ( v41 )
+            seen[v40] = 1;
+            racePositions[v31][v36] = v40;
+            if ( v40 == driverId )
               userRaceOrder_45FC20 = v36;
-            ++v36;
           }
-          while ( v36 < 4 );
-          v31 += 4;
         }
-        while ( v31 < 4582238 );
-		/*v31 = 4582226;//45EB52
-        do
-        {
-          v32 = *(BYTE *)(v31 - 2);
-          v33 = *(BYTE *)(v31 + 1);
-          *(_DWORD *)DstBuf = 0;
-          v50 = 0;
-          v51 = 0;
-          v52 = 0;
-          v53 = 0;
-          v34 = *(BYTE *)(v31 - 1);
-          Str = v32;
-          v35 = *(BYTE *)v31;
-          v48 = v33;
-          v46 = v34;
-          v47 = v35;
-          v36 = 0;
-          v37 = (unsigned __int8)v34;
-          v38 = (unsigned __int8)v35;
-          do
-          {
-            v39 = &Str;
-            do
-              v40 = (unsigned __int8)*v39++;
-            while ( DstBuf[v40] );
-            if ( v37 > v40 && !DstBuf[v37] )
-              v40 = v37;
-            if ( v38 > v40 && !DstBuf[v38] )
-              v40 = v38;
-            if ( (unsigned __int8)v33 > v40 && !DstBuf[(unsigned __int8)v33] )
-              v40 = (unsigned __int8)v33;
-            v41 = v40 == driverId;
-            DstBuf[v40] = 1;
-            *(BYTE *)(v31 + v36 - 2) = v40;
-            if ( v41 )
-              userRaceOrder_45FC20 = v36;
-            ++v36;
-          }
-          while ( v36 < 4 );
-          v31 += 4;
-        }
-        while ( v31 < 4582238 );*/
         v42 = 0;
         if ( !sabotageScreen() && !showHitmanScreen() )
         {
