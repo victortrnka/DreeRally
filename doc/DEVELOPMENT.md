@@ -22,6 +22,7 @@ CrossOver. Everything below runs on Apple Silicon.
 | `make check-equiv [BASE=rev]` | Machine-code equivalence against `BASE` (default `HEAD`) |
 | `make verify-tables` | Compare hand-typed data tables against the original `dr.exe` |
 | `make signcheck` | Rank functions whose signed/unsigned instructions differ from the original's |
+| `make calldiff` | List calls the original makes that the port dropped, per function |
 | `make stats` | Remaining Hex-Rays names per file (cleanup progress) |
 | `make clean` | Removes `build/` |
 
@@ -289,6 +290,64 @@ zero-extends; and a function missing from the list may simply be
 unpaired (`--all` lists those).
 
 Tests: `python3 tools/test_signcheck.py`.
+
+## Call check
+
+`make calldiff` looks for the "Original code commented out by the port
+author" class (`doc/FINDINGS.md`): a call the port dropped, whether it
+was commented out with `//`, hidden in a `/* ... */` block or deleted
+outright. A grep only finds the first kind.
+
+`tools/calldiff.py` pairs functions like signcheck and collects each
+side's call targets. In the original these are `call rel32`, a `jmp` to
+another function's start (a tail call), `call [IAT]`, and `call reg`
+after `mov reg, [IAT]`; a call through a `jmp [IAT]` or `jmp func` stub
+counts as a call to what the stub jumps to. In the port the map names
+every target. Port callees are mapped to original addresses through the
+pairing, and per function the tool lists:
+
+- `missing`: an original callee the port never calls, with the count
+  of calls on each side;
+- `fewer`: one it calls fewer times;
+- `lib`: a library call (by name) the port makes fewer times;
+- `extra`: a port callee the original does not call, printed as context
+  next to the lost ones.
+
+Each lost callee gets a hint. `commented` or `in code` means its name
+(any name the sources give its address, or `sub_XXXXXX`) occurs in a
+comment, or in the code, of the port function's source lines (from the
+PDB). `via X` means the port's extra callee X calls it: MSVC inlined X
+in the original. `port calls its callee X` means the port calls X
+directly where the original called a wrapper around it. `none` means
+the call was deleted or never translated.
+
+Functions are grouped by the original's own call graph: `race`
+(reachable from startRace), `menus` (from mainMenu), `startup` (from the
+game's main, 0x43ACE0), `other` (reached only through function
+pointers), and last `multiplayer` (a `multiplayer_*` function, or
+reachable only through one).
+
+Noise to expect:
+- MSVC inlined small functions in the original, so their callees show
+  up as lost in the caller. startRace's 32 `setWindowCaption`,
+  `freeMusic`, `printf` and `exit` calls are allocateMemory's error
+  path, inlined at each of its allocations; the port calls `malloc`
+  directly.
+- The original calls `_ftol2` for every float-to-int conversion, while
+  clang converts inline; it is left out.
+- A bare `ret` function (0x43C720, the port's `nullsub_1`) is ignored
+  on both sides.
+- An original callee without a marker (`sub_XXXXXX` that the port names
+  differently) shows up as missing next to an `extra` unpaired port
+  function, as in postRaceMain's `sub_423870` and `loadGraphics4`.
+
+```sh
+make calldiff                                          # every function with a lost callee
+make calldiff CALLDIFF_ARGS="--all"                    # also functions with only extra callees
+make calldiff CALLDIFF_ARGS="--func startRace"         # or --func 0x415710
+```
+
+Tests: `python3 tools/test_calldiff.py`.
 
 ## Hooking the original dr.exe
 

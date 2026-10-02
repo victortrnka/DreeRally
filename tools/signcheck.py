@@ -44,6 +44,7 @@ Python 3.9, stdlib only. Needs llvm-objdump (and llvm-symbolizer for
 """
 import argparse
 import bisect
+import collections
 import hashlib
 import os
 import re
@@ -563,6 +564,51 @@ def load_port(exe):
     return funcs, code
 
 
+def check_inputs(tool, orig, dr_data, exe):
+    """The original dr.exe's path (orig, or dr_data/dr.exe), after checking
+    that it is the Steam build the markers refer to and that exe exists."""
+    orig_exe = Path(orig) if orig else Path(dr_data) / "dr.exe"
+    if not orig_exe.is_file():
+        raise SystemExit("%s: original dr.exe not found: %s (set DR_DATA or --orig)" % (tool, orig_exe))
+    if not Path(exe).is_file():
+        raise SystemExit("%s: %s not found; run make first" % (tool, exe))
+    digest = hashlib.sha256(orig_exe.read_bytes()).hexdigest()
+    if digest != ORIG_SHA256:
+        raise SystemExit("%s: %s is not the Steam dr.exe the markers refer to (sha256 %s)"
+                         % (tool, orig_exe, digest))
+    return orig_exe
+
+
+Pairing = collections.namedtuple(
+    "Pairing", "pairs conflicts unpaired orig_funcs port_code text markers")
+
+
+def load_pairing(orig_exe, exe):
+    """Pair the port's game functions with the original's and disassemble
+    both sides; tools/calldiff.py uses the same pairing.
+
+    pairs, conflicts, unpaired: see pair(); orig_funcs: {address: [insn]}
+    for every known original function start; port_code: {port function:
+    [insn]}; text: (lo, hi) of the original's .text; markers: every
+    (address, name, live) from markers_in."""
+    markers = []
+    every_marker = []
+    for path in compiled_sources(REPO_ROOT):
+        text = path.read_text(encoding="latin-1")
+        markers.extend(markers_in(text))
+        every_marker.extend(all_marker_addresses(text))
+
+    ib, _hi, secs = equiv.read_pe(orig_exe)
+    tva, traw = secs[".text"]
+    text_lo, text_hi = ib + tva, ib + tva + len(traw)
+
+    port_funcs, port_code = load_port(exe)
+    pairs, conflicts, unpaired = pair(port_funcs, markers, text_lo, text_hi)
+    known = set(every_marker) | {a for a, _f, _h in pairs}
+    orig_funcs, _ = load_original(orig_exe, known)
+    return Pairing(pairs, conflicts, unpaired, orig_funcs, port_code, (text_lo, text_hi), markers)
+
+
 def symbolize(exe, addrs):
     """{address: "file:line"} via llvm-symbolizer and the PDB."""
     if not addrs:
@@ -612,38 +658,16 @@ def main(argv=None):
     ap.add_argument("--show", action="append", default=[])
     args = ap.parse_args(argv)
 
-    orig_exe = Path(args.orig) if args.orig else Path(args.dr_data) / "dr.exe"
-    if not orig_exe.is_file():
-        raise SystemExit("signcheck: original dr.exe not found: %s (set DR_DATA or --orig)" % orig_exe)
-    if not Path(args.exe).is_file():
-        raise SystemExit("signcheck: %s not found; run make first" % args.exe)
-    digest = hashlib.sha256(orig_exe.read_bytes()).hexdigest()
-    if digest != ORIG_SHA256:
-        raise SystemExit("signcheck: %s is not the Steam dr.exe the markers refer to (sha256 %s)"
-                         % (orig_exe, digest))
-
-    markers = []
-    every_marker = []
-    for path in compiled_sources(REPO_ROOT):
-        text = path.read_text(encoding="latin-1")
-        markers.extend(markers_in(text))
-        every_marker.extend(all_marker_addresses(text))
-
-    ib, _hi, secs = equiv.read_pe(orig_exe)
-    tva, traw = secs[".text"]
-    text_lo, text_hi = ib + tva, ib + tva + len(traw)
-
-    port_funcs, port_code = load_port(args.exe)
-    pairs, conflicts, unpaired = pair(port_funcs, markers, text_lo, text_hi)
-    known = set(every_marker) | {a for a, _f, _h in pairs}
-    orig_funcs, _ = load_original(orig_exe, known)
+    orig_exe = check_inputs("signcheck", args.orig, args.dr_data, args.exe)
+    p = load_pairing(orig_exe, args.exe)
+    conflicts, unpaired = p.conflicts, p.unpaired
 
     entries = []
-    for orig_addr, pf, how in pairs:
-        oi = orig_funcs.get(orig_addr)
+    for orig_addr, pf, how in p.pairs:
+        oi = p.orig_funcs.get(orig_addr)
         if oi is None:
             continue
-        pi = port_code[pf]
+        pi = p.port_code[pf]
         oc = counts(classify(oi))
         pc = counts(classify(pi))
         sc = score(oc, pc)
