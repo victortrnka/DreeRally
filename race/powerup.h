@@ -35,7 +35,7 @@ typedef struct Powerup {
 				parece q unk_501BCC es donde estsa el fondo de la imagen
 				*/
 
-extern Powerup powerups[16]; //creo que son 20 pero hay qu erevisarlo
+extern Powerup powerups[20]; // 0x501BA0: 20 slots of 288 bytes, up to 0x503220
 
 //----- (00410050) --------------------------------------------------------
 void powerUpTaken_410050();

@@ -6,7 +6,7 @@
 #include <math.h>
 #include "../sfx/sound.h"
 
-Powerup powerups[16];
+Powerup powerups[20];
 int dword_456AC4 = 0; // weak
 
 //----- (00410050) --------------------------------------------------------
@@ -804,7 +804,7 @@ int generateBigPowerUps()
         v4 = rand;
         powerups[v0].dword_501BAC = rand() % 50 + 100;
         v0++;
-    } while (v0 < 16);
+    } while (v0 < 20); // 0x409504: all 20 slots, one rand() each, not only the 16 a track fills
 
     /*v0 =   (signed int)&unk_501BB4;
     do
